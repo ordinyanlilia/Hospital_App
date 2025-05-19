@@ -18,7 +18,7 @@ type CollectionName = "doctors" | "patients" | "appointments";
 const fetchData = async (collectionName: CollectionName) => {
     const dataCollection = collection(db, collectionName);
     const dataSnapshot = await getDocs(dataCollection);
-    const dataList = dataSnapshot.docs.map(doc => ({ id: doc.id,...doc.data()}));
+    const dataList = dataSnapshot.docs.map(doc => ({ ...doc.data(), doc_id: doc.id}));
     return dataList;
 }
 
