@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE } from "./paths";
-import Home from "../components/Home";
-import About from "../components/About";
-import FindDoctor from "../components/FindDoctor";
-import ContactUs from "../components/ContactUs";
-import Profile from "../components/Profile";
+import Home from "../pages/Home";
+import About from "../pages/About";
+import FindDoctor from "../pages/FindDoctor";
+import ContactUs from "../pages/ContactUs";
+import Profile from "../pages/Profile";
 
 
 export const router = createBrowserRouter([
