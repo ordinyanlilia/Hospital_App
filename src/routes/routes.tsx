@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE } from "./paths";
+import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE } from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
+import DoctorPage from "../pages/DoctorPage";
 
 export const router = createBrowserRouter([
   {
@@ -48,4 +49,10 @@ export const router = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: DOCTOR_PAGE,
+    element: (
+      <DoctorPage />
+    )
+  }
 ]);
