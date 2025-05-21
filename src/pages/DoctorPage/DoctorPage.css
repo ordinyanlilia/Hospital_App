@@ -1,0 +1,9 @@
+.doctorPage-container{
+    margin: 0;
+    padding: 0;
+}
+
+.doctorPage-content{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
