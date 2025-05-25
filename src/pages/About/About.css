@@ -1,0 +1,28 @@
+.about-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.about-content {
+  display: flex;
+  align-items: center;
+}
+
+.about-image {
+  width: 500px;
+  height: auto;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.about-text {
+  flex: 1;
+  font-size: 14px;
+  color: #555;
+}
