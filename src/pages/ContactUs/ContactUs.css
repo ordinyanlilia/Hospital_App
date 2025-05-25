@@ -1,0 +1,32 @@
+.contact-us-container {
+  padding: 40px 24px;
+  background-color: #f7fafd;
+  text-align: center;
+}
+
+.contact-title {
+  margin-bottom: 32px;
+  color: #021c45;
+}
+
+.contact-cards {
+  margin-bottom: 32px;
+}
+
+.contact-card {
+  background-color: #d4e5ed;
+  padding: 24px;
+  border-radius: 10px;
+  max-height: 210px;
+}
+
+.contact-icon {
+  font-size: 28px;
+  color: #0a6cc8;
+  margin-bottom: 8px;
+}
+
+.contact-map iframe {
+  border-radius: 10px;
+  max-width: 100%;
+}
