@@ -13,20 +13,7 @@ const { Header } = Layout;
 
 const HeaderComponent = () => {
     return(
-    <Header style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      width: "100%",
-      zIndex: 1000,
-      backgroundColor: "#fff",
-      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-      padding: "0 24px",
-      height: "64px",
-      display: "flex",
-      justifyContent: "center",  
-      alignItems: "center",  }}>
+    <Header className={'app-header'}>
       <Menu
         mode="horizontal"
         defaultSelectedKeys={["home"]}

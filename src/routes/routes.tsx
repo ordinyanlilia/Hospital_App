@@ -57,6 +57,7 @@ export const router = createBrowserRouter([
                 <BookAppointment />
             </Layout>
         )
-    }
+    },
+
 
 ])

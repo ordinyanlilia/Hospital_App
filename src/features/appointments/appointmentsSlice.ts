@@ -1,5 +1,7 @@
 import {setData} from "../../services/apiService.ts";
 import {createAppSlice} from "../../app/createAppSlice.ts";
+import type {Timestamp} from "firebase/firestore";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 export interface Appointment {
     patient?: string,
@@ -8,19 +10,20 @@ export interface Appointment {
     location: string,
     reason: string,
     mode: string,
-    notes: string,
+    notes?: string,
     status: string,
     doc_id?: string,
+    date: Timestamp,
 }
 
 interface InitialState {
-    data: string[];
+    appointments: string[];
     status: string;
     error: string | null;
 }
 
 const initialState: InitialState = {
-    data: [],
+    appointments: [],
     status: '',
     error: '',
 }
@@ -34,26 +37,25 @@ const appointmentsSlice = createAppSlice({
             },
             {
                 pending: state => {
-                    console.log('Log ::: Pending ===');
                     state.status = 'loading';
                 },
                 fulfilled: (state, action) => {
-                    console.log('Log ::: Success ===');
                     state.status = 'succeeded';
-                    console.log(action, 'action');
-                    state.data.push(action.payload);
+                    state.appointments.push(action.payload);
                 },
                 rejected: (state, action) => {
                     state.status = 'failed';
                     state.error = action.error.message || null;
                 },
-            })
+            }),
     }),
     selectors: {
         selectStatus: state => state.status,
+        selectError: state => state.error,
+        selectAppointments: state => state.appointments,
     }
 })
 
-export const {selectStatus} = appointmentsSlice.selectors;
+export const {selectStatus, selectError, selectAppointments} = appointmentsSlice.selectors;
 export const {addAppointment} = appointmentsSlice.actions;
 export default appointmentsSlice

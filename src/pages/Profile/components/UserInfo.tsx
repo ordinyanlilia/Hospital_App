@@ -1,0 +1,64 @@
+import {Button, Col, List, Row, Typography} from "antd";
+import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
+import profileImage from '../../../assets/images/profile-photo.jpg'
+import type {Patient} from "../../../services/apiService.ts";
+
+const {Text} = Typography;
+
+const UserInfo = ({user}: { user: Patient | undefined }) => {
+    const date = Date(user?.registeredAt).toString();
+
+    return (
+        <Row gutter={[16, 16]} className={'profile'}>
+            <Col span={8}>
+                <div className="profile-main-info">
+                    <img src={profileImage} alt="profile picture"/>
+                    <h3>{user?.name} {user?.surname}</h3>
+                    <p><PhoneOutlined/>{user?.phoneNumber}</p>
+                    <p><MailOutlined/>{user?.email}</p>
+                    <Text type="secondary" strong>Registered At:
+                        {date}
+                    </Text>
+                    <Button>Edit Profile</Button>
+                </div>
+            </Col>
+            <Col span={8}>
+                <div className="profile-details">
+                    <Text type="secondary" strong>Gender</Text>
+                    <p>{user?.gender}</p>
+                    <Text type="secondary" strong>Date of Birth</Text>
+                    <p>{user?.dob}</p>
+                    <Text type="secondary" strong>Blood</Text>
+                    <p>{user?.bloodType}</p>
+                    <Text type="secondary" strong>Allergies</Text>
+                    <List
+                        size="small"
+                        itemLayout={'horizontal'}
+                        dataSource={user?.allergies}
+                        renderItem={(item: string) => <List.Item>{item}</List.Item>}
+                    />
+                </div>
+            </Col>
+            <Col span={6}>
+                <div className="profile-history">
+                    <Text type="secondary" strong>Medical History</Text>
+                    <List
+                        size="small"
+                        bordered
+                        dataSource={user?.currentMedications}
+                        renderItem={(item: string) => <List.Item>{item}</List.Item>}
+                    />
+                    <Text type="secondary" strong>Current Medications</Text>
+                    <List
+                        size="small"
+                        bordered
+                        dataSource={user?.currentMedications}
+                        renderItem={(item: string) => <List.Item>{item}</List.Item>}
+                    />
+                </div>
+            </Col>
+        </Row>
+    )
+}
+
+export default UserInfo;
