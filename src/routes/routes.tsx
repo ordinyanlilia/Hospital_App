@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import {HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, BOOK_APPOINTMENT} from "./paths";
-import Home from "../pages/Home";
-import About from "../pages/About";
-import FindDoctor from "../pages/FindDoctor";
-import ContactUs from "../pages/ContactUs";
+import {HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, BOOK_APPOINTMENT, DOCTOR_PAGE} from "./paths";
+import Home from "../pages/Home/Home";
+import About from "../pages/About/About";
+import FindDoctor from "../pages/FindDoctor/FindDoctor";
+import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile.tsx";
 import BookAppointment from "../pages/BookAppointment/BookAppointment.tsx";
+import DoctorPage from "../pages/DoctorPage/index.tsx";
 
 
 export const router = createBrowserRouter([
@@ -50,6 +51,12 @@ export const router = createBrowserRouter([
             </Layout>
         )
     },
+      {
+    path: DOCTOR_PAGE,
+    element: (
+      <DoctorPage />
+    )
+  },
     {
         path: BOOK_APPOINTMENT,
         element:(

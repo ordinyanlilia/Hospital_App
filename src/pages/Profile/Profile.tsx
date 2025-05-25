@@ -16,7 +16,7 @@ const Profile = () => {
 
     useEffect(() => {
         getData('2e3C5vE5WSVC6LJ9Zjc0').then((response) => {
-            setUser(response);
+            // setUser(response);
         })
     }, []);
 
