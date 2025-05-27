@@ -1,0 +1,23 @@
+.find-doctor-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 60px;
+  justify-content: flex-start;
+}
+
+.find-doctor-input,
+.find-doctor-select {
+  width: 200px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.footer {
+  padding: 50px;
+}
