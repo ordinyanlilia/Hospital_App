@@ -1,0 +1,22 @@
+.ant-picker-panel {
+  height: 78vh !important; 
+  overflow-y: auto;
+}
+
+.ant-picker-cell-inner {
+  padding: 4px 0;
+  height: 30px;
+}
+
+.count-badge {
+  display: inline-block;
+  background-color: #1677ff; 
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}

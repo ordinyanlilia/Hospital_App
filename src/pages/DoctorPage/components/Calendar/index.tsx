@@ -10,7 +10,7 @@ const Calendar: React.FC = () => {
                         <img src={calendarBlueIcon} alt="Calendar icon" />
                         <span>Calendar</span>
                     </div>
-                    <div>
+                    <div className="calendar-part-container">
                         <CalendarPart />
                     </div>
             </div>

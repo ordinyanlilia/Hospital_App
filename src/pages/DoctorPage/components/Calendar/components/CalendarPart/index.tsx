@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchData } from "../../../../../../services/apiService";
 import dayjs from "dayjs";
 import type { Timestamp } from "firebase/firestore";
+import "./CalendarPart.css";
 
 const CalendarPart: React.FC = () => {
   type Appointment = {
@@ -102,7 +103,11 @@ const CalendarPart: React.FC = () => {
     return info.originNode;
   };
 
-  return <Calendar cellRender={cellRender} />;
+  return (
+    <div className="calendar-wrapper">
+      <Calendar cellRender={cellRender} />
+    </div>
+  );
 };
 
 export default CalendarPart;

@@ -99,18 +99,16 @@ const AppointmentsList: React.FC<FilterBarProps> = ({
         <table>
           <thead>
             <tr>
-              <th>Patient ID</th>
-              <th>Name</th>
-              <th>Date and Time</th>
-              <th>Reason</th>
-              <th>Notes</th>
-              <th>Status</th>
+              <th>NAME</th>
+              <th>DATE AND TIME</th>
+              <th>REASON</th>
+              <th>NOTES</th>
+              <th>STATUS</th>
             </tr>
           </thead>
           <tbody>
             {filteredAppointments.map((appointment) => appointment.doctorId === '1' ? (
               <tr key={appointment.id}>
-                <td>{appointment.patientId}</td>
                 <td>{appointment.patientName}</td>
                 <td>
                   {appointment.date.toDate().toLocaleDateString("en-US", {
