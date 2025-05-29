@@ -64,7 +64,7 @@ const Signup = () => {
           surname: values.surname,
           yearsOfExperience: parseInt(values.yearsOfExperience),
           gender: values.gender,
-          speciality: values.speciality,
+          specialty: values.specialty,
           email: values.email,
           password: values.password,
         };
@@ -193,8 +193,8 @@ const Signup = () => {
               </Form.Item>
 
               <Form.Item
-                label="Speciality"
-                name="speciality"
+                label="Specialty"
+                name="specialty"
                 rules={[{ required: true, message: 'Enter your speciality' }]}
               >
                 <Input />

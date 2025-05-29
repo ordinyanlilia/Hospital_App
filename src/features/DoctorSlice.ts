@@ -7,7 +7,7 @@ export interface Doctor {
   surname: string;
   yearsOfExperience: number;
   gender: string;
-  speciality: string;
+  specialty: string;
   email: string;
   password: string;
 }
