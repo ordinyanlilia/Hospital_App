@@ -1,8 +1,9 @@
+import Login from "./Login";
 
-const Profile = () =>{
+const Profile: React.FC = () =>{
     return(
         <div className="profile-container">
-        Profile
+        <Login />
         </div>
     )
 }

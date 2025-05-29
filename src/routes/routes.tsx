@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE } from "./paths";
-import Home from "../pages/Home";
-import About from "../pages/About";
-import FindDoctor from "../pages/FindDoctor";
-import ContactUs from "../pages/ContactUs";
-import Profile from "../pages/Profile";
+import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, SIGNUP } from "./paths";
+import Home from "../pages/Home/Home";
+import About from "../pages/About/About";
+import FindDoctor from "../pages/FindDoctor/FindDoctor";
+import ContactUs from "../pages/ContactUs/ContactUs";
+import Profile from "../pages/Profile/Profile";
+import Signup from "../pages/Profile/SignUp";
 
 
 export const router = createBrowserRouter([
@@ -46,6 +47,14 @@ export const router = createBrowserRouter([
         element: (
             <Layout>
                 <Profile />
+            </Layout>
+        )
+    },
+    {
+        path: SIGNUP,
+        element: (
+            <Layout>
+                <Signup />
             </Layout>
         )
     }
