@@ -1,9 +1,25 @@
 import './BookAppointment.css';
 
-import {Button, Card, DatePicker, Divider, Form, Input, Result, Row, Select, Space, Spin, Tag, TimePicker} from "antd";
+import {
+    Button,
+    Card,
+    DatePicker,
+    Divider,
+    Form,
+    Input,
+    message,
+    Result,
+    Row,
+    Select,
+    Space,
+    Spin,
+    Tag,
+    TimePicker
+} from "antd";
 import {
     addAppointment,
     type Appointment,
+    resetStatus,
     selectError,
     selectStatus
 } from '../../features/appointments/appointmentsSlice.ts';
@@ -11,14 +27,28 @@ import {
 import {useNavigate} from "react-router-dom";
 import {SmileOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import {type Doctor, fetchData} from "../../services/apiService.ts";
+import {fetchData} from "../../services/apiService.ts";
 import {Timestamp} from 'firebase/firestore';
 import dayjs from 'dayjs';
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import Title from "antd/es/typography/Title";
 
+
+interface Doctor {
+    doc_id: string;
+    id: string;
+    name: string;
+    surname: string;
+    specialty: string;
+    appointments: string[];
+    yearsOfExperience: number;
+}
 
 const BookAppointment = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const [selectedDoctors, setSelectedDoctors] = useState<Doctor[]>(doctors);
+    const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+
     const formItemLayout = {
         labelCol: {
             xs: {span: 24},
@@ -31,6 +61,7 @@ const BookAppointment = () => {
     };
 
     const categories = [
+        'All',
         'Neurology',
         'Psychiatry',
         'Plastic Surgery',
@@ -41,17 +72,15 @@ const BookAppointment = () => {
         'Cardiology',
     ];
 
-    const [selected, setSelected] = useState<string>('Neurology');
+    const [selected, setSelectedCategory] = useState<string>('All');
+    const [messageApi, contextHolder] = message.useMessage();
+
+
     useEffect(() => {
-        fetchData('doctors').then((data: Doctor[]) => {
-            // const doctors = data.map(d => {
-            //     return {
-            //         label: d.name,
-            //         value: d.id,
-            //     }
-            // })
-            console.log(data)
+        fetchData<Doctor>('doctors').then((data: Doctor[]) => {
             setDoctors(data)
+            setSelectedDoctors(data);
+            setSelectedDoctor(null)
         })
     }, []);
 
@@ -61,7 +90,21 @@ const BookAppointment = () => {
     const error: string | null = useAppSelector(selectError);
     const [form] = Form.useForm();
 
+    const disabledTime = () => ({
+        disabledHours: () => {
+            return Array.from({ length: 24 }, (_, i) => i).filter((hour) => hour < 9 || hour > 17);
+        },
+    });
+
     const onFinish = async (value) => {
+        if (!selectedDoctor) {
+            messageApi.open({
+                type: 'error',
+                content: "Please select a doctor.",
+            });
+            return;
+        }
+
         try {
             const date = dayjs(value.date);
             const time = dayjs(value.time);
@@ -78,24 +121,52 @@ const BookAppointment = () => {
             const timestamp = Timestamp.fromDate(combinedDateTime);
 
             const resultValue: Appointment = {
-                ...value,
+                reason: value.reason,
+                mode: value.mode,
                 date: timestamp,
-                userId: '1',
+                patientId: '1',
+                patientName: 'Mariam',
                 status: 'scheduled',
+                doctorId: selectedDoctor?.id,
+                doctorName: selectedDoctor?.name,
             };
 
-            await dispatch(addAppointment(resultValue)).unwrap();
+            if(value.notes){
+               resultValue.notes = value.notes;
+            }
+
+            await dispatch(addAppointment(resultValue)).unwrap()
+
         } catch (error) {
             console.log(error);
         }
+        form.resetFields();
+        setSelectedDoctor(null);
+        setSelectedCategory('All');
     };
+
+    const handleClick = () => {
+        navigate('/profile');
+        dispatch(resetStatus());
+    }
+
+    const handleCategorySelect = (category: string) => {
+        setSelectedCategory(category);
+
+        if (category === 'All') {
+            setSelectedDoctors(doctors);
+        } else {
+            setSelectedDoctors(doctors.filter(doctor => doctor.specialty === category));
+
+        }
+    }
 
     if (status === 'succeeded') {
         return (
             <Result
                 icon={<SmileOutlined/>}
                 title="Great, we have done all the operations!"
-                extra={<Button type="primary" onClick={() => navigate('/profile')}>Next</Button>}
+                extra={<Button type="primary" onClick={handleClick}>Next</Button>}
             />
         )
     } else if (status === 'failed') {
@@ -104,7 +175,7 @@ const BookAppointment = () => {
             title="Submission Failed"
             subTitle={error}
             extra={
-                <Button type="primary" onClick={() => navigate('/profile')}>Next</Button>
+                <Button type="primary" onClick={handleClick}>Next</Button>
             }
         />)
     } else if (status === 'loading') {
@@ -119,7 +190,8 @@ const BookAppointment = () => {
 
     return (
         <>
-            <h3>Make An Appointment</h3>
+            {contextHolder}
+            <Title level={3}>Make An Appointment</Title>
             <Row justify="center" align="middle" className='book-appointment'>
                 <Form
                     {...formItemLayout}
@@ -129,30 +201,11 @@ const BookAppointment = () => {
                     style={{width: 600}}
                     initialValues={{variant: 'underlined'}}
                 >
-                    <Form.Item label="Name" name="name" rules={[{required: true, message: 'Please input!'}]}>
+                    <Form.Item label="Your Name" name="name" rules={[{required: true, message: 'Please input!'}]}>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label="Reason" name="reason" rules={[{required: true, message: 'Please input!'}]}>
+                    <Form.Item label="Your Reason" name="reason" rules={[{required: true, message: 'Please input!'}]}>
                         <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Doctor"
-                        name="doctorId"
-                        rules={[{required: true, message: 'Please input!'}]}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Select a Doctor"
-                            optionFilterProp="label"
-                            style={{width: 120}}
-                            options={doctors.map(doc => {
-                                return {
-                                    label: doc.name,
-                                    value: doc.id,
-                                }
-                            })}
-                        />
                     </Form.Item>
 
                     <Divider>Category</Divider>
@@ -160,27 +213,28 @@ const BookAppointment = () => {
                         {categories.map(category => (
                             <Tag.CheckableTag
                                 key={category}
-                                // color={category === selected ? 'blue' : 'default'}
                                 checked={category === selected}
-                                onChange={() => setSelected(category)}
+                                onChange={() => handleCategorySelect(category)}
                                 style={{borderRadius: '20px', padding: '8px 16px', cursor: 'pointer'}}
                             >
                                 {category}
                             </Tag.CheckableTag>
                         ))}
                     </Space>
-                    <Divider>Doctors</Divider>
+                    <Divider>Doctor</Divider>
                     <Space wrap>
-                        {doctors.map((doc, index) => (
+                        {selectedDoctors.map((doc, index) => (
                             <Card
                                 key={index}
                                 hoverable
                                 style={{
                                     width: 120,
                                     height: 100,
-                                    borderColor: '#1890ff',
-                                    boxShadow: '0 0 10px #e6f7ff'
+                                    borderColor: doc.id === selectedDoctor?.id ? '#1890ff' : '#707070',
+                                    color: doc.id === selectedDoctor?.id ? '#1890ff' : '#707070',
+                                    boxShadow: doc.id === selectedDoctor?.id ? '0 0 3px #1890ff' : '0 0 10px #e6f7ff',
                                 }}
+                                onClick={() => setSelectedDoctor(doc)}
                             >
                                 <Card.Meta
                                     // avatar={<Avatar size={64} src={doc.image} />}
@@ -232,12 +286,14 @@ const BookAppointment = () => {
                         name="DatePicker"
                         rules={[{required: true, message: 'Please input!'}]}
                     >
-                        <DatePicker/>
+                        <DatePicker disabledDate={(current) => current && current < dayjs().startOf('day')}/>
                     </Form.Item>
                     <Form.Item
                         label="TimePicker"
-                        name="TimePicker">
-                        <TimePicker prefix={<SmileOutlined/>} format={'HH:mm'}/>
+                        name="TimePicker"
+                        rules={[{required: true, message: 'Please input!'}]}
+                    >
+                        <TimePicker disabledTime={disabledTime} prefix={<SmileOutlined/>} format={'HH:mm'}/>
                     </Form.Item>
 
                     <Form.Item

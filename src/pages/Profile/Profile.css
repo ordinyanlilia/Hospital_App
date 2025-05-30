@@ -5,13 +5,13 @@
     font-weight: 500;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin: 0.5rem auto;
 }
 
 .profile-main-info {
     border-right: 1px solid #eee;
     text-align: center;
     padding: 1rem;
-
 }
 
 .profile-main-info img {
@@ -70,6 +70,13 @@
 .profile .ant-empty-description {
     font-size: 12px;
 }
+
+.ant-typography.blue-text{
+    color: #0050b3;
+}
+
+
+
 @media (max-width: 768px) {
     .profile {
         display: flex;
@@ -84,3 +91,5 @@
         border-bottom: 1px solid #eee;
     }
 }
+
+

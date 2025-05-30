@@ -1,13 +1,13 @@
-import {Button, Col, List, Row, Typography} from "antd";
+import {Button, Col, List, Row, Space, Typography} from "antd";
 import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import profileImage from '../../../assets/images/profile-photo.jpg'
-import type {Patient} from "../../../services/apiService.ts";
-
+import {type Patient} from "../../../services/apiService.ts";
+import dayjs from "dayjs";
 const {Text} = Typography;
 
-const UserInfo = ({user}: { user: Patient | undefined }) => {
-    const date = Date(user?.registeredAt).toString();
-
+const UserInfo = ({user, onSetIsEditing}: { user: Patient | undefined, onSetIsEditing: MouseEventHandler<HTMLElement> }) => {
+    const registeredDate = dayjs(user?.registeredAt).format('MMM D, YYYY');
+    const dobDate = dayjs(user?.dob).format('DD/MM/YYYY');
     return (
         <Row gutter={[16, 16]} className={'profile'}>
             <Col span={8}>
@@ -16,10 +16,13 @@ const UserInfo = ({user}: { user: Patient | undefined }) => {
                     <h3>{user?.name} {user?.surname}</h3>
                     <p><PhoneOutlined/>{user?.phoneNumber}</p>
                     <p><MailOutlined/>{user?.email}</p>
-                    <Text type="secondary" strong>Registered At:
-                        {date}
-                    </Text>
-                    <Button>Edit Profile</Button>
+                    <Space direction="vertical">
+                        <Text type="secondary" strong>
+                            Registered At:{registeredDate}
+                        </Text>
+                        <Button onClick={onSetIsEditing}>Edit Profile</Button>
+                    </Space>
+
                 </div>
             </Col>
             <Col span={8}>
@@ -27,7 +30,7 @@ const UserInfo = ({user}: { user: Patient | undefined }) => {
                     <Text type="secondary" strong>Gender</Text>
                     <p>{user?.gender}</p>
                     <Text type="secondary" strong>Date of Birth</Text>
-                    <p>{user?.dob}</p>
+                    <p>{dobDate}</p>
                     <Text type="secondary" strong>Blood</Text>
                     <p>{user?.bloodType}</p>
                     <Text type="secondary" strong>Allergies</Text>
@@ -44,14 +47,12 @@ const UserInfo = ({user}: { user: Patient | undefined }) => {
                     <Text type="secondary" strong>Medical History</Text>
                     <List
                         size="small"
-                        bordered
-                        dataSource={user?.currentMedications}
+                        dataSource={user?.medicalHistory}
                         renderItem={(item: string) => <List.Item>{item}</List.Item>}
                     />
                     <Text type="secondary" strong>Current Medications</Text>
                     <List
                         size="small"
-                        bordered
                         dataSource={user?.currentMedications}
                         renderItem={(item: string) => <List.Item>{item}</List.Item>}
                     />

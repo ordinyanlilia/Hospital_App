@@ -3,15 +3,14 @@ import {
     addDoc,
     collection,
     CollectionReference,
+    doc,
     Firestore,
+    getDoc,
     getDocs,
     getFirestore,
-    getDoc,
-    doc,
-    Timestamp
+    updateDoc
 } from "firebase/firestore";
 import {DATABASE_URL} from "./constants.ts";
-import type {Appointment} from "../features/appointments/appointmentsSlice.ts";
 
 const app: FirebaseApp = initializeApp({
     apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
@@ -36,35 +35,35 @@ export interface Patient {
     currentMedications: string[];
     medicalHistory: string[];
     appointments: number[];
-    registeredAt: Timestamp;
-    password: string;
+    registeredAt: string;
 }
 
 const db: Firestore = getFirestore(app);
 type CollectionName = "doctors" | "patients" | "appointments";
 
-const fetchData = async (collectionName: CollectionName) => {
-    const dataCollection = collection(db, collectionName);
+const fetchData = async <T>(collectionName: CollectionName) => {
+    const dataCollection = collection(db, collectionName) as CollectionReference<T>;
     const dataSnapshot = await getDocs(dataCollection);
-    const dataList = dataSnapshot.docs.map(doc => ({ ...doc.data(), doc_id: doc.id}));
+    const dataList = dataSnapshot.docs.map(doc => ({...doc.data(), doc_id: doc.id}));
     return dataList;
 }
 
-const setData = async <T>(collectionName: CollectionName, data: T):Promise<string> => {
+const setData = async <T>(collectionName: CollectionName, data: T): Promise<string> => {
     const dataCollection = collection(db, collectionName) as CollectionReference<T>;
-    const docRef =  await addDoc(dataCollection, data);
+    const docRef = await addDoc(dataCollection, data);
     return docRef.id;
 }
 
-const getData = async (id:string) => {
-    const docRef = doc(db, "patients", id);
-    const docSnap = await getDoc(docRef);
-    return docSnap.data();
+const updateData = async <T extends object>(doc_id: string, collectionName: CollectionName, updatedData: T):Promise<void> => {
+    const docRef = doc(db, collectionName, doc_id);
+    await updateDoc(docRef, updatedData);
 }
 
-const getAppointment  = async (id:string):Promise<Appointment> => {
-    const docRef = doc(db, "appointments", id);
+const getData = async <T>(id: string, collectionName: CollectionName,):Promise<T> => {
+    const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
+    return docSnap.data() as T;
 }
-export {fetchData, setData, getData, getAppointment}
+
+
+export {fetchData, setData, getData, updateData}

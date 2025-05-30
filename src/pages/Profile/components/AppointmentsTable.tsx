@@ -1,27 +1,26 @@
-import {FileDoneOutlined, ScheduleOutlined} from '@ant-design/icons'
-import {useEffect, useState} from "react";
-import {type Appointment, selectAppointments} from "../../../features/appointments/appointmentsSlice.ts";
-import {Table} from "antd";
-import type { ColumnsType } from 'antd/es/table';
-import {getAppointment} from "../../../services/apiService.ts";
-import {useAppSelector} from "../../../app/hooks.ts";
+import {FileDoneOutlined, ScheduleOutlined, ScheduleTwoTone} from '@ant-design/icons'
+import {useEffect} from "react";
+import {
+    type Appointment,
+    selectAppointments,
+    setAppointmentsInitialState
+} from "../../../features/appointments/appointmentsSlice.ts";
+import {Space, Table} from "antd";
+import type {ColumnsType} from 'antd/es/table';
+import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
+import {getData} from "../../../services/apiService.ts";
 
 const AppointmentsTable = () => {
-    const columns:ColumnsType<Appointment> = [
+    const columns: ColumnsType<Appointment> = [
         {
             title: 'Patient',
-            dataIndex: 'patient',
-            key: 'patient',
+            dataIndex: 'patientName',
+            key: 'patientName',
         },
         {
             title: 'Doctor',
-            dataIndex: 'doctorId',
-            key: 'doctorId',
-        },
-        {
-            title: 'Location',
-            dataIndex: 'location',
-            key: 'location',
+            dataIndex: 'doctorName',
+            key: 'doctorName',
         },
         {
             title: 'Reason',
@@ -44,27 +43,37 @@ const AppointmentsTable = () => {
             dataIndex: 'status',
             key: 'status',
             render: (text: string) => (
-                <>{text === 'scheduled' ?
-                    <ScheduleOutlined style={{color: '#2feb32'}}/> :
+                <Space>{text === 'scheduled' ?
+                    <ScheduleTwoTone className={'blue-text'}/> :
                     <FileDoneOutlined/>}
-                    {text}</>
+                    {text}</Space>
             ),
         },
     ];
 
-    const appointmentsId = useAppSelector(selectAppointments);
-    console.log(appointmentsId);
-    const [appointments, setAppointments] = useState<Appointment[] | []>([]);
+    const appointments = useAppSelector(selectAppointments);
+    const dispatch = useAppDispatch();
     const user = {
-        name: 'Mariam'
+        name: 'Mariam',
+        appointments: [
+            'GNKkT9yoOwo7pee7bHDx'
+        ]
     }
+
     useEffect(() => {
-        appointmentsId.forEach((id: string) => {
-            getAppointment(id).then((appointment) => {
-                setAppointments([...appointments, {...appointment, patient: user.name}]);
-            })
-        })
-    }, [])
+        const fetchAppointments = async () => {
+            let results = await Promise.all(
+                user.appointments.map(id => getData<Appointment>(id, 'appointments'))
+            );
+
+            // results = results.map(result => result.date.toString());
+
+            dispatch(setAppointmentsInitialState(results));
+        };
+
+        fetchAppointments();
+    }, []);
+
     return (
         <Table columns={columns} dataSource={appointments} size="small"/>
     )
