@@ -1,6 +1,6 @@
 import {setData, updateData} from "../../services/apiService.ts";
 import {createAppSlice} from "../../app/createAppSlice.ts";
-import {arrayUnion, type Timestamp} from "firebase/firestore";
+import {arrayUnion} from "firebase/firestore";
 
 export interface Appointment {
     patientName?: string,
@@ -12,7 +12,7 @@ export interface Appointment {
     notes?: string,
     status: string,
     doc_id?: string,
-    date: Timestamp,
+    date: string,
 }
 
 interface InitialState {

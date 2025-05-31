@@ -28,7 +28,6 @@ import {useNavigate} from "react-router-dom";
 import {SmileOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {fetchData} from "../../services/apiService.ts";
-import {Timestamp} from 'firebase/firestore';
 import dayjs from 'dayjs';
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
@@ -44,21 +43,21 @@ interface Doctor {
     yearsOfExperience: number;
 }
 
+interface FinishValue{
+    DatePicker?: dayjs.Dayjs | null;
+    TimePicker?: dayjs.Dayjs | null;
+    reason: string,
+    mode: string,
+    notes?: string,
+    doc_id?: string,
+    date: string,
+    time?: string,
+}
+
 const BookAppointment = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [selectedDoctors, setSelectedDoctors] = useState<Doctor[]>(doctors);
     const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-
-    const formItemLayout = {
-        labelCol: {
-            xs: {span: 24},
-            sm: {span: 6},
-        },
-        wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 14},
-        },
-    };
 
     const categories = [
         'All',
@@ -96,7 +95,7 @@ const BookAppointment = () => {
         },
     });
 
-    const onFinish = async (value) => {
+    const onFinish = async (value:FinishValue) => {
         if (!selectedDoctor) {
             messageApi.open({
                 type: 'error',
@@ -113,17 +112,15 @@ const BookAppointment = () => {
                 .hour(time.hour())
                 .minute(time.minute())
                 .second(time.second())
-                .toDate();
+                .toDate().toISOString();
 
             delete value.DatePicker;
             delete value.TimePicker;
 
-            const timestamp = Timestamp.fromDate(combinedDateTime);
-
             const resultValue: Appointment = {
-                reason: value.reason,
-                mode: value.mode,
-                date: timestamp,
+                reason: value.reason || '',
+                mode: value.mode || '',
+                date: combinedDateTime,
                 patientId: '1',
                 patientName: 'Mariam',
                 status: 'scheduled',
@@ -187,6 +184,17 @@ const BookAppointment = () => {
             }}/>
         </Spin>;
     }
+
+    const formItemLayout = {
+        labelCol: {
+            xs: {span: 24},
+            sm: {span: 6},
+        },
+        wrapperCol: {
+            xs: {span: 24},
+            sm: {span: 14},
+        },
+    };
 
     return (
         <>

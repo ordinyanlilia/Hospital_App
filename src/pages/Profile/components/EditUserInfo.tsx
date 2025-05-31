@@ -1,19 +1,22 @@
-import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography,} from "antd";
+import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography, Upload,} from "antd";
 import {DeleteOutlined, DeleteTwoTone, MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import {type Patient, updateData} from "../../../services/apiService";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
+import {PlusOutlined} from "@ant-design/icons";
 
 const {Text} = Typography;
 const {Option} = Select;
+
 
 const EditUserInfo = ({
                           user,
                           onSetIsEditing,
                       }: {
     user: Patient | undefined;
-    onSetIsEditing: React.MouseEventHandler<HTMLElement>;
+    onSetIsEditing: () => void;
 }) => {
+
 
     const [formData, setFormData] = useState({
         name: user?.name || "",
@@ -25,6 +28,7 @@ const EditUserInfo = ({
         bloodType: user?.bloodType || "",
         allergies: user?.allergies || [],
         currentMedications: user?.currentMedications || [],
+        imageUrl: '',
     });
 
     const handleChange = (field: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,25 +48,57 @@ const EditUserInfo = ({
 
     const handleDeleteListItem = (field: "allergies" | "currentMedications", index: number) => {
         const updatedList = formData[field].filter((_item: string, i: number) => i !== index);
-        console.log(updatedList);
         setFormData((prev) => ({...prev, [field]: updatedList}));
     }
 
     const handleSave = async () => {
-        await updateData<Patient>('2e3C5vE5WSVC6LJ9Zjc0', 'patients', formData)
+        await updateData<Partial<Patient>>('2e3C5vE5WSVC6LJ9Zjc0', 'patients', formData)
         onSetIsEditing();
     };
 
-    const handleDateChange = (date: Date) => {
+    const handleDateChange = (date: dayjs.Dayjs) => {
         if (date) {
             setFormData((prev) => ({...prev, dob: date.toISOString()}));
         }
+    }
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
+    );
+
+    const handleImgUploadChange = async (info) => {
+        const formData = new FormData();
+        formData.append("image", info.file.originFileObj);
+
+        const apiKey = "235bac975049560ecbf592acddc541e0";
+
+        const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+        });
+
+        const dataObj = await response.json();
+        setFormData((prev) => ({...prev, ['imageUrl']: dataObj.data.url}));
     }
 
     return (
         <Row gutter={[16, 16]} className="profile">
             <Col span={8}>
                 <Flex vertical gap={'small'}>
+                    <Upload
+                        name="avatar"
+                        listType="picture-circle"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                        onChange={handleImgUploadChange}
+                    >
+                        {formData.imageUrl ? <img src={formData.imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                    </Upload>
                     <Text type="secondary" strong className={'blue-text'}>Name</Text>
                     <Input
                         placeholder="Name"
@@ -91,7 +127,7 @@ const EditUserInfo = ({
                     />
                     <Space align={'center'}>
                         <Button onClick={handleSave}>Save</Button>
-                        <Button onClick={onSetIsEditing} danger style={{marginLeft: 8}}>
+                        <Button onClick={()=>onSetIsEditing()} danger style={{marginLeft: 8}}>
                             Cancel
                         </Button>
                     </Space>
@@ -101,7 +137,7 @@ const EditUserInfo = ({
 
             <Col span={8}>
                 <div className="profile-details">
-                    <Text type="secondary" strong className={'blue-text'} className={'blue-text'}>Gender</Text>
+                    <Text type="secondary" strong className={'blue-text'}>Gender</Text>
                     <Select
                         value={formData.gender}
                         onChange={(value) => setFormData((prev) => ({...prev, gender: value}))}

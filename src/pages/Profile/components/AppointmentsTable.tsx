@@ -1,4 +1,4 @@
-import {FileDoneOutlined, ScheduleOutlined, ScheduleTwoTone} from '@ant-design/icons'
+import {FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
 import {useEffect} from "react";
 import {
     type Appointment,

@@ -3,6 +3,7 @@ import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import profileImage from '../../../assets/images/profile-photo.jpg'
 import {type Patient} from "../../../services/apiService.ts";
 import dayjs from "dayjs";
+import type {MouseEventHandler} from "react";
 const {Text} = Typography;
 
 const UserInfo = ({user, onSetIsEditing}: { user: Patient | undefined, onSetIsEditing: MouseEventHandler<HTMLElement> }) => {
