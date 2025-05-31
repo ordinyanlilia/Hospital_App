@@ -1,0 +1,6 @@
+.theme-switch {
+  position: absolute;
+  top: 0px;
+  right: 100px;
+  z-index: 1100;
+}

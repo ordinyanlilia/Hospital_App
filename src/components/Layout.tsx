@@ -7,11 +7,9 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <>
+    <div className="layout-container">
       <HeaderComponent />
-      <main style={{ margin: "0 auto", padding: "0px 20px 80px 20px" }}>
-        {children}
-      </main>
-    </>
+      <main style={{ padding: "24px" }}>{children}</main>
+    </div>
   );
 };

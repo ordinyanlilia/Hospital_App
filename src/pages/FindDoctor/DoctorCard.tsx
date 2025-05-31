@@ -4,7 +4,6 @@ import {
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import defaultDoctorImage from "../../assets/Doctors/user.png";
 import "./DoctorCard.css";
 
 type Doctor = {
@@ -23,7 +22,10 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   return (
     <div className="doctor-card-horizontal">
       <img
-        src={doctor.photoUrl || defaultDoctorImage}
+        src={
+          doctor.photoUrl ||
+          "https://res.cloudinary.com/healthcareintern/image/upload/v1748634566/59e12228-35cd-4554-956a-7dec683aa497_fbfgrc.png"
+        }
         alt={doctor.name}
         className="doctor-card-avatar"
       />
