@@ -36,6 +36,7 @@ const FindDoctor = () => {
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+  const [noDoctorsFound, setNoDoctorsFound] = useState(false);
 
   const paginatedDoctors = (
     filteredDoctors.length > 0 ? filteredDoctors : doctors
@@ -74,6 +75,7 @@ const FindDoctor = () => {
     });
     setFilteredDoctors(filtered);
     setCurrentPage(1);
+    setNoDoctorsFound(filtered.length === 0);
   };
 
   useEffect(() => {
@@ -130,6 +132,14 @@ const FindDoctor = () => {
               value: "Cardiology",
               label: "Cardiology",
             },
+            {
+              value: "Plastic Surgery",
+              label: "Plastic Surgery",
+            },
+            {
+              value: "Dermatology",
+              label: "Dermatology",
+            },
           ]}
         />
 
@@ -167,27 +177,32 @@ const FindDoctor = () => {
         </Button>
       </div>
       <div className="container">
-        <Row gutter={[16, 16]} justify="start">
-          {paginatedDoctors.map((doctor) => (
-            <Col key={doctor.doc_id} xs={24} sm={24} md={8} lg={8}>
-              <DoctorCard doctor={doctor} />
-            </Col>
-          ))}
-        </Row>
-
-        <div style={{ textAlign: "center", marginTop: "30px" }}>
-          <Pagination
-            current={currentPage}
-            pageSize={itemsPerPage}
-            total={
-              filteredDoctors.length > 0
-                ? filteredDoctors.length
-                : doctors.length
-            }
-            onChange={(page) => setCurrentPage(page)}
-            showSizeChanger={false}
-          />
-        </div>
+        {noDoctorsFound ? (
+          <p>Oops! We couldn’t find any doctors matching your search.</p>
+        ) : (
+          <Row gutter={[16, 16]} justify="start">
+            {paginatedDoctors.map((doctor) => (
+              <Col key={doctor.doc_id} xs={24} sm={24} md={8} lg={8}>
+                <DoctorCard doctor={doctor} />
+              </Col>
+            ))}
+          </Row>
+        )}
+        {!noDoctorsFound && (
+          <div style={{ textAlign: "center", marginTop: "30px" }}>
+            <Pagination
+              current={currentPage}
+              pageSize={itemsPerPage}
+              total={
+                filteredDoctors.length > 0
+                  ? filteredDoctors.length
+                  : doctors.length
+              }
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </div>
       <div className="footer">
         {" "}
