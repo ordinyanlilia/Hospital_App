@@ -1,13 +1,12 @@
-import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography, Upload,} from "antd";
+import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography} from "antd";
 import {DeleteOutlined, DeleteTwoTone, MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import {type Patient, updateData} from "../../../services/apiService";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
-import {PlusOutlined} from "@ant-design/icons";
+import ImgUploader from "./ImgUploader.tsx";
 
 const {Text} = Typography;
 const {Option} = Select;
-
 
 const EditUserInfo = ({
                           user,
@@ -16,8 +15,6 @@ const EditUserInfo = ({
     user: Patient | undefined;
     onSetIsEditing: () => void;
 }) => {
-
-
     const [formData, setFormData] = useState({
         name: user?.name || "",
         surname: user?.surname || "",
@@ -28,15 +25,20 @@ const EditUserInfo = ({
         bloodType: user?.bloodType || "",
         allergies: user?.allergies || [],
         currentMedications: user?.currentMedications || [],
-        imageUrl: '',
+        imageUrl: user?.imageUrl || '',
     });
 
-    const handleChange = (field: string) => (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e?.target?.value ?? e;
-        setFormData((prev) => ({...prev, [field]: value}));
-    };
+    const handleChange =
+        (field: string) => (e: ChangeEvent<HTMLInputElement>) => {
+            const value = e?.target?.value ?? e;
+            setFormData((prev) => ({...prev, [field]: value}));
+        };
 
-    const handleListChange = (field: "allergies" | "currentMedications", index: number, value: string) => {
+    const handleListChange = (
+        field: "allergies" | "currentMedications",
+        index: number,
+        value: string
+    ) => {
         const updatedList = [...formData[field]];
         updatedList[index] = value;
         setFormData((prev) => ({...prev, [field]: updatedList}));
@@ -46,13 +48,22 @@ const EditUserInfo = ({
         setFormData((prev) => ({...prev, [field]: [...prev[field], ""]}));
     };
 
-    const handleDeleteListItem = (field: "allergies" | "currentMedications", index: number) => {
-        const updatedList = formData[field].filter((_item: string, i: number) => i !== index);
+    const handleDeleteListItem = (
+        field: "allergies" | "currentMedications",
+        index: number
+    ) => {
+        const updatedList = formData[field].filter(
+            (_item: string, i: number) => i !== index
+        );
         setFormData((prev) => ({...prev, [field]: updatedList}));
-    }
+    };
 
     const handleSave = async () => {
-        await updateData<Partial<Patient>>('2e3C5vE5WSVC6LJ9Zjc0', 'patients', formData)
+        await updateData<Partial<Patient>>(
+            "2e3C5vE5WSVC6LJ9Zjc0",
+            "patients",
+            formData
+        );
         onSetIsEditing();
     };
 
@@ -60,122 +71,117 @@ const EditUserInfo = ({
         if (date) {
             setFormData((prev) => ({...prev, dob: date.toISOString()}));
         }
+    };
+
+    const handleImageFileChange = (url: string) => {
+        setFormData((prev) => ({...prev, imageUrl: url}));
     }
-    const uploadButton = (
-        <button style={{ border: 0, background: 'none' }} type="button">
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </button>
-    );
 
-    const handleImgUploadChange = async (info) => {
-        const formData = new FormData();
-        formData.append("image", info.file.originFileObj);
-
-        const apiKey = "235bac975049560ecbf592acddc541e0";
-
-        const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-
-        const response = await fetch(url, {
-            method: "POST",
-            body: formData,
-        });
-
-        const dataObj = await response.json();
-        setFormData((prev) => ({...prev, ['imageUrl']: dataObj.data.url}));
-    }
 
     return (
         <Row gutter={[16, 16]} className="profile">
             <Col span={8}>
-                <Flex vertical gap={'small'}>
-                    <Upload
-                        name="avatar"
-                        listType="picture-circle"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                        onChange={handleImgUploadChange}
-                    >
-                        {formData.imageUrl ? <img src={formData.imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                    </Upload>
-                    <Text type="secondary" strong className={'blue-text'}>Name</Text>
+                <Flex vertical gap={"small"}>
+                    <ImgUploader imageUrl={formData.imageUrl} onSetFormData={handleImageFileChange}/>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Name
+                    </Text>
                     <Input
                         placeholder="Name"
                         value={formData.name}
                         onChange={handleChange("name")}
                     />
-                    <Text type="secondary" strong className={'blue-text'}>Surname</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Surname
+                    </Text>
                     <Input
                         placeholder="Surname"
                         value={formData.surname}
                         onChange={handleChange("surname")}
                     />
-                    <Text type="secondary" strong className={'blue-text'}>Phone Number</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Phone Number
+                    </Text>
                     <Input
                         prefix={<PhoneOutlined/>}
                         placeholder="Phone Number"
                         value={formData.phoneNumber}
                         onChange={handleChange("phoneNumber")}
                     />
-                    <Text type="secondary" strong className={'blue-text'}>Email</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Email
+                    </Text>
                     <Input
                         prefix={<MailOutlined/>}
                         placeholder="Email"
                         value={formData.email}
                         onChange={handleChange("email")}
                     />
-                    <Space align={'center'}>
+                    <Space align={"center"}>
                         <Button onClick={handleSave}>Save</Button>
-                        <Button onClick={()=>onSetIsEditing()} danger style={{marginLeft: 8}}>
+                        <Button
+                            onClick={() => onSetIsEditing()}
+                            danger
+                            style={{marginLeft: 8}}
+                        >
                             Cancel
                         </Button>
                     </Space>
-
                 </Flex>
             </Col>
 
             <Col span={8}>
                 <div className="profile-details">
-                    <Text type="secondary" strong className={'blue-text'}>Gender</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Gender
+                    </Text>
                     <Select
                         value={formData.gender}
-                        onChange={(value) => setFormData((prev) => ({...prev, gender: value}))}
-                        style={{width: '100%'}}
+                        onChange={(value) =>
+                            setFormData((prev) => ({...prev, gender: value}))
+                        }
+                        style={{width: "100%"}}
                     >
                         <Option value="male">Male</Option>
                         <Option value="female">Female</Option>
                         <Option value="other">Other</Option>
                     </Select>
 
-                    <Text type="secondary" strong className={'blue-text'}>Date of Birth</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Date of Birth
+                    </Text>
                     <DatePicker
-                        value={dayjs(formData.dob, 'YYYY/MM/DD')}
-                        format={'YYYY/MM/DD'}
+                        value={dayjs(formData.dob, "YYYY/MM/DD")}
+                        format={"YYYY/MM/DD"}
                         onChange={handleDateChange}
-                        style={{width: '100%'}}
+                        style={{width: "100%"}}
                     />
 
-                    <Text type="secondary" strong className={'blue-text'}>Blood Type</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Blood Type
+                    </Text>
                     <Input
                         placeholder="Blood Type"
                         value={formData.bloodType}
                         onChange={handleChange("bloodType")}
                     />
 
-                    <Text type="secondary" strong className={'blue-text'}>Allergies</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Allergies
+                    </Text>
                     <List
-                        className={'edit-list'}
+                        className={"edit-list"}
                         dataSource={formData.allergies}
                         renderItem={(item, index) => (
                             <List.Item
                                 key={index}
                                 style={{
-                                    border: 'none',
-                                    padding: '8px',
-                                }}>
+                                    border: "none",
+                                    padding: "8px",
+                                }}
+                            >
                                 <Input
-                                    size={'middle'}
+                                    size={"middle"}
                                     value={item}
                                     onChange={(e) =>
                                         handleListChange("allergies", index, e.target.value)
@@ -183,37 +189,48 @@ const EditUserInfo = ({
                                 />
                                 <DeleteTwoTone
                                     onClick={() => handleDeleteListItem("allergies", index)}
-                                    style={{cursor: 'pointer', marginLeft: 8}}
+                                    style={{cursor: "pointer", marginLeft: 8}}
                                 />
                             </List.Item>
                         )}
                     />
-                    <Button onClick={() => handleAddListItem("allergies")}>Add Allergy</Button>
+                    <Button onClick={() => handleAddListItem("allergies")}>
+                        Add Allergy
+                    </Button>
                 </div>
             </Col>
 
             <Col span={8}>
                 <div className="profile-history">
-                    <Text type="secondary" strong className={'blue-text'}>Current Medications</Text>
+                    <Text type="secondary" strong className={"blue-text"}>
+                        Current Medications
+                    </Text>
                     <List
                         dataSource={formData.currentMedications}
-
                         renderItem={(item, index) => (
                             <List.Item
                                 key={index}
                                 style={{
-                                    border: 'none',
-                                    padding: '8px',
-                                }}>
+                                    border: "none",
+                                    padding: "8px",
+                                }}
+                            >
                                 <Input
                                     value={item}
                                     onChange={(e) =>
-                                        handleListChange("currentMedications", index, e.target.value)
+                                        handleListChange(
+                                            "currentMedications",
+                                            index,
+                                            e.target.value
+                                        )
                                     }
                                 />
                                 <DeleteOutlined
-                                    style={{cursor: 'pointer', marginLeft: 8}}
-                                    onClick={() => handleDeleteListItem("currentMedications", index)}/>
+                                    style={{cursor: "pointer", marginLeft: 8}}
+                                    onClick={() =>
+                                        handleDeleteListItem("currentMedications", index)
+                                    }
+                                />
                             </List.Item>
                         )}
                     />

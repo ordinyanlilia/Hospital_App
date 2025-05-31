@@ -1,6 +1,5 @@
 import {Button, Col, List, Row, Space, Typography} from "antd";
 import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
-import profileImage from '../../../assets/images/profile-photo.jpg'
 import {type Patient} from "../../../services/apiService.ts";
 import dayjs from "dayjs";
 import type {MouseEventHandler} from "react";
@@ -13,7 +12,7 @@ const UserInfo = ({user, onSetIsEditing}: { user: Patient | undefined, onSetIsEd
         <Row gutter={[16, 16]} className={'profile'}>
             <Col span={8}>
                 <div className="profile-main-info">
-                    <img src={profileImage} alt="profile picture"/>
+                    <img src={user?.imageUrl} alt="profile picture"/>
                     <h3>{user?.name} {user?.surname}</h3>
                     <p><PhoneOutlined/>{user?.phoneNumber}</p>
                     <p><MailOutlined/>{user?.email}</p>

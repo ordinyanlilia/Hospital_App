@@ -36,6 +36,7 @@ export interface Patient {
     medicalHistory: string[];
     appointments: number[];
     registeredAt: string;
+    imageUrl: string;
 }
 
 const db: Firestore = getFirestore(app);
