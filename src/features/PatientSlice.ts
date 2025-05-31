@@ -12,6 +12,7 @@ export interface Patient {
     email?: string;
     phoneNumber?: string;
     bloodType?: string;
+    registeredAt?: string;
     allergies?: string[];
     currentMedications?: string[];
     medicalHistory?: string[];

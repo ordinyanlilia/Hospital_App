@@ -1,7 +1,7 @@
 import type { FormProps } from 'antd';
 import { Button, Row, Form, Input, Select, DatePicker, Card, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { HOME_PAGE, PROFILE } from '../../routes/paths';
+import { LOGIN, PROFILE } from '../../routes/paths';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../../services/apiServices';
@@ -23,7 +23,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (patientStatus === 'succeeded' || doctorStatus === 'succeeded') {
-      navigate(HOME_PAGE);
+      navigate(LOGIN);
     }
   }, [patientStatus, doctorStatus, navigate]);
 
@@ -39,11 +39,13 @@ const Signup = () => {
           id: Date.now(),
           name: values.name,
           surname: values.surname,
-          dob: values.dob.format('DD/MM/YYYY'),
+          dob: values.dob?.toString(),
           gender: values.gender,
           email: values.email,
           phoneNumber: values.phoneNumber,
           bloodType: 'unknown',
+          registeredAt: new Date().toISOString(),
+
           password: values.password,
           allergies: [],
           currentMedications: [],
