@@ -1,6 +1,7 @@
 import './BookAppointment.css';
 
 import {
+    Avatar,
     Button,
     Card,
     DatePicker,
@@ -25,7 +26,7 @@ import {
 } from '../../features/appointments/appointmentsSlice.ts';
 
 import {useNavigate} from "react-router-dom";
-import {SmileOutlined} from "@ant-design/icons";
+import {SmileOutlined, UserOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {fetchData} from "../../services/apiService.ts";
 import dayjs from 'dayjs';
@@ -41,9 +42,10 @@ interface Doctor {
     specialty: string;
     appointments: string[];
     yearsOfExperience: number;
+    photoUrl: string;
 }
 
-interface FinishValue{
+interface FinishValue {
     DatePicker?: dayjs.Dayjs | null;
     TimePicker?: dayjs.Dayjs | null;
     reason: string,
@@ -91,11 +93,11 @@ const BookAppointment = () => {
 
     const disabledTime = () => ({
         disabledHours: () => {
-            return Array.from({ length: 24 }, (_, i) => i).filter((hour) => hour < 9 || hour > 17);
+            return Array.from({length: 24}, (_, i) => i).filter((hour) => hour < 9 || hour > 17);
         },
     });
 
-    const onFinish = async (value:FinishValue) => {
+    const onFinish = async (value: FinishValue) => {
         if (!selectedDoctor) {
             messageApi.open({
                 type: 'error',
@@ -128,8 +130,8 @@ const BookAppointment = () => {
                 doctorName: selectedDoctor?.name,
             };
 
-            if(value.notes){
-               resultValue.notes = value.notes;
+            if (value.notes) {
+                resultValue.notes = value.notes;
             }
 
             await dispatch(addAppointment(resultValue)).unwrap()
@@ -206,7 +208,7 @@ const BookAppointment = () => {
                     onFinish={onFinish}
                     variant={'underlined'}
                     form={form}
-                    style={{width: 600}}
+                    style={{maxWidth: 800}}
                     initialValues={{variant: 'underlined'}}
                 >
                     <Form.Item label="Your Name" name="name" rules={[{required: true, message: 'Please input!'}]}>
@@ -229,15 +231,13 @@ const BookAppointment = () => {
                             </Tag.CheckableTag>
                         ))}
                     </Space>
-                    <Divider>Doctor</Divider>
-                    <Space wrap>
+                    <Divider>Doctors</Divider>
+                    <Space align={'center'}  wrap style={{justifyContent:'center'}}>
                         {selectedDoctors.map((doc, index) => (
                             <Card
                                 key={index}
                                 hoverable
                                 style={{
-                                    width: 120,
-                                    height: 100,
                                     borderColor: doc.id === selectedDoctor?.id ? '#1890ff' : '#707070',
                                     color: doc.id === selectedDoctor?.id ? '#1890ff' : '#707070',
                                     boxShadow: doc.id === selectedDoctor?.id ? '0 0 3px #1890ff' : '0 0 10px #e6f7ff',
@@ -245,8 +245,16 @@ const BookAppointment = () => {
                                 onClick={() => setSelectedDoctor(doc)}
                             >
                                 <Card.Meta
-                                    // avatar={<Avatar size={64} src={doc.image} />}
+                                    avatar={
+                                        <Avatar
+                                            size={{ md: 50, lg: 64, xl: 70, xxl: 90 }}
+                                            src={doc?.photoUrl}
+                                            style={{ backgroundColor: 'rgba(96,150,186,0.75)' }}
+                                            icon={!doc?.photoUrl && <UserOutlined style={{ fontSize: '30px', color: '#fffefe'}} />}
+                                        />
+                                    }
                                     title={doc.name}
+                                    className={'doc-info-card'}
                                     description={
                                         <>
                                             <div>{doc.specialty}</div>

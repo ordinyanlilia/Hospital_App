@@ -32,3 +32,9 @@
     background-color: #005fa3;
     border-color: #005fa3;
 }
+
+.doc-info-card{
+    width: 11em ;
+    text-align: center;
+    align-items: center;
+}
