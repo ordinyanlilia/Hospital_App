@@ -1,0 +1,58 @@
+.doctor-info-container {
+  padding: 2rem;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-top: 75px;
+}
+
+.doctor-info-main-card .ant-card-cover img {
+  object-fit: cover;
+  height: 300px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.doctor-info-main-card .ant-card-body {
+  padding: 1.5rem;
+}
+
+.recommended-title {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #1890ff;
+  padding-bottom: 0.5rem;
+}
+
+.recommended-doctors .doctor-card-horizontal {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.recommended-doctors .doctor-card-horizontal:hover {
+  transform: translateY(-4px);
+}
+
+.doctor-info-main-card img {
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+}
+
+.recommended-doctors .ant-col {
+  display: flex;
+  justify-content: center;
+}
+
+.doctor-info-main-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.doctor-info-main-card .ant-btn {
+  margin-top: 1rem;
+}
+.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: red !important;
+  color: white !important;
+  border-radius: 4px;
+}

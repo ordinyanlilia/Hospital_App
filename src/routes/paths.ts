@@ -11,5 +11,6 @@ export const BOOK_APPOINTMENT = "/book-appointment/:id";
 export const DOCTOR_APPOINTMENTS = "appointments";
 export const DOCTOR_CALENDAR = "calendar";
 export const DOCTOR_PROFILE = "profile";
+export const DOCTOR_INFO = "/doctor-info/:id";
 
 
