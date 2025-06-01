@@ -7,6 +7,7 @@ import "./App.css";
 import { store } from "./store/store";
 import { ThemeProvider } from "./context/theme-context.tsx";
 
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
@@ -16,3 +17,5 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </StrictMode>
 );
+
+
