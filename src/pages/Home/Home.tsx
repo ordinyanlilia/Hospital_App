@@ -1,32 +1,25 @@
-import React from 'react';
-import { Carousel } from 'antd';
+// Home.tsx
+import { Layout } from 'antd';
+import HeroSection from './HeroSection';
+import ServicesSection from './ServiceSection';
+import AboutSection from './AboutSection';
+import ContactSection from './ContactSection';
+import WelcomeBanner from './WelcomeBanner';
 
-const contentStyle: React.CSSProperties = {
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-  background: '#364d79',
+const { Content } = Layout;
+
+const Home = () => {
+  return (
+    <Layout>
+      <Content>
+        <WelcomeBanner />
+        <HeroSection />
+        <ServicesSection />
+        <AboutSection />
+        <ContactSection />
+      </Content>
+    </Layout>
+  );
 };
 
-const Home: React.FC = () => (
-  <div className="home-container">
-    <Carousel autoplay>
-        <div>
-        <h3 style={contentStyle}>1</h3>
-        </div>
-        <div>
-        <h3 style={contentStyle}>2</h3>
-        </div>
-        <div>
-        <h3 style={contentStyle}>3</h3>
-        </div>
-        <div>
-        <h3 style={contentStyle}>4</h3>
-        </div>
-    </Carousel>
-  </div>
-);
-
 export default Home;
-

@@ -3,6 +3,7 @@ import { router } from "./routes/routes";
 import { useAppDispatch } from "./app/hooks";
 import { useEffect } from "react";
 import { setUser } from "./features/UserSlice";
+import AuthLoader from "./pages/Profile/AuthLoader";
 
 const App = () => {
   //   const dispatch = useAppDispatch();
@@ -13,7 +14,12 @@ const App = () => {
   //     dispatch(setUser(parsedUser));
   //   }
   // }, [dispatch]);
-  return <RouterProvider router={router} />;
+  return (
+    <AuthLoader>
+      <RouterProvider router={router} />
+    </AuthLoader>
+);
+
 };
 
 export default App;

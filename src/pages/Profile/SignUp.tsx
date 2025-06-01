@@ -9,7 +9,10 @@ import { addPatient, selectPatientStatus } from '../../features/PatientSlice';
 import { addDoctor, selectDoctorStatus } from '../../features/DoctorSlice';
 import { type Patient } from '../../features/PatientSlice';
 import { type Doctor } from '../../features/DoctorSlice';
-
+import { auth } from "../../services/apiServices";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setData } from '../../services/apiServices';
+import { setUser } from '../../features/UserSlice';
 
 const { Option } = Select;
 
@@ -29,39 +32,48 @@ const Signup = () => {
 
   const onFinish: FormProps['onFinish'] = async values => {
     try {
+      const { email, password } = values;
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+      const firebaseUID = firebaseUser.uid;
+      const token = await firebaseUser.getIdToken();
+
       if (selectedRole === 'patient') {
         if (!values.dob || !values.dob.isValid()) throw new Error('Date of birth is invalid or missing');
+
         const allPatients: Patient[] = await fetchData('patients');
         const exists = allPatients.find(p => p.email === values.email);
         if (exists) return navigate(PROFILE);
 
         const newPatient: Patient = {
-          id: Date.now(),
+          id: firebaseUID,
           name: values.name,
           surname: values.surname,
-          dob: values.dob?.toString(),
+          dob: values.dob?.toISOString(),
           gender: values.gender,
           email: values.email,
           phoneNumber: values.phoneNumber,
           bloodType: 'unknown',
           registeredAt: new Date().toISOString(),
-
           password: values.password,
           allergies: [],
           currentMedications: [],
           medicalHistory: [],
           appointments: [],
         };
-        await dispatch(addPatient(newPatient)).unwrap();
+
+        await setData("patients", newPatient, firebaseUID); 
+        dispatch(addPatient(newPatient));                   
+        dispatch(setUser({ data: newPatient, role: 'patient', token }));                    
       }
 
       if (selectedRole === 'doctor') {
         const allDoctors = await fetchData('doctors');
-        const exists = allDoctors.find(d => d.name === values.name && d.surname === values.surname);
+        const exists = allDoctors.find(d => d.email === values.email);
         if (exists) return navigate(PROFILE);
 
         const newDoctor: Doctor = {
-          id: Date.now().toString(),
+          id: firebaseUID,
           name: values.name,
           surname: values.surname,
           yearsOfExperience: parseInt(values.yearsOfExperience),
@@ -70,8 +82,12 @@ const Signup = () => {
           email: values.email,
           password: values.password,
         };
-        await dispatch(addDoctor(newDoctor)).unwrap();
+
+        await setData("doctors", newDoctor, firebaseUID); 
+        dispatch(addDoctor(newDoctor));                  
+        dispatch(setUser({ data: newDoctor, role: "doctor", token }));                     
       }
+
     } catch (err) {
       console.error('Signup error:', err);
     }
