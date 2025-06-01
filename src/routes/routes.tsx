@@ -19,10 +19,10 @@ import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
+import Signup from "../pages/Auth/SignUp.tsx";
+import Login from "../pages/Auth/Login.tsx";
 import DoctorPage from "../pages/DoctorPage";
-
 import BookAppointment from "../pages/BookAppointment/BookAppointment";
-
 import Appointments from "../pages/DoctorPage/components/Appointments";
 import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
 import Calendar from "../pages/DoctorPage/components/Calendar";

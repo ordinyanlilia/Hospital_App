@@ -4,8 +4,9 @@ import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App.tsx";
 import "./App.css";
-import { store } from "./store/store";
+import store from "./app/store.ts";
 import { ThemeProvider } from "./context/theme-context.tsx";
+
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,3 +17,5 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </StrictMode>
 );
+
+
