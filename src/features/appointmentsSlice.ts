@@ -1,5 +1,5 @@
-import {setData, updateData} from "../../services/apiService.ts";
-import {createAppSlice} from "../../app/createAppSlice.ts";
+import {setData, updateData} from "../services/apiService.ts";
+import {createAppSlice} from "../app/createAppSlice.ts";
 import {arrayUnion} from "firebase/firestore";
 
 export interface Appointment {
@@ -35,15 +35,20 @@ const appointmentsSlice = createAppSlice({
             state.status = '';
             state.error = null;
         }),
-        setAppointmentsInitialState: create.reducer((state, action:{payload: Appointment[]}) => {
+        setAppointmentsInitialState: create.reducer((state, action: { payload: Appointment[] }) => {
             state.appointments = action.payload;
         }),
-        addAppointment: create.asyncThunk(async (appointment: Appointment) => {
+        addAppointment: create.asyncThunk(async (args: {
+                appointment: Appointment,
+                doctor_doc_id: string,
+                user_doc_id: string
+            }) => {
+                const {appointment, doctor_doc_id, user_doc_id} = args;
                 const appointmentId: string = await setData('appointments', appointment);
-                await updateData('2e3C5vE5WSVC6LJ9Zjc0', 'patients', {
+                await updateData(user_doc_id, 'patients', {
                     appointments: arrayUnion(appointmentId),
                 });
-                await updateData('doctor_1', 'doctors', {
+                await updateData(doctor_doc_id, 'doctors', {
                     appointments: arrayUnion(appointmentId),
                 })
                 return appointment;

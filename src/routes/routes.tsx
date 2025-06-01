@@ -1,6 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import {HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, BOOK_APPOINTMENT, DOCTOR_PAGE} from "./paths";
+import {
+    HOME_PAGE,
+    ABOUT,
+    FIND_DOCTOR,
+    CONTACT_US,
+    PROFILE,
+    BOOK_APPOINTMENT,
+    DOCTOR_PAGE,
+    BOOK_APPOINTMENT_ID
+} from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
@@ -65,6 +74,12 @@ export const router = createBrowserRouter([
             </Layout>
         )
     },
-
-
+    {
+        path: BOOK_APPOINTMENT_ID,
+        element:(
+            <Layout>
+                <BookAppointment />
+            </Layout>
+        )
+    },
 ])

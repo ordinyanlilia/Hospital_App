@@ -9,6 +9,8 @@ import {
     Form,
     Input,
     message,
+    Pagination,
+    type PaginationProps,
     Result,
     Row,
     Select,
@@ -23,9 +25,9 @@ import {
     resetStatus,
     selectError,
     selectStatus
-} from '../../features/appointments/appointmentsSlice.ts';
+} from '../../features/appointmentsSlice.ts';
 
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {SmileOutlined, UserOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {fetchData} from "../../services/apiService.ts";
@@ -57,10 +59,6 @@ interface FinishValue {
 }
 
 const BookAppointment = () => {
-    const [doctors, setDoctors] = useState<Doctor[]>([]);
-    const [selectedDoctors, setSelectedDoctors] = useState<Doctor[]>(doctors);
-    const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-
     const categories = [
         'All',
         'Neurology',
@@ -72,16 +70,23 @@ const BookAppointment = () => {
         'Dermatology',
         'Cardiology',
     ];
+    const location = useLocation();
 
+    const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const selectedDoctorInitialId = location.pathname.split("/")[2];
+    const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
     const [selected, setSelectedCategory] = useState<string>('All');
     const [messageApi, contextHolder] = message.useMessage();
-
+    const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+    const [current, setCurrent] = useState(1);
+    const inPageCount = 8;
+    const paginatedDoctors = filteredDoctors.slice((current - 1) * inPageCount, current * inPageCount);
 
     useEffect(() => {
         fetchData<Doctor>('doctors').then((data: Doctor[]) => {
-            setDoctors(data)
-            setSelectedDoctors(data);
-            setSelectedDoctor(null)
+            setDoctors(data);
+            setFilteredDoctors(data);
+            setSelectedDoctor(data.find(doc => doc.id === selectedDoctorInitialId) || null);
         })
     }, []);
 
@@ -133,8 +138,14 @@ const BookAppointment = () => {
             if (value.notes) {
                 resultValue.notes = value.notes;
             }
+            const user_doc_id = '2e3C5vE5WSVC6LJ9Zjc0';
 
-            await dispatch(addAppointment(resultValue)).unwrap()
+
+            await dispatch(addAppointment({
+                appointment: resultValue,
+                doctor_doc_id: selectedDoctor?.doc_id ?? '',
+                user_doc_id: user_doc_id,
+            })).unwrap()
 
         } catch (error) {
             console.log(error);
@@ -151,14 +162,16 @@ const BookAppointment = () => {
 
     const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
+        setCurrent(1);
 
         if (category === 'All') {
-            setSelectedDoctors(doctors);
+            setFilteredDoctors(doctors);
         } else {
-            setSelectedDoctors(doctors.filter(doctor => doctor.specialty === category));
-
+            const filtered = doctors.filter(doctor => doctor.specialty === category);
+            setFilteredDoctors(filtered);
         }
-    }
+
+    };
 
     if (status === 'succeeded') {
         return (
@@ -198,6 +211,10 @@ const BookAppointment = () => {
         },
     };
 
+    const onChange: PaginationProps['onChange'] = (page) => {
+        setCurrent(page);
+    };
+
     return (
         <>
             {contextHolder}
@@ -214,7 +231,8 @@ const BookAppointment = () => {
                     <Form.Item label="Your Name" name="name" rules={[{required: true, message: 'Please input!'}]}>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label="Your Reason" name="reason" rules={[{required: true, message: 'Please input!'}]}>
+                    <Form.Item label="Your Reason" name="reason"
+                               rules={[{required: true, message: 'Please input!'}]}>
                         <Input/>
                     </Form.Item>
 
@@ -232,8 +250,8 @@ const BookAppointment = () => {
                         ))}
                     </Space>
                     <Divider>Doctors</Divider>
-                    <Space align={'center'}  wrap style={{justifyContent:'center'}}>
-                        {selectedDoctors.map((doc, index) => (
+                    <Space align={'center'} wrap style={{justifyContent: 'center'}}>
+                        {paginatedDoctors.map((doc, index) => (
                             <Card
                                 key={index}
                                 hoverable
@@ -247,10 +265,11 @@ const BookAppointment = () => {
                                 <Card.Meta
                                     avatar={
                                         <Avatar
-                                            size={{ md: 50, lg: 64, xl: 70, xxl: 90 }}
+                                            size={{md: 50, lg: 64, xl: 70, xxl: 90}}
                                             src={doc?.photoUrl}
-                                            style={{ backgroundColor: 'rgba(96,150,186,0.75)' }}
-                                            icon={!doc?.photoUrl && <UserOutlined style={{ fontSize: '30px', color: '#fffefe'}} />}
+                                            style={{backgroundColor: 'rgba(96,150,186,0.75)'}}
+                                            icon={!doc?.photoUrl &&
+                                                <UserOutlined style={{fontSize: '30px', color: '#fffefe'}}/>}
                                         />
                                     }
                                     title={doc.name}
@@ -264,6 +283,16 @@ const BookAppointment = () => {
                             </Card>
                         ))}
                     </Space>
+                    {filteredDoctors.length > inPageCount && (
+                        <Pagination
+                            align={'center'}
+                            current={current}
+                            total={filteredDoctors.length}
+                            pageSize={inPageCount}
+                            onChange={onChange}
+                            style={{ marginTop: '20px' }}
+                        />
+                    )}
                     <Divider></Divider>
                     <Form.Item
                         label="Mode"
@@ -272,7 +301,7 @@ const BookAppointment = () => {
                     >
                         <Select
                             showSearch
-                            // initialValue={'in-person'}
+                            value={'in-person'}
                             placeholder="Select a mode"
                             optionFilterProp="label"
                             style={{width: 120}}

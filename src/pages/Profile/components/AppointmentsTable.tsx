@@ -4,7 +4,7 @@ import {
     type Appointment,
     selectAppointments,
     setAppointmentsInitialState
-} from "../../../features/appointments/appointmentsSlice.ts";
+} from "../../../features/appointmentsSlice.ts";
 import {Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
@@ -65,8 +65,6 @@ const AppointmentsTable = () => {
             let results = await Promise.all(
                 user.appointments.map(id => getData<Appointment>(id, 'appointments'))
             );
-
-            // results = results.map(result => result.date.toString());
 
             dispatch(setAppointmentsInitialState(results));
         };
