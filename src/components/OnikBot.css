@@ -1,0 +1,182 @@
+/* === CONTAINER WIDGET === */
+.onik-bot-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: sans-serif;
+
+  pointer-events: none; /* Prevents invisible box from interfering */
+}
+
+/* Allows inner parts to be clickable */
+.onik-toggle,
+.onik-bot-box {
+  pointer-events: auto;
+}
+
+/* === TOGGLE BUTTON === */
+.onik-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: #2f2f2f;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+  margin-top: 8px;
+}
+
+.onik-toggle:hover {
+  background-color: #444;
+}
+
+.onik-toggle p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.onik-toggle img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* === CHAT BOX TRANSITION === */
+.onik-bot-box {
+  width: 290px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scaleY(0.9);
+  transform-origin: bottom;
+  transition: all 0.4s ease;
+  margin-bottom: 10px;
+}
+
+.onik-bot-box.open {
+  max-height: 1000px;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* === INNER CONTENT === */
+.onik-inner-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* === FADE + SLIDE ANIMATION === */
+.fade-slide {
+  animation: fadeSlideIn 0.35s ease;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === GREETING === */
+.greeting {
+  font-size: 14px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.highlight {
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* === OPTIONS LIST === */
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options-list li {
+  background-color: #f1f1f1;
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: left;
+}
+
+.options-list li:hover {
+  background-color: #e0efff;
+}
+
+/* === CHAT VIEW === */
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.user-msg {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+}
+
+.bot-msg {
+  background-color: #eaeaea;
+  color: black;
+  align-self: flex-start;
+}
+
+/* === BACK BUTTON === */
+.back-button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* === RESPONSIVENESS === */
+@media (max-width: 600px) {
+  .onik-bot-widget {
+    bottom: 80px;
+    right: 16px;
+  }
+
+  .onik-bot-box {
+    width: 90vw;
+  }
+}

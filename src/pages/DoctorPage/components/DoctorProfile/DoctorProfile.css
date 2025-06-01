@@ -1,0 +1,16 @@
+.doctor-profile-title{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.doctor-profile-title img{
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+}
+
+.doctor-profile-title span {
+    font-family: 'Inter', sans-serif;
+    font-size: 30px;
+}
