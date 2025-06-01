@@ -1,9 +1,8 @@
-const BookAppointment = () =>{
-    return (
-        <>
-        Book Appointment
-        </>
-    )
-}
+import React from "react";
+
+const BookAppointment = () => {
+  return <div>BookAppointment</div>;
+};
 
 export default BookAppointment;
+

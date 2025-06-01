@@ -1,25 +1,6 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Demo this peace of CSS must be written in the other place*/
-/* .login-container,
-.signup-container {
-  padding: 40px;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.login-container input,
-.signup-container input {
-  margin-bottom: 12px;
-}
-
-.login-container button,
-.signup-container button {
-  margin-bottom: 12px;
-  margin-right: 10px;
-} */

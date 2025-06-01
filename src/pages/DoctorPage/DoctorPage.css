@@ -1,0 +1,23 @@
+.doctorPage-container {
+  margin: 0;
+  padding: 0;
+  height: 95vh;
+  overflow: hidden;
+  margin: 20px 50px 0;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.doctorPage-content {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  height: 100%;
+}
+
+.doctorPage-main {
+  padding: 20px;
+  overflow-y: auto;
+  height: 100vh;
+  box-sizing: border-box;
+}

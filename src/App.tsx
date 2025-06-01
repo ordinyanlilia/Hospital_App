@@ -1,14 +1,14 @@
-import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/routes";
-import AuthLoader from "./pages/Profile/AuthLoader";
+import OnikBot from "./components/OnikBot";
+
 
 const App = () => {
   return (
-    <AuthLoader>
+    <>
       <RouterProvider router={router} />
-    </AuthLoader>
-);
-
+      <OnikBot />
+      
+    </>
+  );
 };
 
 export default App;

@@ -1,4 +1,3 @@
-// Home.tsx
 import { Layout } from 'antd';
 import HeroSection from './HeroSection';
 import ServicesSection from './ServiceSection';
@@ -23,3 +22,4 @@ const Home = () => {
 };
 
 export default Home;
+

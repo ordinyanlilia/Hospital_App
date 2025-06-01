@@ -1,6 +1,16 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, SIGNUP, LOGIN, DOCTOR_PAGE, BOOK_APPOINTMENT } from "./paths";
+
+import {
+  HOME_PAGE,
+  ABOUT,
+  FIND_DOCTOR,
+  CONTACT_US,
+  PROFILE,
+  DOCTOR_PAGE,
+  BOOK_APPOINTMENT,
+} from "./paths";
+import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, SIGNUP, LOGIN, PROFILE, DOCTOR_PAGE, BOOK_APPOINTMENT, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE } from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
@@ -8,8 +18,12 @@ import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
 import Signup from "../pages/Profile/SignUp";
 import Login from "../pages/Profile/Login";
-import Doctorpage from "../pages/DoctorPage/Doctorpage";
+import DoctorPage from "../pages/DoctorPage";
 import BookAppointment from "../pages/BookAppointment/BookAppointment";
+
+import Appointments from "../pages/DoctorPage/components/Appointments";
+import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
+import Calendar from "../pages/DoctorPage/components/Calendar";
 
 
 export const router = createBrowserRouter([
@@ -70,19 +84,22 @@ export const router = createBrowserRouter([
         )
     },
     {
-    path: DOCTOR_PAGE,
+        path: DOCTOR_PAGE,
+        element: <DoctorPage />,
+        children: [
+            {index: true, element: <Navigate to={DOCTOR_APPOINTMENTS} replace />},
+            {path: DOCTOR_APPOINTMENTS, element: <Appointments/>},
+            {path: DOCTOR_CALENDAR, element: <Calendar />},
+            {path: DOCTOR_PROFILE, element: <DoctorProfile />}
+    ]
+  },
+  {
+    path: BOOK_APPOINTMENT,
     element: (
-        <Layout>
-            <Doctorpage />
-        </Layout>
-        )
-    },
-    {
-        path: BOOK_APPOINTMENT,
-        element: (
-            <Layout>
-                <BookAppointment />
-            </Layout>
-        )
-    }
+      <Layout>
+        <BookAppointment />
+      </Layout>
+    ),
+  },
 ])
+
