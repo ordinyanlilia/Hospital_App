@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../services/apiService";
-import { Card, Row, Col, Typography, Spin, Button, Calendar } from "antd";
-import defaultDoctorImage from "../../assets/Doctors/user.png";
+import { Card, Row, Col, Typography, Button, Calendar } from "antd";
 import { DoctorCard } from "../FindDoctor/DoctorCard";
 import "./DoctorInfo.css";
 import dayjs, { Dayjs } from "dayjs";
@@ -118,7 +117,7 @@ const getDateStatus = (date: Dayjs) => {
             <Row gutter={[32, 32]} align="middle">
               <Col xs={24} sm={8} md={6} lg={5}>
                 <img
-                  src={doctor.photoUrl || defaultDoctorImage}
+                  src={doctor.photoUrl || "https://res.cloudinary.com/healthcareintern/image/upload/v1748634566/59e12228-35cd-4554-956a-7dec683aa497_fbfgrc.png"}
                   alt="Doctor"
                   className="doctor-profile-image"
                   style={{
