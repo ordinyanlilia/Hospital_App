@@ -2,13 +2,13 @@ import "./Login.css";
 import React, { useState } from "react";
 import { Button, Input, Form, Row } from 'antd'
 import { useNavigate } from "react-router-dom";
-import { SIGNUP, PROFILE, DOCTOR_PAGE } from "../../routes/paths";
-import { fetchData } from "../../services/apiServices";
-import  { type Patient } from "../../features/PatientSlice";
-import { type Doctor } from "../../features/DoctorSlice";
-import { setUser } from "../../features/UserSlice";
-import { useAppDispatch } from "../../app/hooks";
-import { auth } from "../../services/apiServices";
+import { SIGNUP, PROFILE, DOCTOR_PAGE } from "../../routes/paths.ts";
+import { fetchData } from "../../services/apiServices.ts";
+import  { type Patient } from "../../features/PatientSlice.ts";
+import { type Doctor } from "../../features/DoctorSlice.ts";
+import { setUser } from "../../features/UserSlice.ts";
+import { useAppDispatch } from "../../app/hooks.ts";
+import { auth } from "../../services/apiServices.ts";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 
@@ -21,7 +21,6 @@ const Login: React.FC = () => {
 
   const onFinish = async (values: { email: string; password: string }) => {
   try {
-    console.log(values);
     const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
     const firebaseUser = userCredential.user;
     const token = await firebaseUser.getIdToken();

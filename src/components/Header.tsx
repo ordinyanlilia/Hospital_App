@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE } from "../routes/paths";
-import { Layout, Menu } from "antd";
 import "./Header.css"
 import { Layout, Menu, Switch } from "antd";
 import {

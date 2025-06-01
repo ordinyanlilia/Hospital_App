@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, fetchData } from "../../services/apiServices";
-import { useAppDispatch } from "../../app/hooks";
-import { setUser } from "../../features/UserSlice"; 
-import { type Patient } from "../../features/PatientSlice";
-import { type Doctor } from "../../features/DoctorSlice";
+import { auth, fetchData } from "../../services/apiServices.ts";
+import { useAppDispatch } from "../../app/hooks.ts";
+import { setUser } from "../../features/UserSlice.ts";
+import { type Patient } from "../../features/PatientSlice.ts";
+import { type Doctor } from "../../features/DoctorSlice.ts";
 
 type Props = {
   children: React.ReactNode;

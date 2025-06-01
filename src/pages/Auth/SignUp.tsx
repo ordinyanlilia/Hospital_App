@@ -1,19 +1,19 @@
 import type { FormProps } from 'antd';
-import { Button, Row, Form, Input, Select, DatePicker, Card, Space } from 'antd';
+import { Button, Row, Form, Input, Select, DatePicker, Card, Space, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { LOGIN, PROFILE } from '../../routes/paths';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { LOGIN, PROFILE } from '../../routes/paths.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { useState, useEffect } from 'react';
-import { fetchData } from '../../services/apiServices';
-import { addPatient, selectPatientStatus } from '../../features/PatientSlice';
-import { addDoctor, selectDoctorStatus } from '../../features/DoctorSlice';
-import { type Patient } from '../../features/PatientSlice';
-import { type Doctor } from '../../features/DoctorSlice';
-import { auth } from "../../services/apiServices";
+import { fetchData } from '../../services/apiServices.ts';
+import { addPatient, selectPatientStatus } from '../../features/PatientSlice.ts';
+import { addDoctor, selectDoctorStatus } from '../../features/DoctorSlice.ts';
+import { type Patient } from '../../features/PatientSlice.ts';
+import { type Doctor } from '../../features/DoctorSlice.ts';
+import { auth } from "../../services/apiServices.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setData } from '../../services/apiServices';
-import { setUser } from '../../features/UserSlice';
-
+import { setData } from '../../services/apiServices.ts';
+import { setUser } from '../../features/UserSlice.ts';
+import { FirebaseError } from 'firebase/app';
 const { Option } = Select;
 
 const Signup = () => {
@@ -23,10 +23,16 @@ const Signup = () => {
   const doctorStatus = useAppSelector(selectDoctorStatus);
   const [form] = Form.useForm();
   const [selectedRole, setSelectedRole] = useState<'patient' | 'doctor' | null>(null);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     if (patientStatus === 'succeeded' || doctorStatus === 'succeeded') {
       navigate(LOGIN);
+    }else if(patientStatus === 'failed' || doctorStatus === 'failed') {
+      messageApi.open({
+        type: 'error',
+        content: 'There was an error while signing',
+      });
     }
   }, [patientStatus, doctorStatus, navigate]);
 
@@ -89,12 +95,37 @@ const Signup = () => {
       }
 
     } catch (err) {
-      console.error('Signup error:', err);
+      console.error("Firebase error:", err);
+
+      let messageText = "Something went wrong. Please try again.";
+
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/weak-password":
+            messageText = "Your password must be at least 6 characters.";
+            break;
+          case "auth/email-already-in-use":
+            messageText = "This email is already registered.";
+            break;
+          case "auth/invalid-email":
+            messageText = "Please enter a valid email address.";
+            break;
+          default:
+            messageText = err.message;
+            break;
+        }
+
+      messageApi.open({
+        type: "error",
+        content: messageText,
+      });
+    }
     }
   };
 
   return (
     <Row justify="center" align="top" style={{ padding: '2rem' }}>
+      {contextHolder}
       {!selectedRole && (
         <Space direction="horizontal">
           <Card
