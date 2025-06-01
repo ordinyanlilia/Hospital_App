@@ -57,3 +57,20 @@
   background-color: #2a3d70;
   color: #fff;
 }
+
+body.light .footer-container {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+body.dark .footer-container {
+  background-color: #1f1f1f;
+  color: #fff;
+}
+body.dark .footer-heading {
+  color: #ffffff;
+}
+
+body.dark .footer-subtext {
+  color: #cccccc;
+}

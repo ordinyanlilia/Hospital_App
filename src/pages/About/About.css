@@ -142,3 +142,18 @@
   object-fit: cover;
   border-radius: 12px;
 }
+
+body.dark .about-text {
+  color: #ffffff;
+}
+body.dark .container-2 h1 {
+  color: #ffffff;
+}
+
+body.dark .container-2 p {
+  color: #dddddd;
+}
+
+body.dark .text-block h1 {
+  color: #ffffff;
+}

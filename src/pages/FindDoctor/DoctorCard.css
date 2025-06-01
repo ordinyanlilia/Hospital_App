@@ -8,6 +8,10 @@
   max-width: 500px;
   min-height: 160px;
   gap: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+body.dark .doctor-card-horizontal {
+  background-color: #1f1f1f;
 }
 .doctor-card-left {
   display: flex;
@@ -15,26 +19,15 @@
   align-items: center;
   gap: 8px;
 }
-
-.doctor-card-avatar {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  flex-shrink: 0;
-}
-
-.doctor-card-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-}
 .doctor-card-info h3 {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
+  color: #000;
+}
+
+body.dark .doctor-card-info h3 {
+  color: #fff;
 }
 
 .doctor-card-info p {
@@ -46,13 +39,26 @@
   text-overflow: ellipsis;
 }
 
-.bio {
-  font-style: italic;
-  font-size: 11px;
-  color: #777;
-  margin-top: 4px;
-  max-height: 2.4em;
-  overflow: hidden;
+body.dark .doctor-card-info p {
+  color: #ccc;
+}
+
+.doctor-card-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+}
+body.dark .doctor-card-avatar {
+  border: 1px solid #444;
+}
+.doctor-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .doctor-card-buttons {

@@ -25,9 +25,15 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    document.body.className = darkMode ? "dark" : "light";
+    const body = document.body;
+    if (darkMode) {
+      body.classList.add("dark");
+      body.classList.remove("light");
+    } else {
+      body.classList.add("light");
+      body.classList.remove("dark");
+    }
   }, [darkMode]);
-
   const themeConfig: ThemeConfig = {
     algorithm: darkMode ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
     token: {

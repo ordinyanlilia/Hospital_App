@@ -31,7 +31,7 @@ const HeaderComponent = () => {
         right: 0,
         width: "100%",
         zIndex: 1000,
-        backgroundColor: "#fff",
+        backgroundColor: darkMode ? "#1f1f1f" : "#fff",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         padding: "0 24px",
         height: "64px",

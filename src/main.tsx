@@ -9,11 +9,10 @@ import { ThemeProvider } from "./context/theme-context.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider>
-      <Provider store={store}>
-        {" "}
+    <Provider store={store}>
+      <ThemeProvider>
         <App />
-      </Provider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Provider>
   </StrictMode>
 );
