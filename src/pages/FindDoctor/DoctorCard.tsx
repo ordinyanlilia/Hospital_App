@@ -5,12 +5,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./DoctorCard.css";
-import BookAppointment from "../BookAppointment/BookAppointment";
-import { useParams } from "react-router-dom";
+// import BookAppointment from "../BookAppointment/BookAppointment";
+// import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 type Doctor = {
-  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;
@@ -19,7 +18,7 @@ type Doctor = {
   email?: string;
   doc_id?: string;
   yearsOfExperience?: number;
-  bio?: string;
+  id?: string;
 };
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
@@ -50,11 +49,9 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           <p>
             <UserOutlined /> {doctor.gender}
           </p>
-          {/* <p className="bio">{doctor.bio}</p> */}
         </div>
-
         <div className="doctor-card-buttons">
-          <Button type="primary">Doctor Profile</Button>
+          <Button type="primary" onClick={() => navigate(`/doctor-info/${doctor.id}`)}>Doctor Profile</Button>
           <Button
             key={doctor.id}
             onClick={() => navigate(`/book-appointment/${doctor.id}`)}
