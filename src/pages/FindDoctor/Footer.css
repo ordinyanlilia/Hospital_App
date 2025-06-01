@@ -1,5 +1,5 @@
 .footer-container {
-  background-color: #c8c8c8;
+  background-color: #ebebebc2;
   padding: 0px 60px;
   position: relative;
   overflow: hidden;
@@ -40,12 +40,12 @@
 
 .footer-subtext {
   font-size: 16px;
-  color: #f4f5fa;
+  color: #5469c7;
   margin: 10px 0;
 }
 
 .footer-button {
-  background-color: #1a2450;
+  background-color: #3e51a8;
   color: #fff;
   font-weight: bold;
   border-radius: 25px;
@@ -56,4 +56,21 @@
 .footer-button:hover {
   background-color: #2a3d70;
   color: #fff;
+}
+
+body.light .footer-container {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+body.dark .footer-container {
+  background-color: #1f1f1f;
+  color: #fff;
+}
+body.dark .footer-heading {
+  color: #ffffff;
+}
+
+body.dark .footer-subtext {
+  color: #cccccc;
 }
