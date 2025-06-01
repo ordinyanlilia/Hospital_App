@@ -9,6 +9,7 @@ import {Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {getData} from "../../../services/apiService.ts";
+import {selectPatient} from "../../../features/PatientSlice.ts";
 
 const AppointmentsTable = () => {
     const columns: ColumnsType<Appointment> = [
@@ -53,17 +54,13 @@ const AppointmentsTable = () => {
 
     const appointments = useAppSelector(selectAppointments);
     const dispatch = useAppDispatch();
-    const user = {
-        name: 'Mariam',
-        appointments: [
-            'GNKkT9yoOwo7pee7bHDx'
-        ]
-    }
+    const user = useAppSelector(selectPatient);
+
 
     useEffect(() => {
         const fetchAppointments = async () => {
-            let results = await Promise.all(
-                user.appointments.map(id => getData<Appointment>(id, 'appointments'))
+            const results = await Promise.all(
+                    user.appointments.map(id => getData<Appointment>(id, 'appointments'))
             );
 
             dispatch(setAppointments(results));

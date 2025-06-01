@@ -5,8 +5,6 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./DoctorCard.css";
-import BookAppointment from "../BookAppointment/BookAppointment";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 type Doctor = {

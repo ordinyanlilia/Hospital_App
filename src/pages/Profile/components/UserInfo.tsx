@@ -1,11 +1,14 @@
 import {Button, Col, List, Row, Space, Typography} from "antd";
 import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
-import {type Patient} from "../../../services/apiService.ts";
 import dayjs from "dayjs";
 import type {MouseEventHandler} from "react";
+import {useAppSelector} from "../../../app/hooks.ts";
+import {selectPatient} from "../../../features/PatientSlice.ts";
 const {Text} = Typography;
 
-const UserInfo = ({user, onSetIsEditing}: { user: Patient | undefined, onSetIsEditing: MouseEventHandler<HTMLElement> }) => {
+const UserInfo = ({onSetIsEditing}: {onSetIsEditing: MouseEventHandler<HTMLElement> }) => {
+   const user = useAppSelector(selectPatient);
+
     const registeredDate = dayjs(user?.registeredAt).format('MMM D, YYYY');
     const dobDate = dayjs(user?.dob).format('DD/MM/YYYY');
     return (

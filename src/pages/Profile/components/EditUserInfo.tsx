@@ -1,20 +1,18 @@
 import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography} from "antd";
 import {DeleteOutlined, DeleteTwoTone, MailOutlined, PhoneOutlined} from "@ant-design/icons";
-import {type Patient, updateData} from "../../../services/apiService";
+import {updateData} from "../../../services/apiService";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
 import ImgUploader from "./ImgUploader.tsx";
+import {type Patient, selectPatient} from "../../../features/PatientSlice.ts";
+import {useAppSelector} from "../../../app/hooks.ts";
 
 const {Text} = Typography;
 const {Option} = Select;
 
-const EditUserInfo = ({
-                          user,
-                          onSetIsEditing,
-                      }: {
-    user: Patient | undefined;
-    onSetIsEditing: () => void;
-}) => {
+const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
+    const user = useAppSelector(selectPatient);
+
     const [formData, setFormData] = useState({
         name: user?.name || "",
         surname: user?.surname || "",
@@ -59,12 +57,15 @@ const EditUserInfo = ({
     };
 
     const handleSave = async () => {
-        await updateData<Partial<Patient>>(
-            "2e3C5vE5WSVC6LJ9Zjc0",
-            "patients",
-            formData
-        );
+        if(user && user?.doc_id){
+            await updateData<Partial<Patient>>(
+                user?.doc_id,
+                "patients",
+                formData
+            );
+        }
         onSetIsEditing();
+
     };
 
     const handleDateChange = (date: dayjs.Dayjs) => {
