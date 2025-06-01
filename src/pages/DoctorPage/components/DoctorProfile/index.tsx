@@ -1,38 +1,63 @@
 import "./DoctorProfile.css";
 import stethoscopeBlueIcon from "../../Icons/stethoscopeBlue.png";
 import { useEffect, useState } from "react";
-import { fetchData } from "../../../../services/apiService";
+import type { AppDispatch, RootState } from "../../../../Store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDoctorById, type DoctorA } from "../../../../features/DoctorPageSlice/doctorPageSlice";
+import { updateData } from "../../../../services/apiService";
+import { type Doctor } from "../../../../../src/features/SignInSignUpSlice/DoctorSlice";
+
 
 const DoctorProfile: React.FC = () => {
-  type Doctor = {
-    name?: string;
-    surname?: string;
-    specialty?: string;
-    photoUrl?: string;
-    gender?: string;
-    email?: string;
-    doc_id?: string;
-    id?: string;
-    yearsOfExperience?: number;
-    bio?: string;
-    department?: string;
+  const dispatch = useDispatch<AppDispatch>();
+  const { doctor } = useSelector((state: RootState) => state.doctorPage);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editDoctor, setEditDoctor] = useState<Partial<DoctorA> | null>(null);
+
+  const userData = useSelector((state: RootState) => state.userSlice.data);
+    const userRole = useSelector((state: RootState) => state.userSlice.role);
+  
+    const doctor1 =
+      userData && userRole === "doctor" && "doc_id" in userData
+        ? (userData as Doctor)
+        : null;
+  
+    const DOCTOR_ID = doctor1?.doc_id;
+  
+    useEffect(() => {
+      if (typeof DOCTOR_ID === "string") {
+        dispatch(fetchDoctorById(DOCTOR_ID));
+      }
+    }, [dispatch, DOCTOR_ID]);
+  
+  useEffect(() => {
+    if (isEditMode && doctor) {
+      setEditDoctor({ ...doctor });
+    }
+  }, [isEditMode, doctor]); 
+  
+  if (!doctor) {
+      return null;
+    }
+
+  if (!doctor) {
+    return (
+      <div className="doctor-profile-container">No doctor data available.</div>
+    );
+  }
+
+  const handleInputChange = (field: keyof DoctorA, value: string) => {
+    setEditDoctor((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    const loadDoctors = async () => {
-      try {
-        const data = await fetchData("doctors");
-        setDoctors(data as Doctor[]);
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-      }
-    };
-
-    loadDoctors();
-  }, []);
+  const handleSave = async () => {
+    if (editDoctor && doctor.doc_id) {
+      await updateData<Partial<DoctorA>>(doctor.doc_id, "doctors", editDoctor);
+      dispatch(fetchDoctorById(doctor.doc_id));
+      setIsEditMode(false);
+    }
+  };
 
   return (
     <div className="doctor-profile-container">
@@ -41,98 +66,129 @@ const DoctorProfile: React.FC = () => {
           <img src={stethoscopeBlueIcon} alt="Stethoscope icon" />
           <span>Profile</span>
         </div>
+
         <div className="personal-info-container">
           <div className="personal-info-content">
-            {doctors.map((doctor) => {
-              if (doctor.id === "1") {
-                return !isEditMode ? (
-                  <div className="forms-content" key={doctor.id}>
-                    <div className="form-container">
-                      <p>Name</p>
-                      <span>{doctor.name}</span>
-                    </div>
-                    <div className="form-container">
-                      <p>Surname</p>
-                      <span>{doctor.surname}</span>
-                    </div>
-                    <div className="form-container">
-                      <p>Gender</p>
-                      <span>{doctor.gender}</span>
-                    </div>
-                    <div className="form-container">
-                      <p>Email</p>
-                      <span>{doctor.email}</span>
-                    </div>
-                    <div className="form-container">
-                      <p>Specialty</p>
-                      <span>{doctor.specialty}</span>
-                    </div>
-                    <div className="form-container">
-                      <p>Years Of Experience</p>
-                      <span>{doctor.yearsOfExperience}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="edit-mode-forms-content" key={doctor.id}>
-                    <div className="form-container">
-                      <p>Name</p>
-                      <div>
-                        <input type="text" value={doctor.name} />
-                      </div>
-                    </div>
-                    <div className="form-container">
-                      <p>Surname</p>
-                      <input type="text" value={doctor.surname} />
-                    </div>
-                    <div className="form-container">
-                      <p>Gender</p>
-                      <select name="" id="" value={doctor.gender}>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                    </div>
-                    <div className="form-container">
-                      <p>Email</p>
-                      <input type="email" value={doctor.email} />
-                    </div>
-                    <div className="form-container">
-                      <p>Specialty</p>
-                      <select name="" id="" value={doctor.specialty}>
-                        <option value="cardiology">Cardiology</option>
-                        <option value="dermatology">Dermatology</option>
-                        <option value="endocrinology">Endocrinology</option>
-                        <option value="gastroenterology">
-                          Gastroenterology
-                        </option>
-                        <option value="neurology">Neurology</option>
-                        <option value="radiology">Radiology</option>
-                      </select>
-                    </div>
-                    <div className="form-container">
-                      <p>Years Of Experience</p>
-                      <select name="" id="">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                    </div>
-                  </div>
-                );
-              }
-            })}
+            {!isEditMode ? (
+              <div className="forms-content" key={doctor.doc_id}>
+                <div className="form-container">
+                  <p>Name</p>
+                  <span>{doctor.name}</span>
+                </div>
+                <div className="form-container">
+                  <p>Surname</p>
+                  <span>{doctor.surname}</span>
+                </div>
+                <div className="form-container">
+                  <p>Gender</p>
+                  <span>{doctor.gender}</span>
+                </div>
+                <div className="form-container">
+                  <p>Email</p>
+                  <span>{doctor.email}</span>
+                </div>
+                <div className="form-container">
+                  <p>Specialty</p>
+                  <span>{doctor.specialty}</span>
+                </div>
+                <div className="form-container">
+                  <p>Years Of Experience</p>
+                  <span>{doctor.yearsOfExperience}</span>
+                </div>
+                <div className="form-container">
+                  <p>Bio</p>
+                  <span>{doctor.bio}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="edit-mode-forms-content" key={doctor.doc_id}>
+                <div className="form-container">
+                  <p>Name</p>
+                  <input
+                    type="text"
+                    value={editDoctor?.name || ""}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                  />
+                </div>
+                <div className="form-container">
+                  <p>Surname</p>
+                  <input
+                    type="text"
+                    value={editDoctor?.surname || ""}
+                    onChange={(e) =>
+                      handleInputChange("surname", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="form-container">
+                  <p>Gender</p>
+                  <select
+                    value={editDoctor?.gender || ""}
+                    onChange={(e) =>
+                      handleInputChange("gender", e.target.value)
+                    }
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+                <div className="form-container">
+                  <p>Email</p>
+                  <span>{doctor.email}</span>
+                </div>
+                <div className="form-container">
+                  <p>Specialty</p>
+                  <select
+                    value={editDoctor?.specialty || ""}
+                    onChange={(e) =>
+                      handleInputChange("specialty", e.target.value)
+                    }
+                  >
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Endocrinology">Endocrinology</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Radiology">Radiology</option>
+                  </select>
+                </div>
+                <div className="form-container">
+                  <p>Years Of Experience</p>
+                  <select
+                    value={editDoctor?.yearsOfExperience || ""}
+                    onChange={(e) =>
+                      handleInputChange("yearsOfExperience", e.target.value)
+                    }
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((year) => (
+                      <option key={year} value={year.toString()}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-container">
+                  <p>Bio</p>
+                  <textarea
+                    value={editDoctor?.bio || ""}
+                    onChange={(e) => handleInputChange("bio", e.target.value)}
+                    rows={4} // default visible lines, can adjust as needed
+                    placeholder="Write a brief bio..."
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="profile-edit-btn">
             {!isEditMode ? (
-              <button onClick={() => setIsEditMode(!isEditMode)}>Edit</button>
+              <button onClick={() => setIsEditMode(true)}>Edit</button>
             ) : (
               <div className="save-cancel-btns">
-                <button className="save-btn">Save</button>
-                <button onClick={() => setIsEditMode(!isEditMode)}>
-                  Cancel
+                <button className="save-btn" onClick={handleSave}>
+                  Save
                 </button>
+                <button onClick={() => setIsEditMode(false)}>Cancel</button>
               </div>
             )}
           </div>

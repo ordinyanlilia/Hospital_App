@@ -5,6 +5,7 @@ import calendarIcon from "../../Icons/calendar.png";
 import sthetoscopeIcon from "../../Icons/stethoscope.png";
 import logoutIcon from "../../Icons/logout.png";
 // import homeIcon from "../../Icons/home-icon.png";
+import userIcon from "../../Icons/user.png";
 import {
   DOCTOR_APPOINTMENTS,
   DOCTOR_CALENDAR,
@@ -23,7 +24,7 @@ const LeftPanel: React.FC = () => {
           <div className="doctor-info-container-top">
             <div className="doctor-info-image">
               <img
-                src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=640:*"
+                src={userIcon}
                 alt="doctor's picture"
               />
             </div>
@@ -41,7 +42,7 @@ const LeftPanel: React.FC = () => {
                   alt="appointment icon"
                   className="nav-icon-appointment"
                 />
-                Appointments
+                <span>Appointments</span>
               </NavLink>
               <NavLink to={DOCTOR_CALENDAR} className="nav-button">
                 <img
@@ -49,7 +50,7 @@ const LeftPanel: React.FC = () => {
                   alt="calendar icon"
                   className="nav-icon-calendar"
                 />
-                Calendar
+                <span>Calendar</span>
               </NavLink>
               <NavLink to={DOCTOR_PROFILE} className="nav-button">
                 <img
@@ -57,7 +58,7 @@ const LeftPanel: React.FC = () => {
                   alt="sthetoscope icon"
                   className="nav-icon-sthetoscope"
                 />
-                Profile
+                <span>Profile</span>
               </NavLink>
             </div>
 
@@ -68,7 +69,7 @@ const LeftPanel: React.FC = () => {
                   alt="logout icon"
                   className="nav-icon-logout"
                 />
-                Log out
+                <span>Log out</span>
               </NavLink>
             </div>
           </nav>

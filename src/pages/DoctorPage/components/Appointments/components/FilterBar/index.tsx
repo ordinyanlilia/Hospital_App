@@ -1,53 +1,40 @@
 import "./FilterBar.css";
-import { Input } from "antd";
-// import type { GetProps } from "antd";
-import { Select } from "antd";
-
-// type SearchProps = GetProps<typeof Input.Search>;
+import { Input, Select } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../../../../Store/store";
+import { setSearchValue, setStatusFilter } from "../../../../../../features/DoctorPageSlice/doctorPageSlice";
 
 const { Search } = Input;
 
-type FilterBarProps = {
-  onSearch: (value: string) => void;
-  setSearchValue:  (value: string) => void;
-  setStatusFilter:  (value: string) => void;
-};
+const FilterBar: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { searchValue, statusFilter } = useSelector(
+    (state: RootState) => state.doctorPage
+  );
 
-
-const FilterBar: React.FC<FilterBarProps> = ({ setSearchValue, setStatusFilter, onSearch }) => {
   return (
     <div className="filter-bar-container">
       <div className="filter-bar-contnet">
         <div className="input-search-patient">
           <Search
             placeholder="Patient's name"
-            onChange={(e)=> setSearchValue(e.target.value)}
-            onSearch={(value) => {onSearch(value); setSearchValue(""); setStatusFilter("All")} }
+            value={searchValue}
+            onChange={(e) => dispatch(setSearchValue(e.target.value))}
+            onSearch={(value) => dispatch(setSearchValue(value))}
+            allowClear
           />
         </div>
         <div className="select-search">
           <Select
-            showSearch
+            value={statusFilter}
             style={{ width: 200 }}
             placeholder="All"
-            onChange={(value) => setStatusFilter(value)}
+            onChange={(value) => dispatch(setStatusFilter(value))}
             options={[
-              {
-                value: "All",
-                label: "All",
-              },
-              {
-                value: "upcoming",
-                label: "Upcoming",
-              },
-              {
-                value: "visited",
-                label: "Visited",
-              },
-              {
-                value: "scheduled",
-                label: "Scheduled",
-              },
+              { value: "All", label: "All" },
+              { value: "upcoming", label: "Upcoming" },
+              { value: "visited", label: "Visited" },
+              { value: "scheduled", label: "Scheduled" },
             ]}
           />
         </div>

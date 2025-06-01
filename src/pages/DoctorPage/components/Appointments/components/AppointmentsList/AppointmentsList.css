@@ -11,14 +11,21 @@
 .appointments-list-content {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   overflow-x: auto;
 }
 
 .appointments-list-content table {
-  width: 100%;
+    width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px;
+  border-spacing: 0 12px; /* a bit more vertical spacing */
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
 }
 
 .appointments-list-content th,
@@ -37,7 +44,7 @@
   font-family: "Inter", sans-serif;
   font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.1em;
   border-radius: 0;
 }
 
@@ -48,6 +55,14 @@
   color: #444;
   border-radius: 8px;
   white-space: nowrap;
+}
+
+.appointments-list-content tbody tr {
+  background-color: #fafafa;
+  transition: background-color 0.3s ease;
+  cursor: default;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
 }
 
 .appointments-list-content tbody tr:hover td {
@@ -66,4 +81,22 @@
   width: 20px;
   height: 20px;
   margin-right: 8px;
+}
+
+
+.loading-message,
+.error-message,
+.no-results-message {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
 }
