@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE } from "./paths";
+import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE, DOCTOR_INFO } from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
@@ -10,6 +10,9 @@ import DoctorPage from "../pages/DoctorPage";
 import Appointments from "../pages/DoctorPage/components/Appointments";
 import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
 import Calendar from "../pages/DoctorPage/components/Calendar";
+import DoctorInfo from "../pages/DoctorInfo/DoctorInfo";
+
+
 
 export const router = createBrowserRouter([
   {
@@ -62,5 +65,13 @@ export const router = createBrowserRouter([
       {path: DOCTOR_PROFILE, element: <DoctorProfile />}
     ]
     
+  },
+  {
+    path: DOCTOR_INFO,
+    element: (
+      <Layout>
+        <DoctorInfo />
+      </Layout>
+    )
   }
 ]);

@@ -6,6 +6,9 @@ import {
 } from "@ant-design/icons";
 import defaultDoctorImage from "../../assets/Doctors/user.png";
 import "./DoctorCard.css";
+// new
+import { useNavigate } from "react-router-dom";
+
 
 type Doctor = {
   name?: string;
@@ -16,10 +19,11 @@ type Doctor = {
   email?: string;
   doc_id?: string;
   yearsOfExperience?: number;
-  bio?: string;
 };
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="doctor-card-horizontal">
       <img
@@ -42,11 +46,9 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           <p>
             <UserOutlined /> {doctor.gender}
           </p>
-          <p className="bio">{doctor.bio}</p>
         </div>
-
         <div className="doctor-card-buttons">
-          <Button type="primary">Doctor Profile</Button>
+          <Button type="primary" onClick={() => navigate(`/doctor-info/${doctor.doc_id}`)}>Doctor Profile</Button>
           <Button>Book Appointment</Button>
         </div>
       </div>
