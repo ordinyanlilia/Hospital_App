@@ -5,6 +5,9 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./DoctorCard.css";
+import BookAppointment from "../BookAppointment/BookAppointment";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Doctor = {
   id?: string;
@@ -20,6 +23,8 @@ type Doctor = {
 };
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="doctor-card-horizontal">
       <img
@@ -50,7 +55,12 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
 
         <div className="doctor-card-buttons">
           <Button type="primary">Doctor Profile</Button>
-          <Button>Book Appointment</Button>
+          <Button
+            key={doctor.id}
+            onClick={() => navigate(`/book-appointment/${doctor.id}`)}
+          >
+            Book Appointment
+          </Button>
         </div>
       </div>
     </div>

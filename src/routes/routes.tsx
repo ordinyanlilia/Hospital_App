@@ -1,12 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE } from "./paths";
+import {
+  HOME_PAGE,
+  ABOUT,
+  FIND_DOCTOR,
+  CONTACT_US,
+  PROFILE,
+  DOCTOR_PAGE,
+  BOOK_APPOINTMENT,
+} from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
 import DoctorPage from "../pages/DoctorPage";
+import BookAppointment from "../pages/BookAppointment/BookAppointment";
 
 export const router = createBrowserRouter([
   {
@@ -51,8 +60,14 @@ export const router = createBrowserRouter([
   },
   {
     path: DOCTOR_PAGE,
+    element: <DoctorPage />,
+  },
+  {
+    path: BOOK_APPOINTMENT,
     element: (
-      <DoctorPage />
-    )
-  }
+      <Layout>
+        <BookAppointment />
+      </Layout>
+    ),
+  },
 ]);

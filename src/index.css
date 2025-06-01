@@ -7,3 +7,18 @@ body.dark {
   background-color: #1f1f1f;
   color: #f0f0f0;
 }
+
+.layout-container {
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+body.dark .layout-container {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+body.light .layout-container {
+  background-color: #ffffff;
+  color: #000000;
+}
