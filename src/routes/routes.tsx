@@ -1,23 +1,13 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
-
-import {
-  HOME_PAGE,
-  ABOUT,
-  FIND_DOCTOR,
-  CONTACT_US,
-  PROFILE,
-  DOCTOR_PAGE,
-  BOOK_APPOINTMENT,
-} from "./paths";
 import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, SIGNUP, LOGIN, PROFILE, DOCTOR_PAGE, BOOK_APPOINTMENT, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE } from "./paths";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
-import Signup from "../pages/Profile/SignUp";
-import Login from "../pages/Profile/Login";
+import Signup from "../pages/Auth/SignUp.tsx";
+import Login from "../pages/Auth/Login.tsx";
 import DoctorPage from "../pages/DoctorPage";
 import BookAppointment from "../pages/BookAppointment/BookAppointment";
 
