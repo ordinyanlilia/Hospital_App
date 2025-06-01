@@ -19,6 +19,7 @@ type Doctor = {
   email?: string;
   doc_id?: string;
   yearsOfExperience?: number;
+  id?: string;
 };
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
@@ -48,7 +49,7 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           </p>
         </div>
         <div className="doctor-card-buttons">
-          <Button type="primary" onClick={() => navigate(`/doctor-info/${doctor.doc_id}`)}>Doctor Profile</Button>
+          <Button type="primary" onClick={() => navigate(`/doctor-info/${doctor.id}`)}>Doctor Profile</Button>
           <Button>Book Appointment</Button>
         </div>
       </div>

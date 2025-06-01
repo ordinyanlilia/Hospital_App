@@ -6,6 +6,8 @@ import defaultDoctorImage from "../../assets/Doctors/user.png";
 import { DoctorCard } from "../FindDoctor/DoctorCard";
 import "./DoctorInfo.css";
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from "react-router-dom";
+
 
 const { Title, Paragraph } = Typography;
 
@@ -26,41 +28,30 @@ const DoctorInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [otherDoctors, setOtherDoctors] = useState<Doctor[]>([]);
-  const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const loadAppointments = async () => {
-      try {
         const allAppointments = await fetchData("appointments");
         const filtered = allAppointments.filter((a) => a.doc_id === id);
         setAppointments(filtered);
         console.log(filtered);
-
-      } catch (error) {
-        console.error("Failed to fetch appointments:", error);
-      }
     };
-
     loadAppointments();
   }, [id]);
 
   useEffect(() => {
     const loadDoctors = async () => {
-      try {
         const doctors: Doctor[] = await fetchData("doctors");
-        const selected = doctors.find((doc) => doc.doc_id === id);
-        const others = doctors.filter((doc) => doc.doc_id !== id);
+        const selected = doctors.find((doc) => doc.id === id);
+        const others = doctors.filter((doc) => doc.id !== id);
 
         const randomThree = others.sort(() => 0.5 - Math.random()).slice(0, 3);
 
         setDoctor(selected || null);
         setOtherDoctors(randomThree);
-      } catch (error) {
-        console.error("Failed to fetch doctors:", error);
-      } finally {
-        setLoading(false);
-      }
     };
 
     loadDoctors();
@@ -115,7 +106,8 @@ const getDateStatus = (date: Dayjs) => {
     );
   };
 
-  if (loading) return <Spin fullscreen />;
+
+
   if (!doctor) return <Title level={3}>Doctor not found</Title>;
 
   return (
@@ -139,10 +131,9 @@ const getDateStatus = (date: Dayjs) => {
                   }}
                 />
               </Col>
-                  {/* nkari pahy liliayic harcnem */}
               <Col xs={24} sm={16} md={12} lg={12}>
                 <img
-                  src="https://cdn.prod.website-files.com/673c89b10bb03cfb1860bed1/67f6253ad0c022c0282f854c_Newsweek_-_Web_banner-EN.jpg"
+                  src="https://res.cloudinary.com/healthcareintern/image/upload/v1748777274/hospitalimage_ziik5y.avif"
                   alt="Hospital"
                   className="hospital-banner"
                   style={{
@@ -178,7 +169,10 @@ const getDateStatus = (date: Dayjs) => {
                   Mon–Fri: 09:00 – 17:00 <br />
                   Sat: 10:00 – 14:00
                 </Paragraph>
-                <Button type="primary">Book Appointment</Button>
+                <Button type="primary" onClick={() => navigate(`/book-appointment/${id}`)}>
+                    Book Appointment
+                </Button>
+
               </Col>
 
               <Col xs={24} sm={24} md={6} lg={7}>
@@ -213,7 +207,7 @@ const getDateStatus = (date: Dayjs) => {
       </Title>
       <Row gutter={[24, 24]} className="recommended-doctors">
         {otherDoctors.map((doc) => (
-          <Col span={24} sm={12} md={8} key={doc.doc_id}>
+          <Col span={24} sm={12} md={8} key={doc.id}>
             <DoctorCard doctor={doc} />
           </Col>
         ))}
