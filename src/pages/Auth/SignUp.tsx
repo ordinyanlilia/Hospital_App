@@ -13,6 +13,7 @@ import { auth } from "../../services/apiServices.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setData } from '../../services/apiServices.ts';
 import { setUser } from '../../features/UserSlice.ts';
+import { FirebaseError } from 'firebase/app';
 const { Option } = Select;
 
 const Signup = () => {
@@ -98,18 +99,27 @@ const Signup = () => {
 
       let messageText = "Something went wrong. Please try again.";
 
-      if (err?.code === "auth/weak-password") {
-        messageText = "Your password must be at least 6 characters.";
-      } else if (err?.code === "auth/email-already-in-use") {
-        messageText = "This email is already registered.";
-      } else if (err?.code === "auth/invalid-email") {
-        messageText = "Please enter a valid email address.";
-      }
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/weak-password":
+            messageText = "Your password must be at least 6 characters.";
+            break;
+          case "auth/email-already-in-use":
+            messageText = "This email is already registered.";
+            break;
+          case "auth/invalid-email":
+            messageText = "Please enter a valid email address.";
+            break;
+          default:
+            messageText = err.message;
+            break;
+        }
 
       messageApi.open({
         type: "error",
         content: messageText,
       });
+    }
     }
   };
 
