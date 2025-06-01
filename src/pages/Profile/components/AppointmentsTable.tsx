@@ -3,8 +3,8 @@ import {useEffect} from "react";
 import {
     type Appointment,
     selectAppointments,
-    setAppointmentsInitialState
-} from "../../../features/appointmentsSlice.ts";
+    setAppointments
+} from "../../../features/appointments/appointmentsSlice.ts";
 import {Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
@@ -66,7 +66,7 @@ const AppointmentsTable = () => {
                 user.appointments.map(id => getData<Appointment>(id, 'appointments'))
             );
 
-            dispatch(setAppointmentsInitialState(results));
+            dispatch(setAppointments(results));
         };
 
         fetchAppointments();

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type Doctor = {
+  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;

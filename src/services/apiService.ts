@@ -46,7 +46,7 @@ const fetchData = async <T>(collectionName: CollectionName) => {
     const dataCollection = collection(db, collectionName) as CollectionReference<T>;
     const dataSnapshot = await getDocs(dataCollection);
     const dataList = dataSnapshot.docs.map(doc => ({...doc.data(), doc_id: doc.id}));
-    return dataList;
+    return dataList as T[];
 }
 
 const setData = async <T>(collectionName: CollectionName, data: T): Promise<string> => {

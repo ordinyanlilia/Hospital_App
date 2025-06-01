@@ -1,9 +1,10 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit"
 import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
-import AppointmentsSlice from "../features/appointmentsSlice.ts";
+import AppointmentsSlice from "../features/appointments/appointmentsSlice.ts";
+import DoctorsSlice from "../features/doctors/doctorsSlice.tsx";
 
-const rootReducer = combineSlices(AppointmentsSlice)
+const rootReducer = combineSlices(AppointmentsSlice, DoctorsSlice);
 
 export type RootState = ReturnType<typeof rootReducer>
 export const makeStore = () => {

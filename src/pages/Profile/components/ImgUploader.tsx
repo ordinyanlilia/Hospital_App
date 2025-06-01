@@ -7,7 +7,7 @@ import type {RcFile, UploadChangeParam} from "antd/lib/upload";
 
 const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormData: (url: string) => void }) => {
     type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
+    const [messageApi, contextHolder] = message.useMessage();
     const uploadButton = (
         <button style={{border: 0, background: "none"}} type="button">
             <PlusOutlined/>
@@ -23,7 +23,11 @@ const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormDat
             onSetFormData('');
             return
         } else if (file.status === 'error') {
-            message.error(`${file.name} file upload failed.`);
+            messageApi.open({
+                type: 'error',
+                content: `${file.name} file upload failed.`,
+            });
+            return;
         }
 
         const formData = new FormData();
@@ -45,22 +49,30 @@ const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormDat
     const beforeUpload = (file: FileType) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
+            messageApi.open({
+                type: 'error',
+                content: 'You can only upload JPG/PNG file!',
+            });
+            return Upload.LIST_IGNORE;
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
+            messageApi.open({
+                type: 'error',
+                content: 'Image must smaller than 2MB!',
+            });
+            return Upload.LIST_IGNORE;
         }
-        return isJpgOrPng && isLt2M;
+        return true;
     };
 
     return (
         <Flex justify="center" align="center" style={{minHeight: "120px"}}>
+            {contextHolder}
             <Upload
                 name="avatar"
                 listType="picture-circle"
                 className="avatar-uploader"
-                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                 onChange={handleImgUploadChange}
                 beforeUpload={beforeUpload}
                 fileList={

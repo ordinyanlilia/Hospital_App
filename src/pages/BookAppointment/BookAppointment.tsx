@@ -25,27 +25,16 @@ import {
     resetStatus,
     selectError,
     selectStatus
-} from '../../features/appointmentsSlice.ts';
+} from '../../features/appointments/appointmentsSlice.ts';
 
 import {useLocation, useNavigate} from "react-router-dom";
 import {SmileOutlined, UserOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import {fetchData} from "../../services/apiService.ts";
 import dayjs from 'dayjs';
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
-
-
-interface Doctor {
-    doc_id: string;
-    id: string;
-    name: string;
-    surname: string;
-    specialty: string;
-    appointments: string[];
-    yearsOfExperience: number;
-    photoUrl: string;
-}
+import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
+import {fetchData} from "../../services/apiService.ts";
 
 interface FinishValue {
     DatePicker?: dayjs.Dayjs | null;
@@ -72,8 +61,8 @@ const BookAppointment = () => {
     ];
     const location = useLocation();
 
-    const [doctors, setDoctors] = useState<Doctor[]>([]);
     const selectedDoctorInitialId = location.pathname.split("/")[2];
+    const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
     const [selected, setSelectedCategory] = useState<string>('All');
     const [messageApi, contextHolder] = message.useMessage();
@@ -131,8 +120,8 @@ const BookAppointment = () => {
                 patientId: '1',
                 patientName: 'Mariam',
                 status: 'scheduled',
-                doctorId: selectedDoctor?.id,
-                doctorName: selectedDoctor?.name,
+                doctorId: selectedDoctor?.id || '',
+                doctorName: selectedDoctor?.name || '',
             };
 
             if (value.notes) {
@@ -167,7 +156,7 @@ const BookAppointment = () => {
         if (category === 'All') {
             setFilteredDoctors(doctors);
         } else {
-            const filtered = doctors.filter(doctor => doctor.specialty === category);
+            const filtered = doctors?.filter(doctor => doctor.specialty === category);
             setFilteredDoctors(filtered);
         }
 
@@ -251,7 +240,7 @@ const BookAppointment = () => {
                     </Space>
                     <Divider>Doctors</Divider>
                     <Space align={'center'} wrap style={{justifyContent: 'center'}}>
-                        {paginatedDoctors.map((doc, index) => (
+                        {!!paginatedDoctors.length && paginatedDoctors?.map((doc, index) => (
                             <Card
                                 key={index}
                                 hoverable
@@ -282,15 +271,16 @@ const BookAppointment = () => {
                                 />
                             </Card>
                         ))}
+                        {!paginatedDoctors.length && <Spin></Spin>}
                     </Space>
-                    {filteredDoctors.length > inPageCount && (
+                    {filteredDoctors?.length > inPageCount && (
                         <Pagination
                             align={'center'}
                             current={current}
-                            total={filteredDoctors.length}
+                            total={filteredDoctors?.length}
                             pageSize={inPageCount}
                             onChange={onChange}
-                            style={{ marginTop: '20px' }}
+                            style={{marginTop: '20px'}}
                         />
                     )}
                     <Divider></Divider>

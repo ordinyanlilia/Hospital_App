@@ -6,25 +6,13 @@ import {
   UserOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { setDoctors, setLoading } from "../../features/doctors/doctorsSlices";
+import { setDoctors, setLoading } from "../../features/doctors/doctorsSlice.tsx";
 import "./FindDoctor.css";
 import { useDispatch, useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
 import { Footer } from "./Footer";
-import type { RootState } from "../../store/store";
-
-type Doctor = {
-  id?: string;
-  name?: string;
-  surname?: string;
-  specialty?: string;
-  photoUrl?: string;
-  gender?: string;
-  email?: string;
-  doc_id?: string;
-  yearsOfExperience?: number;
-  bio?: string;
-};
+import type {RootState} from "../../app/store.ts";
+import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
 
 const FindDoctor = () => {
   const dispatch = useDispatch();
@@ -46,8 +34,8 @@ const FindDoctor = () => {
   useEffect(() => {
     const loadDoctors = async () => {
       try {
-        const data = await fetchData("doctors");
-        dispatch(setDoctors(data as Doctor[]));
+        const data = await fetchData<Doctor>("doctors");
+        dispatch(setDoctors(data));
       } catch (error) {
         console.error("Error fetching doctors:", error);
       } finally {

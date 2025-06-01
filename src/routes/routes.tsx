@@ -10,7 +10,6 @@ import Profile from "../pages/Profile/Profile.tsx";
 import BookAppointment from "../pages/BookAppointment/BookAppointment.tsx";
 import DoctorPage from "../pages/DoctorPage/index.tsx";
 
-
 import Appointments from "../pages/DoctorPage/components/Appointments";
 import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
 import Calendar from "../pages/DoctorPage/components/Calendar";
