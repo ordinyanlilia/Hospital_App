@@ -37,4 +37,4 @@ const doctorsSlice = createSlice({
 });
 
 export const { setDoctors, setLoading } = doctorsSlice.actions;
-export default doctorsSlice.reducer;
+export default doctorsSlice;
