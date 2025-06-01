@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { fetchData } from "../../services/apiService";
 import { Input, Select, Button, Row, Col, Pagination } from "antd";
 import {
   SearchOutlined,
   UserOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { setDoctors, setLoading } from "../../features/doctors/doctorsSlices";
 import "./FindDoctor.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "../../store/hooks";
+import { useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
 import { Footer } from "./Footer";
 import type { RootState } from "../../store/store";
+import { fetchDoctors } from "../../features/doctors/doctorsSlices";
 
 type Doctor = {
   id?: string;
@@ -27,8 +27,9 @@ type Doctor = {
 };
 
 const FindDoctor = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const doctors = useSelector((state: RootState) => state.doctors.doctors);
+  const loading = useSelector((state: RootState) => state.doctors.isLoading);
   const [searchByName, setSearchByName] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(
     null
@@ -44,18 +45,7 @@ const FindDoctor = () => {
   ).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    const loadDoctors = async () => {
-      try {
-        const data = await fetchData("doctors");
-        dispatch(setDoctors(data as Doctor[]));
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-      } finally {
-        dispatch(setLoading(false));
-      }
-    };
-
-    loadDoctors();
+    dispatch(fetchDoctors());
   }, []);
 
   const filterDoctors = () => {
@@ -175,6 +165,7 @@ const FindDoctor = () => {
           type="primary"
           icon={<SearchOutlined />}
           onClick={filterDoctors}
+          loading={loading}
         >
           Search
         </Button>

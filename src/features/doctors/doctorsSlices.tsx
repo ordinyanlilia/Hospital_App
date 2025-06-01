@@ -1,5 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchData } from "../../services/apiService";
+
+export const fetchDoctors = createAsyncThunk(
+  "doctors/fetchDoctors",
+  async () => {
+    const data = await fetchData("doctors");
+    return data;
+  }
+);
 
 export type Doctor = {
   name?: string;
@@ -16,25 +24,33 @@ export type Doctor = {
 interface DoctorsState {
   doctors: Doctor[];
   isLoading: boolean;
+  error: string | null;
 }
 const initialState: DoctorsState = {
   doctors: [],
   isLoading: false,
+  error: null,
 };
 
 const doctorsSlice = createSlice({
   name: "doctors",
   initialState,
-  reducers: {
-    setDoctors: (state, action: PayloadAction<Doctor[]>) => {
-      state.doctors = action.payload;
-      state.isLoading = false;
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchDoctors.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchDoctors.fulfilled, (state, action) => {
+        state.doctors = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchDoctors.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? null;
+      });
   },
 });
 
-export const { setDoctors, setLoading } = doctorsSlice.actions;
 export default doctorsSlice.reducer;

@@ -8,9 +8,11 @@ import {
   CONTACT_US,
   PROFILE,
   DOCTOR_PAGE,
+  DOCTOR_APPOINTMENTS,
+  DOCTOR_CALENDAR,
+  DOCTOR_PROFILE,
   BOOK_APPOINTMENT,
 } from "./paths";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE } from "./paths";
 
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
@@ -24,7 +26,6 @@ import BookAppointment from "../pages/BookAppointment/BookAppointment";
 import Appointments from "../pages/DoctorPage/components/Appointments";
 import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
 import Calendar from "../pages/DoctorPage/components/Calendar";
-
 
 export const router = createBrowserRouter([
   {
@@ -70,12 +71,12 @@ export const router = createBrowserRouter([
   {
     path: DOCTOR_PAGE,
     element: <DoctorPage />,
-     children: [
-      {index: true, element: <Navigate to={DOCTOR_APPOINTMENTS} replace />},
-      {path: DOCTOR_APPOINTMENTS, element: <Appointments/>},
-      {path: DOCTOR_CALENDAR, element: <Calendar />},
-      {path: DOCTOR_PROFILE, element: <DoctorProfile />}
-    ]
+    children: [
+      { index: true, element: <Navigate to={DOCTOR_APPOINTMENTS} replace /> },
+      { path: DOCTOR_APPOINTMENTS, element: <Appointments /> },
+      { path: DOCTOR_CALENDAR, element: <Calendar /> },
+      { path: DOCTOR_PROFILE, element: <DoctorProfile /> },
+    ],
   },
   {
     path: BOOK_APPOINTMENT,
@@ -85,7 +86,4 @@ export const router = createBrowserRouter([
       </Layout>
     ),
   },
-
-   
-
 ]);
