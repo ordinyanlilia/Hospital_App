@@ -15,6 +15,7 @@ import DoctorProfile from "../pages/DoctorPage/components/DoctorProfile";
 import Calendar from "../pages/DoctorPage/components/Calendar";
 import DoctorInfo from "../pages/DoctorInfo/DoctorInfo";
 
+
 export const router = createBrowserRouter([
     {
         path: HOME_PAGE,
@@ -81,7 +82,6 @@ export const router = createBrowserRouter([
             {path: DOCTOR_CALENDAR, element: <Calendar />},
             {path: DOCTOR_PROFILE, element: <DoctorProfile />}
     ]
-    
   },
   {
     path: BOOK_APPOINTMENT,
@@ -97,6 +97,7 @@ export const router = createBrowserRouter([
       <Layout>
         <DoctorInfo />
       </Layout>
+    ),
+  },
     )
-  }
 ]);
