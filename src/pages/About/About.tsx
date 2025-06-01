@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Row, Col } from "antd";
 import "./About.css";
 import { Footer } from "../FindDoctor/Footer";
 import { motion } from "framer-motion";
@@ -14,42 +14,53 @@ const About = () => {
         >
           <Card className="about-card">
             <div className="about-content">
-              <motion.img
-                src="https://res.cloudinary.com/healthcareintern/image/upload/v1748518555/doctors-about_nq3hwm.jpg"
-                alt="aboutDoctor"
-                className="about-image"
-                initial={{ scale: 2, x: 100, opacity: 0 }}
-                animate={{ scale: 1, x: 0, opacity: 1 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-              <motion.p
-                className="about-text"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
-              >
-                Our experienced doctors are always ready to help you. We provide
-                high-quality medical services with care and professionalism.
-              </motion.p>{" "}
+              <Row gutter={[16, 16]} justify="start">
+                <Col xs={24} md={12}>
+                  <motion.img
+                    src="https://res.cloudinary.com/healthcareintern/image/upload/v1748518555/doctors-about_nq3hwm.jpg"
+                    alt="aboutDoctor"
+                    className="about-image"
+                    initial={{ scale: 2, x: 100, opacity: 0 }}
+                    animate={{ scale: 1, x: 0, opacity: 1 }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <motion.p
+                    className="about-text"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                  >
+                    Our experienced doctors are always ready to help you. We
+                    provide high-quality medical services with care and
+                    professionalism.
+                  </motion.p>{" "}
+                </Col>
+              </Row>
             </div>
           </Card>
         </motion.div>
       </div>
       <div className="container-2">
-        <motion.h1
-          initial={{ x: -100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          Our Values
-        </motion.h1>
-        <motion.p
-          initial={{ x: -100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          Patient-centered care with compassion and professionalism
-        </motion.p>
+        <Row justify="center" align="middle">
+          <Col xs={24} md={24} style={{ textAlign: "center" }}>
+            <motion.h1
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              Our Values
+            </motion.h1>
+            <motion.p
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              Patient-centered care with compassion and professionalism
+            </motion.p>
+          </Col>
+        </Row>
       </div>
       <motion.div
         className="card-row"
@@ -96,29 +107,36 @@ const About = () => {
         >
           <Card className="about-card-2">
             <div className="about-content-2">
-              <motion.div
-                className="text-block"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1 }}
-              >
-                <h1>Our Story</h1>
-                <p className="about-text-2">
-                  For 19 years now, we have been providing people with the
-                  medical services they need, combining professionalism and
-                  modern technology. What makes us different? Professionalism
-                  and experience: our doctors are constantly improving their
-                  qualifications, following the latest trends in medicine.
-                </p>
-              </motion.div>
-              <motion.img
-                src="https://res.cloudinary.com/healthcareintern/image/upload/v1748518238/bulding_rhjkkk.jpg"
-                alt="aboutDoctor"
-                className="about-image-2"
-                initial={{ scale: 1.5, x: 100, opacity: 0 }}
-                animate={{ scale: 1, x: 0, opacity: 1 }}
-                transition={{ duration: 2, delay: 0.5, ease: "easeInOut" }}
-              />
+              <Row gutter={[16, 16]} justify="start">
+                <Col xs={24} md={12}>
+                  <motion.div
+                    className="text-block"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 1 }}
+                  >
+                    <h1>Our Story</h1>
+                    <p className="about-text-2">
+                      For 19 years now, we have been providing people with the
+                      medical services they need, combining professionalism and
+                      modern technology. What makes us different?
+                      Professionalism and experience: our doctors are constantly
+                      improving their qualifications, following the latest
+                      trends in medicine.
+                    </p>
+                  </motion.div>
+                </Col>
+                <Col xs={24} md={12}>
+                  <motion.img
+                    src="https://res.cloudinary.com/healthcareintern/image/upload/v1748518238/bulding_rhjkkk.jpg"
+                    alt="aboutDoctor"
+                    className="about-image-2"
+                    initial={{ scale: 1.5, x: 100, opacity: 0 }}
+                    animate={{ scale: 1, x: 0, opacity: 1 }}
+                    transition={{ duration: 2, delay: 0.5, ease: "easeInOut" }}
+                  />
+                </Col>
+              </Row>
             </div>
           </Card>
         </motion.div>

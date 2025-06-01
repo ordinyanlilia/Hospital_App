@@ -14,6 +14,7 @@ import { Footer } from "./Footer";
 import type { RootState } from "../../store/store";
 
 type Doctor = {
+  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;
@@ -79,8 +80,10 @@ const FindDoctor = () => {
   };
 
   useEffect(() => {
-    filterDoctors();
-  }, [searchByName, selectedSpecialty, selectedGender]);
+    if (doctors.length > 0) {
+      filterDoctors();
+    }
+  }, [doctors]);
 
   return (
     <>

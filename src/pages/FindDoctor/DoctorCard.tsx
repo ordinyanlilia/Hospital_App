@@ -7,6 +7,7 @@ import {
 import "./DoctorCard.css";
 
 type Doctor = {
+  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;
@@ -44,7 +45,7 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           <p>
             <UserOutlined /> {doctor.gender}
           </p>
-          <p className="bio">{doctor.bio}</p>
+          {/* <p className="bio">{doctor.bio}</p> */}
         </div>
 
         <div className="doctor-card-buttons">
