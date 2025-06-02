@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../services/apiService";
-import { Card, Row, Col, Typography, Spin, Button, Calendar } from "antd";
-import defaultDoctorImage from "../../assets/Doctors/user.png";
+import { Card, Row, Col, Typography, Button, Calendar } from "antd";
 import { DoctorCard } from "../FindDoctor/DoctorCard";
 import "./DoctorInfo.css";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
-
+import { useTheme } from "../../context/theme-context";
 
 const { Title, Paragraph } = Typography;
 
@@ -31,45 +30,42 @@ const DoctorInfo = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const loadAppointments = async () => {
-        const allAppointments = await fetchData("appointments");
-        const filtered = allAppointments.filter((a) => a.doc_id === id);
-        setAppointments(filtered);
-        console.log(filtered);
+      const allAppointments = await fetchData("appointments");
+      const filtered = allAppointments.filter((a) => a.doc_id === id);
+      setAppointments(filtered);
+      console.log(filtered);
     };
     loadAppointments();
   }, [id]);
 
   useEffect(() => {
     const loadDoctors = async () => {
-        const doctors: Doctor[] = await fetchData("doctors");
-        const selected = doctors.find((doc) => doc.id === id);
-        const others = doctors.filter((doc) => doc.id !== id);
+      const doctors: Doctor[] = await fetchData("doctors");
+      const selected = doctors.find((doc) => doc.id === id);
+      const others = doctors.filter((doc) => doc.id !== id);
 
-        const randomThree = others.sort(() => 0.5 - Math.random()).slice(0, 3);
+      const randomThree = others.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-        setDoctor(selected || null);
-        setOtherDoctors(randomThree);
+      setDoctor(selected || null);
+      setOtherDoctors(randomThree);
     };
 
     loadDoctors();
   }, [id]);
 
+  const getDateStatus = (date: Dayjs) => {
+    const dayAppointments = appointments.filter((ap) =>
+      dayjs(ap.date).isSame(date, "day")
+    );
+    console.log("Checking date:", date.format("YYYY-MM-DD"));
+    console.log("Appointments on this day:", dayAppointments);
 
-const getDateStatus = (date: Dayjs) => {
-  const dayAppointments = appointments.filter((ap) =>
-    dayjs(ap.date).isSame(date, "day")
-  );
-  console.log("Checking date:", date.format("YYYY-MM-DD"));
-  console.log("Appointments on this day:", dayAppointments);
-
-  if (dayAppointments.length === 0) return "free";
-  if (dayAppointments.length >= 10) return "full";
-  return "partial";
-};
-
+    if (dayAppointments.length === 0) return "free";
+    if (dayAppointments.length >= 10) return "full";
+    return "partial";
+  };
 
   const cellRender = (date: Dayjs) => {
     const status = getDateStatus(date);
@@ -106,19 +102,20 @@ const getDateStatus = (date: Dayjs) => {
     );
   };
 
-
-
   if (!doctor) return <Title level={3}>Doctor not found</Title>;
-
+  const { darkMode } = useTheme();
   return (
-    <div className="doctor-info-container">
+    <div className={`doctor-info-container ${darkMode ? "dark" : "light"}`}>
       <Row gutter={[32, 32]}>
         <Col span={24}>
           <Card className="doctor-info-main-card">
             <Row gutter={[32, 32]} align="middle">
               <Col xs={24} sm={8} md={6} lg={5}>
                 <img
-                  src={doctor.photoUrl || defaultDoctorImage}
+                  src={
+                    doctor.photoUrl ||
+                    "https://res.cloudinary.com/healthcareintern/image/upload/v1748634566/59e12228-35cd-4554-956a-7dec683aa497_fbfgrc.png"
+                  }
                   alt="Doctor"
                   className="doctor-profile-image"
                   style={{
@@ -169,10 +166,12 @@ const getDateStatus = (date: Dayjs) => {
                   Mon–Fri: 09:00 – 17:00 <br />
                   Sat: 10:00 – 14:00
                 </Paragraph>
-                <Button type="primary" onClick={() => navigate(`/book-appointment/${id}`)}>
-                    Book Appointment
+                <Button
+                  type="primary"
+                  onClick={() => navigate(`/book-appointment/${id}`)}
+                >
+                  Book Appointment
                 </Button>
-
               </Col>
 
               <Col xs={24} sm={24} md={6} lg={7}>
@@ -181,17 +180,60 @@ const getDateStatus = (date: Dayjs) => {
 
                 <div style={{ marginTop: "16px" }}>
                   <Title level={5}>Availability status</Title>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <div style={{ width: "16px", height: "16px", backgroundColor: "white", border: "1px solid #ccc" }} />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                          backgroundColor: "white",
+                          border: "1px solid #ccc",
+                        }}
+                      />
                       <span>Free</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <div style={{ width: "16px", height: "16px", backgroundColor: "#cceeff" }} />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                          backgroundColor: "#cceeff",
+                        }}
+                      />
                       <span>Partially booked</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <div style={{ width: "16px", height: "16px", backgroundColor: "#1890ff" }} />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                          backgroundColor: "#1890ff",
+                        }}
+                      />
                       <span>Fully booked</span>
                     </div>
                   </div>

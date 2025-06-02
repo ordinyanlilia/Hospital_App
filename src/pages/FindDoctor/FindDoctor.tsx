@@ -9,8 +9,7 @@ import "./FindDoctor.css";
 import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
-import { Footer } from "./Footer";
-import type { RootState } from "../../store/store";
+import type { RootState } from "../../app/store";
 import { fetchDoctors } from "../../features/doctors/doctorsSlices";
 
 type Doctor = {
@@ -197,10 +196,6 @@ const FindDoctor = () => {
             />
           </div>
         )}
-      </div>
-      <div className="footer">
-        {" "}
-        <Footer />
       </div>
     </>
   );

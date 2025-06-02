@@ -1,10 +1,12 @@
 import "./Footer.css";
 import { Button, Row, Col } from "antd";
+import { useTheme } from "../context/theme-context";
 
 export const Footer = () => {
+  const { darkMode } = useTheme();
   return (
     <>
-      <div className="footer-container">
+      <div className={`footer-container ${darkMode ? "dark" : "light"}`}>
         <div className="footer-content">
           <Row gutter={[16, 16]} align="middle">
             <Col xs={24} md={12}>

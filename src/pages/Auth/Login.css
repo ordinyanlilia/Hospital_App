@@ -15,3 +15,37 @@
   background: #fff;
 }
 
+.login-container.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.login-container.dark .login-form {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+.login-container.dark .ant-input,
+.login-container.dark .ant-input-password {
+  background-color: #3a3a3a;
+  color: #fff;
+  border-color: #555;
+}
+
+.login-container.dark .ant-input::placeholder {
+  color: #bbb;
+}
+
+.login-container.dark .ant-form-item-label > label {
+  color: #fff;
+}
+
+.login-container.dark .ant-btn-primary {
+  background-color: #3e51a8;
+  border-color: #3e51a8;
+}
+
+.login-container.dark .ant-btn-primary:hover {
+  background-color: #2a3d70;
+  border-color: #2a3d70;
+}

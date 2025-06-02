@@ -5,6 +5,7 @@ import type { Timestamp } from "firebase/firestore";
 import scheduledIcon from "../../../../Icons/scheduled.png";
 import visitedIcon from "../../../../Icons/visited.png";
 import upcomingIcon from "../../../../Icons/upcoming.png";
+import { useTheme } from "../../../../../../context/theme-context";
 
 type FilterBarProps = {
   searchValue: string;
@@ -91,10 +92,12 @@ const AppointmentsList: React.FC<FilterBarProps> = ({
 
     setFilteredAppointments(filtered);
   }, [searchValue, statusFilter, appointments]);
-  
 
+  const { darkMode } = useTheme();
   return (
-    <div className="appointments-list-container">
+    <div
+      className={`appointments-list-container ${darkMode ? "dark" : "light"}`}
+    >
       <div className="appointments-list-content">
         <table>
           <thead>
@@ -108,38 +111,40 @@ const AppointmentsList: React.FC<FilterBarProps> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredAppointments.map((appointment) => appointment.doctorId === '1' ? (
-              <tr key={appointment.id}>
-                <td>{appointment.patientId}</td>
-                <td>{appointment.patientName}</td>
-                <td>
-                  {appointment.date.toDate().toLocaleDateString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </td>
-                <td>{appointment.reason}</td>
-                <td>{appointment.notes}</td>
-                <td>
-                  {appointment.status === "scheduled" ? (
-                    <div className="appointment-status">
-                      <img src={scheduledIcon} alt="Calendar icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  ) : appointment.status === "visited" ? (
-                    <div className="appointment-status">
-                      <img src={visitedIcon} alt="Confirmed icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  ) : (
-                    <div className="appointment-status">
-                      <img src={upcomingIcon} alt="Watch icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ) : (null))}
+            {filteredAppointments.map((appointment) =>
+              appointment.doctorId === "1" ? (
+                <tr key={appointment.id}>
+                  <td>{appointment.patientId}</td>
+                  <td>{appointment.patientName}</td>
+                  <td>
+                    {appointment.date.toDate().toLocaleDateString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td>{appointment.reason}</td>
+                  <td>{appointment.notes}</td>
+                  <td>
+                    {appointment.status === "scheduled" ? (
+                      <div className="appointment-status">
+                        <img src={scheduledIcon} alt="Calendar icon" />{" "}
+                        {appointment.status}
+                      </div>
+                    ) : appointment.status === "visited" ? (
+                      <div className="appointment-status">
+                        <img src={visitedIcon} alt="Confirmed icon" />{" "}
+                        {appointment.status}
+                      </div>
+                    ) : (
+                      <div className="appointment-status">
+                        <img src={upcomingIcon} alt="Watch icon" />{" "}
+                        {appointment.status}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ) : null
+            )}
           </tbody>
         </table>
       </div>
