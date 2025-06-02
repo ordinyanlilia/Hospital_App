@@ -1,7 +1,13 @@
 import "./Footer.css";
 import { Button, Row, Col } from "antd";
+import {BOOK_APPOINTMENT} from "../routes/paths.ts";
+import {useNavigate} from "react-router-dom";
 
 export const Footer = () => {
+  const navigate = useNavigate();
+  const handleBookAppointment = () => {
+    navigate(BOOK_APPOINTMENT);
+  }
   return (
     <>
       <div className="footer-container">
@@ -22,7 +28,7 @@ export const Footer = () => {
                   Looking for professional & trusted medical healthcare?
                 </p>
                 <p className="footer-subtext">DON'T HASTITATE TO CONTACT US.</p>
-                <Button className="footer-button">MAKE APPOINTMENT</Button>
+                <Button className="footer-button" onClick={handleBookAppointment}>MAKE APPOINTMENT</Button>
               </div>{" "}
             </Col>
           </Row>

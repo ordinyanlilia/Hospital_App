@@ -1,5 +1,5 @@
-import { setData } from '../services/apiServices';
-import { createAppSlice } from '../app/CreateAppSlice';
+import { setData } from '../services/apiService.ts';
+import { createAppSlice } from '../app/createAppSlice.ts';
 
 export interface Doctor {
   id: string;

@@ -10,7 +10,8 @@ import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
 import { Footer } from "./Footer";
-import type { RootState } from "../../store/store";
+import type {RootState} from "../../app/store.ts";
+import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
 import { fetchDoctors } from "../../features/doctors/doctorsSlices";
 
 type Doctor = {
@@ -25,6 +26,7 @@ type Doctor = {
   yearsOfExperience?: number;
   bio?: string;
 };
+import { fetchDoctors } from "../../features/doctors/doctorsSlices";
 
 const FindDoctor = () => {
   const dispatch = useAppDispatch();
@@ -165,7 +167,6 @@ const FindDoctor = () => {
           type="primary"
           icon={<SearchOutlined />}
           onClick={filterDoctors}
-          loading={loading}
         >
           Search
         </Button>

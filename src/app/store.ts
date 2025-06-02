@@ -1,19 +1,30 @@
-import { configureStore } from '@reduxjs/toolkit';
-import patientSlice from '../features/PatientSlice';
-import doctorSlice from '../features/DoctorSlice';
-import userSlice from '../features/UserSlice';
-import doctorsSlices from "../features/doctors/doctorsSlices.tsx";
+import type { Action, ThunkAction } from "@reduxjs/toolkit"
+import { combineSlices, configureStore } from "@reduxjs/toolkit"
+import { setupListeners } from "@reduxjs/toolkit/query"
+import AppointmentsSlice from "../features/appointments/appointmentsSlice.ts";
+import DoctorsSlice from "../features/doctors/doctorsSlice.tsx";
+import userSlice from "../features/UserSlice.ts";
+import patientSlice from "../features/PatientSlice.ts";
+import DoctorSlice from "../features/DoctorSlice.ts";
 
-const store = configureStore({
-  reducer: {
-    patientSlice: patientSlice.reducer,
-    doctorSlice: doctorSlice.reducer,
-    userSlice: userSlice.reducer,
-    doctors: doctorsSlices
-  },
-});
+const rootReducer = combineSlices(AppointmentsSlice, DoctorsSlice, userSlice, patientSlice, DoctorSlice);
 
-export default store;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>
+export const makeStore = () => {
+    const store = configureStore({
+        reducer: rootReducer,
+    })
+    setupListeners(store.dispatch)
+    return store
+}
 
+export const store = makeStore();
+
+export type AppStore = typeof store
+export type AppDispatch = AppStore["dispatch"]
+export type AppThunk<ThunkReturnType = void> = ThunkAction<
+    ThunkReturnType,
+    RootState,
+    unknown,
+    Action
+>

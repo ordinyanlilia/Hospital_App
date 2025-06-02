@@ -1,4 +1,4 @@
-import { createAppSlice } from '../app/CreateAppSlice';
+import { createAppSlice } from '../app/createAppSlice.ts';
 import { type Patient } from './PatientSlice';
 import { type Doctor } from './DoctorSlice';
 

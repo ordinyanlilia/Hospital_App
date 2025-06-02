@@ -1,49 +1,51 @@
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, fetchData } from "../../services/apiServices.ts";
-import { useAppDispatch } from "../../app/hooks.ts";
-import { setUser } from "../../features/UserSlice.ts";
-import { type Patient } from "../../features/PatientSlice.ts";
-import { type Doctor } from "../../features/DoctorSlice.ts";
+import {useEffect, useState} from "react";
+import {onAuthStateChanged} from "firebase/auth";
+import {auth, fetchData} from '../../services/apiService.ts';
+import {useAppDispatch} from "../../app/hooks.ts";
+import {setUser} from "../../features/UserSlice.ts";
+import {type Patient, setPatient} from "../../features/PatientSlice.ts";
+import {type Doctor} from "../../features/DoctorSlice.ts";
+import {Spin} from "antd";
 
 type Props = {
-  children: React.ReactNode;
+    children: React.ReactNode;
 };
 
-const AuthLoader = ({ children }: Props) => {
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(true);
+const AuthLoader = ({children}: Props) => {
+    const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        localStorage.setItem("authToken", token);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const token = await user.getIdToken();
+                localStorage.setItem("authToken", token);
 
-        const [patients, doctors] = await Promise.all([
-          fetchData("patients") as Promise<Patient[]>,
-          fetchData("doctors") as Promise<Doctor[]>,
-        ]);
+                const [patients, doctors] = await Promise.all([
+                    fetchData<Patient>("patients"),
+                    fetchData<Doctor>("doctors"),
+                ]);
 
-        const matchedPatient = patients.find(p => p.id === user.uid);
-        const matchedDoctor = doctors.find(d => d.id === user.uid);
+                const matchedPatient = patients.find(p => p.id === user.uid);
+                const matchedDoctor = doctors.find(d => d.id === user.uid);
 
-        if (matchedDoctor) {
-          dispatch(setUser({ data: matchedDoctor, role: "doctor", token }));
-        } else if (matchedPatient) {
-          dispatch(setUser({ data: matchedPatient, role: "patient", token }));
-        }
-      }
+                if (matchedDoctor) {
+                    dispatch(setUser({data: matchedDoctor, role: "doctor", token}));
+                } else if (matchedPatient) {
+                    dispatch(setPatient(matchedPatient));
+                    dispatch(setUser({data: matchedPatient, role: "patient", token}));
+                }
+            }
 
-      setLoading(false);
-    });
+            setLoading(false);
+        });
 
-    return () => unsubscribe(); 
-  }, [dispatch]);
+        return () => unsubscribe();
+    }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
+    if (loading) return <Spin fullscreen>Loading...</Spin>;
 
-  return <>{children}</>;
+    return <>{children}</>;
 };
 
 export default AuthLoader;

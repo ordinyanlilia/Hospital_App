@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import './OnikBot.css';
 
 const faqResponses: Record<string, string> = {

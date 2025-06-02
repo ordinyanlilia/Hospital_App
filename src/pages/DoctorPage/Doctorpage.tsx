@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { clearUser, selectUserData } from "../../features/UserSlice";
 import { LOGIN } from "../../routes/paths";
 import { signOut } from "firebase/auth";
-import { auth } from "../../services/apiServices";
+import { auth } from "../../services/apiService.ts";
 import { Button } from "antd";
 
 

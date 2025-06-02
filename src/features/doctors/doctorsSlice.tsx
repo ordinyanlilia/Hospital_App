@@ -10,6 +10,7 @@ export const fetchDoctors = createAsyncThunk(
 );
 
 export type Doctor = {
+  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;
@@ -53,4 +54,5 @@ const doctorsSlice = createSlice({
   },
 });
 
-export default doctorsSlice.reducer;
+export const { setDoctors, setLoading } = doctorsSlice.actions;
+export default doctorsSlice;
