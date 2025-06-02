@@ -1,37 +1,21 @@
 import { useEffect, useState } from "react";
-import { Input, Select, Button, Row, Col, Pagination } from "antd";
+import {Input, Select, Button, Row, Col, Pagination, Spin} from "antd";
 import {
   SearchOutlined,
   UserOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
 import "./FindDoctor.css";
-import { useAppDispatch } from "../../store/hooks";
-import { useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
 import { Footer } from "./Footer";
-import type {RootState} from "../../app/store.ts";
-import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
-import { fetchDoctors } from "../../features/doctors/doctorsSlices";
-
-type Doctor = {
-  id?: string;
-  name?: string;
-  surname?: string;
-  specialty?: string;
-  photoUrl?: string;
-  gender?: string;
-  email?: string;
-  doc_id?: string;
-  yearsOfExperience?: number;
-  bio?: string;
-};
-import { fetchDoctors } from "../../features/doctors/doctorsSlices";
+import {type Doctor, selectLoading, selectDoctors} from "../../features/doctors/doctorsSlice.tsx";
+import { fetchDoctors } from "../../features/doctors/doctorsSlice.tsx";
+import {useAppSelector, useAppDispatch} from "../../app/hooks.ts";
 
 const FindDoctor = () => {
   const dispatch = useAppDispatch();
-  const doctors = useSelector((state: RootState) => state.doctors.doctors);
-  const loading = useSelector((state: RootState) => state.doctors.isLoading);
+  const doctors = useAppSelector(selectDoctors);
+  const loading = useAppSelector(selectLoading);
   const [searchByName, setSearchByName] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(
     null
@@ -77,6 +61,9 @@ const FindDoctor = () => {
     }
   }, [doctors]);
 
+  if(loading){
+    return <Spin />;
+  }
   return (
     <>
       <div className="find-doctor-container">
@@ -198,10 +185,6 @@ const FindDoctor = () => {
             />
           </div>
         )}
-      </div>
-      <div className="footer">
-        {" "}
-        <Footer />
       </div>
     </>
   );
