@@ -6,9 +6,11 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "./CalendarPart.css";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../../../../Store/store";
+// import type { AppDispatch, RootState } from "../../../../../../Store/store";
 import { fetchDoctorAppointments } from "../../../../../../features/DoctorPageSlice/doctorPageSlice";
-import type { Doctor } from "../../../../../../features/SignInSignUpSlice/DoctorSlice";
+import type { Doctor } from "../../../../../../features/DoctorSlice";
+import type { AppDispatch, RootState } from "../../../../../../app/store";
+// import type { Doctor } from "../../../../../../features/SignInSignUpSlice/DoctorSlice";
 
 dayjs.extend(utc);
 
@@ -28,10 +30,10 @@ const CalendarPart: React.FC = () => {
         ? (userData as Doctor)
         : null;
   
-    const DOCTOR_ID = doctor?.doc_id;
+    const DOCTOR_ID = doctor?.id;
   
     useEffect(() => {
-      if (typeof DOCTOR_ID === "string") {
+      if (DOCTOR_ID) {
         dispatch(fetchDoctorAppointments(DOCTOR_ID));
       }
     }, [dispatch, DOCTOR_ID]);

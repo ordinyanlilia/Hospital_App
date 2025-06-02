@@ -1,8 +1,9 @@
 import "./FilterBar.css";
 import { Input, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../../../../Store/store";
+// import type { AppDispatch, RootState } from "../../../../../../Store/store";
 import { setSearchValue, setStatusFilter } from "../../../../../../features/DoctorPageSlice/doctorPageSlice";
+import type { AppDispatch, RootState } from "../../../../../../app/store";
 
 const { Search } = Input;
 

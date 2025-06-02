@@ -159,4 +159,4 @@ const doctorPageSlice = createSlice({
 
 export const { setSearchValue, setStatusFilter } = doctorPageSlice.actions;
 
-export default doctorPageSlice.reducer;
+export default doctorPageSlice;

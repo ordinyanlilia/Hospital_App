@@ -5,10 +5,12 @@ import "./AppointmentsList.css";
 import scheduledIcon from "../../../../Icons/scheduled.png";
 import visitedIcon from "../../../../Icons/visited.png";
 import upcomingIcon from "../../../../Icons/upcoming.png";
-import type { AppDispatch, RootState } from "../../../../../../Store/store";
+// import type { AppDispatch, RootState } from "../../../../../../Store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDoctorAppointments } from "../../../../../../features/DoctorPageSlice/doctorPageSlice";
-import type { Doctor } from "../../../../../../features/SignInSignUpSlice/DoctorSlice";
+import type { Doctor } from "../../../../../../features/DoctorSlice";
+import type { AppDispatch, RootState } from "../../../../../../app/store";
+// import type { Doctor } from "../../../../../../features/SignInSignUpSlice/DoctorSlice";
 
 dayjs.extend(utc);
 
@@ -21,19 +23,20 @@ const AppointmentsList: React.FC = () => {
 
   const userData = useSelector((state: RootState) => state.userSlice.data);
   const userRole = useSelector((state: RootState) => state.userSlice.role);
-
+  
   const doctor =
-    userData && userRole === "doctor" && "doc_id" in userData
+    userData && userRole === "doctor" && "id" in userData
       ? (userData as Doctor)
       : null;
 
-  const DOCTOR_ID = doctor?.doc_id;
+  const DOCTOR_ID = doctor?.id;
 
   useEffect(() => {
-    if (typeof DOCTOR_ID === "string") {
+    if (DOCTOR_ID) {
       dispatch(fetchDoctorAppointments(DOCTOR_ID));
     }
   }, [dispatch, DOCTOR_ID]);
+
 
   if (!doctor) {
     return null;

@@ -1,11 +1,13 @@
 import "./DoctorProfile.css";
 import stethoscopeBlueIcon from "../../Icons/stethoscopeBlue.png";
 import { useEffect, useState } from "react";
-import type { AppDispatch, RootState } from "../../../../Store/store";
+// import type { AppDispatch, RootState } from "../../../../Store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDoctorById, type DoctorA } from "../../../../features/DoctorPageSlice/doctorPageSlice";
 import { updateData } from "../../../../services/apiService";
-import { type Doctor } from "../../../../../src/features/SignInSignUpSlice/DoctorSlice";
+import type { Doctor } from "../../../../features/DoctorSlice";
+import type { AppDispatch, RootState } from "../../../../app/store";
+// import { type Doctor } from "../../../../../src/features/SignInSignUpSlice/DoctorSlice";
 
 
 const DoctorProfile: React.FC = () => {
@@ -23,10 +25,10 @@ const DoctorProfile: React.FC = () => {
         ? (userData as Doctor)
         : null;
   
-    const DOCTOR_ID = doctor1?.doc_id;
+    const DOCTOR_ID = doctor1?.id;
   
     useEffect(() => {
-      if (typeof DOCTOR_ID === "string") {
+      if (DOCTOR_ID) {
         dispatch(fetchDoctorById(DOCTOR_ID));
       }
     }, [dispatch, DOCTOR_ID]);
