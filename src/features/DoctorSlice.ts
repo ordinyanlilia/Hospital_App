@@ -10,6 +10,7 @@ export interface Doctor {
   specialty: string;
   email: string;
   password: string;
+  photoUrl?: string;
 }
 
 interface InitialState {

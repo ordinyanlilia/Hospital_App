@@ -1,8 +1,7 @@
 .doctor-info-container {
   padding: 2rem;
-  background-color: #f5f5f5;
   min-height: 100vh;
-  padding-top: 75px;
+  padding-top: 2px;
 }
 
 .doctor-info-main-card .ant-card-cover img {

@@ -13,7 +13,6 @@
 
 .doctorPage-main {
   padding: 20px;
-  overflow-y: auto;
   height: 100vh;
   box-sizing: border-box;
 }
@@ -32,8 +31,6 @@
 .doctorPage-main {
   flex-grow: 1;
   padding: 20px;
-  overflow-y: auto;
   height: 100vh;
-  box-sizing: border-box;
 }
 }

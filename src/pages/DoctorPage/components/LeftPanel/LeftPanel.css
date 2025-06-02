@@ -16,11 +16,11 @@
   font-weight: bold;
 }
 
-/* .home-icon {
-  width: 28px;
-  height: 28px;
-  margin: 10px 0 0 10px;
-} */
+.home-icon {
+  width: 32px;
+  height: 32px;
+  margin: 20px 30px 10px 10px;
+}
 
 .leftPanel-content {
   display: flex;
@@ -44,6 +44,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .doctor-info-text {
@@ -120,6 +121,7 @@
   transition: background-color 0.3s;
   margin-bottom: 20px;
   font-family: "Inter", sans-serif;
+  cursor: pointer;
 }
 
 .sidebar-bottom .nav-button-logout:hover {

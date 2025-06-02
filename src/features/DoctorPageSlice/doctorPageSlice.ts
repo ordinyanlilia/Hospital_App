@@ -16,6 +16,7 @@ interface Appointment {
 
 export interface DoctorA {
   doc_id: string;
+  id: string;
   name: string;
   surname: string;
   email: string;
