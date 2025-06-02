@@ -35,6 +35,7 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
 import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
 import {fetchData} from "../../services/apiService.ts";
+import {selectPatient} from "../../features/PatientSlice.ts";
 
 interface FinishValue {
     DatePicker?: dayjs.Dayjs | null;
@@ -70,6 +71,7 @@ const BookAppointment = () => {
     const [current, setCurrent] = useState(1);
     const inPageCount = 8;
     const paginatedDoctors = filteredDoctors.slice((current - 1) * inPageCount, current * inPageCount);
+    const user = useAppSelector(selectPatient);
 
     useEffect(() => {
         fetchData<Doctor>('doctors').then((data: Doctor[]) => {
@@ -117,8 +119,8 @@ const BookAppointment = () => {
                 reason: value.reason || '',
                 mode: value.mode || '',
                 date: combinedDateTime,
-                patientId: '1',
-                patientName: 'Mariam',
+                patientId: user?.id || '',
+                patientName: user?.name || '',
                 status: 'scheduled',
                 doctorId: selectedDoctor?.id || '',
                 doctorName: selectedDoctor?.name || '',
@@ -127,13 +129,12 @@ const BookAppointment = () => {
             if (value.notes) {
                 resultValue.notes = value.notes;
             }
-            const user_doc_id = '2e3C5vE5WSVC6LJ9Zjc0';
 
 
             await dispatch(addAppointment({
                 appointment: resultValue,
                 doctor_doc_id: selectedDoctor?.doc_id ?? '',
-                user_doc_id: user_doc_id,
+                user_doc_id: user?.doc_id ?? '',
             })).unwrap()
 
         } catch (error) {
@@ -144,7 +145,7 @@ const BookAppointment = () => {
         setSelectedCategory('All');
     };
 
-    const handleClick = () => {
+    const handleProfileClick = () => {
         navigate('/profile');
         dispatch(resetStatus());
     }
@@ -167,7 +168,7 @@ const BookAppointment = () => {
             <Result
                 icon={<SmileOutlined/>}
                 title="Great, we have done all the operations!"
-                extra={<Button type="primary" onClick={handleClick}>Next</Button>}
+                extra={<Button type="primary" onClick={handleProfileClick}>Go to Profile</Button>}
             />
         )
     } else if (status === 'failed') {
@@ -176,14 +177,14 @@ const BookAppointment = () => {
             title="Submission Failed"
             subTitle={error}
             extra={
-                <Button type="primary" onClick={handleClick}>Next</Button>
+                <Button type="primary" onClick={handleProfileClick}>Go to Profile</Button>
             }
         />)
     } else if (status === 'loading') {
         return <Spin tip="Booking appointment..." fullscreen>
             <div style={{
                 padding: 50,
-                background: 'rgba(0, 0, 0, 0.05)',
+                background: '#55afb7',
                 borderRadius: 4
             }}/>
         </Spin>;

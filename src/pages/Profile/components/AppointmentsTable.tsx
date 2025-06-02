@@ -56,21 +56,22 @@ const AppointmentsTable = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectPatient);
 
-
     useEffect(() => {
         const fetchAppointments = async () => {
             const results = await Promise.all(
-                    user.appointments.map(id => getData<Appointment>(id, 'appointments'))
+                (user?.appointments ?? []).map(id => getData<Appointment>(id, 'appointments'))
             );
 
             dispatch(setAppointments(results));
         };
 
         fetchAppointments();
-    }, []);
+    }, [user?.appointments?.length]);
+
 
     return (
-        <Table columns={columns} dataSource={appointments} size="small"/>
+        <Table columns={columns} dataSource={appointments} rowKey={record => record.doc_id || ''}
+               size="small"/>
     )
 }
 

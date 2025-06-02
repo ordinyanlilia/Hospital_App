@@ -54,7 +54,7 @@ const updateData = async <T extends object>(doc_id: string, collectionName: Coll
 const getData = async <T>(id: string, collectionName: CollectionName,):Promise<T> => {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
-    return docSnap.data() as T;
+    return {...docSnap.data(), doc_id: id} as T;
 }
 
 

@@ -8,6 +8,7 @@
     margin: 3rem auto;
 }
 
+
 .profile-main-info {
     border-right: 1px solid #eee;
     text-align: center;
@@ -34,6 +35,11 @@
 .profile-details,
 .profile-history {
     padding: 1rem;
+}
+
+.dark-theme>.profile {
+    background-color: #3c3e41;
+    color: rgba(255,254,254,0.75);
 }
 
 .profile-details p,
