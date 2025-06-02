@@ -37,7 +37,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const themeConfig: ThemeConfig = {
     algorithm: darkMode ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
     token: {
-      colorBgBase: darkMode ? "#141414" : "#ffffff",
+      colorBgBase: darkMode ? "#090e1c" : "#ffffff",
       colorTextBase: darkMode ? "#ffffff" : "#000000",
     },
   };

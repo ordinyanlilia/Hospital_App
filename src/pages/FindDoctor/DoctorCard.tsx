@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import "./DoctorCard.css";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/theme-context";
 
 type Doctor = {
   id?: string;
@@ -22,9 +23,9 @@ type Doctor = {
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   const navigate = useNavigate();
-
+  const { darkMode } = useTheme();
   return (
-    <div className="doctor-card-horizontal">
+    <div className={`doctor-card-horizontal ${darkMode ? "dark" : "light"}`}>
       <img
         src={
           doctor.photoUrl ||
@@ -52,7 +53,12 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
         </div>
 
         <div className="doctor-card-buttons">
-          <Button type="primary" onClick={()=>navigate(`/doctor-info/${doctor.id}`)}>Doctor Profile</Button>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/doctor-info/${doctor.id}`)}
+          >
+            Doctor Profile
+          </Button>
           <Button
             key={doctor.id}
             onClick={() => navigate(`/book-appointment/${doctor.id}`)}
