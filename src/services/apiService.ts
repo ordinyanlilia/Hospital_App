@@ -40,10 +40,10 @@ const setData = async <T>(collectionName: CollectionName, data: T, docId?: strin
         await setDoc(docRef, { ...data, id: docId });
         return docId;
     } else {
-    const dataCollection = collection(db, collectionName) as CollectionReference<T>;
+        const dataCollection = collection(db, collectionName) as CollectionReference<T>;
         const docRef = await addDoc(dataCollection, data);
-    return docRef.id;
-}
+        return docRef.id;
+    }
 }
 
 const updateData = async <T extends object>(doc_id: string, collectionName: CollectionName, updatedData: T):Promise<void> => {
