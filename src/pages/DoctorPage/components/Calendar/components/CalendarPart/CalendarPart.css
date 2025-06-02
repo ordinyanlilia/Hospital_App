@@ -4,7 +4,7 @@
 }
 
 .ant-picker-cell-inner {
-  padding: 4px 0;
+  /* padding: 4px 0; */
   height: 30px;
   background-color: white !important;
 }
@@ -22,12 +22,6 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
-.ant-picker-cell-selected .ant-picker-cell-inner,
-    .ant-picker-cell-selected:hover .ant-picker-cell-inner,
-    .ant-picker-cell-range-start .ant-picker-cell-inner,
-    .ant-picker-cell-range-end .ant-picker-cell-inner {
-      background-color: transparent !important;
-      color: inherit !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-    }
+.calendar-wrapper .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: white !important;
+}
