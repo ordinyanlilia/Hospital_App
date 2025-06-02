@@ -1,22 +1,37 @@
 .leftPanel-container {
   width: 250px;
-  height: 95vh;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: whitesmoke;
+  background-color: white;
   position: relative;
-  border-radius: 20px;
 }
 
-.home-icon{
-  width: 32px;
-  height: 32px;
-  margin: 10px 0 0 10px;
+.logo-part {
+  margin: 25px 30px;
 }
+
+.logo-part span{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* .home-icon {
+  width: 28px;
+  height: 28px;
+  margin: 10px 0 0 10px;
+} */
 
 .leftPanel-content {
   display: flex;
   justify-content: center;
+}
+
+.doctor-info-container-top {
+  background-color: #f5f5f4;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.05);
 }
 
 .doctor-info-container {
@@ -38,21 +53,30 @@
 }
 
 .doctor-info-text span:first-child {
-  color: black;
-  font-size: 18px;
+  color: #333;
+  font-size: 15px;
+  font-family: "Inter", sans-serif;
 }
 
 .doctor-info-text span:last-child {
   color: rgba(0, 0, 0, 0.7);
-  font-size: 15px;
+  font-size: 12px;
+  font-family: "Inter", sans-serif;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
-  height: calc(100vh - 45vh);
+  margin-top: 20px;
+  height: calc(100vh - 47vh);
   justify-content: space-between;
+  background-color: #f5f5f4;
+  border-radius: 30px;
+  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-top {
+  margin-top: 20px;
 }
 
 .sidebar-top .nav-button {
@@ -60,13 +84,15 @@
   display: flex;
   justify-content: baseline;
   align-items: center;
-  color: black;
+  color: #333;
   padding: 12px 15px;
   margin-bottom: 5px;
   border: none;
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
+  transition: color 0.3s;
+  font-family: "Inter", sans-serif;
 }
 
 .sidebar-top .nav-button:hover {
@@ -77,7 +103,7 @@
 .sidebar-top .nav-button.active {
   background-color: #1677ff;
   color: white;
-  box-shadow: 4px 4px 10px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-bottom .nav-button-logout {
@@ -85,13 +111,15 @@
   display: flex;
   justify-content: baseline;
   align-items: center;
-  color: black;
+  color: #333;
   padding: 12px 15px;
   border: none;
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
+  margin-bottom: 20px;
+  font-family: "Inter", sans-serif;
 }
 
 .sidebar-bottom .nav-button-logout:hover {
@@ -131,4 +159,69 @@
 
 .sidebar-bottom .nav-button-logout:hover .nav-icon-logout {
   content: url(../../Icons/logoutWhite.png);
+}
+
+
+@media (max-width: 768px) {
+  .leftPanel-container {
+    width: 60px;
+  }
+
+  .leftPanel-content {
+    width: 60px;
+    margin-top: 75px;
+  }
+
+  .sidebar{
+    width: 60px;
+    height: max-content;
+    border-radius: 10px;
+  }
+
+  .logo-part span,
+  .doctor-info-text span,
+  .nav-button span,
+  .nav-button-logout span {
+    display: none; 
+  }
+
+  .sidebar img
+  {
+    width: 32px;
+    height: 32px;
+  }
+
+  .doctor-info-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+
+
+  .doctor-info-image {
+     width: 60px;
+  }
+  
+
+  .doctor-info-container-top {
+     border-radius: 10px;
+    width: 60px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sidebar-top .nav-button,
+  .sidebar-bottom .nav-button-logout {
+    justify-content: center;
+    padding: 10px;
+    width: 60px;
+  }
+
+  .sidebar img {
+    margin-right: 0;
+  }
 }
