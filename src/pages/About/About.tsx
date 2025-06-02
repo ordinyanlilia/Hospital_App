@@ -1,6 +1,5 @@
 import { Card, Row, Col } from "antd";
 import "./About.css";
-import { Footer } from "../FindDoctor/Footer";
 import { motion } from "framer-motion";
 
 const About = () => {
@@ -141,7 +140,6 @@ const About = () => {
           </Card>
         </motion.div>
       </div>
-      <Footer />
     </>
   );
 };
