@@ -9,8 +9,11 @@ import {
   PROFILE,
   DOCTOR_PAGE,
   BOOK_APPOINTMENT,
+  DOCTOR_CALENDAR,
+  DOCTOR_APPOINTMENTS,
+  DOCTOR_PROFILE,
 } from "./paths";
-import { HOME_PAGE, ABOUT, FIND_DOCTOR, CONTACT_US, PROFILE, DOCTOR_PAGE, DOCTOR_APPOINTMENTS, DOCTOR_CALENDAR, DOCTOR_PROFILE } from "./paths";
+
 
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
