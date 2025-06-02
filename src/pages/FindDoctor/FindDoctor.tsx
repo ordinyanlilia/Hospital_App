@@ -1,34 +1,21 @@
 import { useEffect, useState } from "react";
-import { fetchData } from "../../services/apiService";
-import { Input, Select, Button, Row, Col, Pagination } from "antd";
+import {Input, Select, Button, Row, Col, Pagination, Spin} from "antd";
 import {
   SearchOutlined,
   UserOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { setDoctors, setLoading } from "../../features/doctors/doctorsSlices";
 import "./FindDoctor.css";
-import { useDispatch, useSelector } from "react-redux";
 import { DoctorCard } from "./DoctorCard";
 import { Footer } from "./Footer";
-import type { RootState } from "../../store/store";
-
-type Doctor = {
-  id?: string;
-  name?: string;
-  surname?: string;
-  specialty?: string;
-  photoUrl?: string;
-  gender?: string;
-  email?: string;
-  doc_id?: string;
-  yearsOfExperience?: number;
-  bio?: string;
-};
+import {type Doctor, selectLoading, selectDoctors} from "../../features/doctors/doctorsSlice.tsx";
+import { fetchDoctors } from "../../features/doctors/doctorsSlice.tsx";
+import {useAppSelector, useAppDispatch} from "../../app/hooks.ts";
 
 const FindDoctor = () => {
-  const dispatch = useDispatch();
-  const doctors = useSelector((state: RootState) => state.doctors.doctors);
+  const dispatch = useAppDispatch();
+  const doctors = useAppSelector(selectDoctors);
+  const loading = useAppSelector(selectLoading);
   const [searchByName, setSearchByName] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(
     null
@@ -44,18 +31,7 @@ const FindDoctor = () => {
   ).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    const loadDoctors = async () => {
-      try {
-        const data = await fetchData("doctors");
-        dispatch(setDoctors(data as Doctor[]));
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-      } finally {
-        dispatch(setLoading(false));
-      }
-    };
-
-    loadDoctors();
+    dispatch(fetchDoctors());
   }, []);
 
   const filterDoctors = () => {
@@ -85,6 +61,9 @@ const FindDoctor = () => {
     }
   }, [doctors]);
 
+  if(loading){
+    return <Spin />;
+  }
   return (
     <>
       <div className="find-doctor-container">
@@ -206,10 +185,6 @@ const FindDoctor = () => {
             />
           </div>
         )}
-      </div>
-      <div className="footer">
-        {" "}
-        <Footer />
       </div>
     </>
   );

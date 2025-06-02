@@ -5,8 +5,6 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./DoctorCard.css";
-import BookAppointment from "../BookAppointment/BookAppointment";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 type Doctor = {
@@ -54,7 +52,7 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
         </div>
 
         <div className="doctor-card-buttons">
-          <Button type="primary">Doctor Profile</Button>
+          <Button type="primary" onClick={()=>navigate(`/doctor-info/${doctor.id}`)}>Doctor Profile</Button>
           <Button
             key={doctor.id}
             onClick={() => navigate(`/book-appointment/${doctor.id}`)}

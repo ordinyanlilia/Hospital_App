@@ -1,0 +1,17 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+
+.ant-form {
+  max-width: 350px;
+  width: 100%;
+  padding: 24px 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(117, 117, 117, 0.12);
+  background: #fff;
+}
+
