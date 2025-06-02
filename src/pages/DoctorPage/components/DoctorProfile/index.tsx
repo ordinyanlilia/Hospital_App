@@ -21,7 +21,7 @@ const DoctorProfile: React.FC = () => {
     const userRole = useSelector((state: RootState) => state.userSlice.role);
   
     const doctor1 =
-      userData && userRole === "doctor" && "doc_id" in userData
+      userData && userRole === "doctor" && "id" in userData
         ? (userData as Doctor)
         : null;
   
@@ -32,6 +32,7 @@ const DoctorProfile: React.FC = () => {
         dispatch(fetchDoctorById(DOCTOR_ID));
       }
     }, [dispatch, DOCTOR_ID]);
+
   
   useEffect(() => {
     if (isEditMode && doctor) {
@@ -39,7 +40,7 @@ const DoctorProfile: React.FC = () => {
     }
   }, [isEditMode, doctor]); 
   
-  if (!doctor) {
+  if (!doctor1) {
       return null;
     }
 
@@ -54,12 +55,15 @@ const DoctorProfile: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (editDoctor && doctor.doc_id) {
-      await updateData<Partial<DoctorA>>(doctor.doc_id, "doctors", editDoctor);
-      dispatch(fetchDoctorById(doctor.doc_id));
+    if (editDoctor && doctor.id) {
+      await updateData<Partial<DoctorA>>(doctor.id, "doctors", editDoctor);
+      dispatch(fetchDoctorById(doctor.id));
       setIsEditMode(false);
     }
   };
+
+  console.log("edited",doctor);
+  
 
   return (
     <div className="doctor-profile-container">
