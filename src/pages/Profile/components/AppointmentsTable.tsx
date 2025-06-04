@@ -9,7 +9,8 @@ import {Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {getData} from "../../../services/apiService.ts";
-import {selectPatient} from "../../../features/PatientSlice.ts";
+import {type Patient, selectPatient} from "../../../features/PatientSlice.ts";
+import dayjs from "dayjs";
 
 const AppointmentsTable = () => {
     const columns: ColumnsType<Appointment> = [
@@ -40,6 +41,18 @@ const AppointmentsTable = () => {
             key: 'notes',
         },
         {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY'),
+        },
+        {
+            title: 'Time',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date: string) => dayjs(date).format('HH:mm'),
+        },
+        {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
@@ -58,15 +71,16 @@ const AppointmentsTable = () => {
 
     useEffect(() => {
         const fetchAppointments = async () => {
+            const userTemp = await getData<Patient>(user?.doc_id ?? '', 'patients');
             const results = await Promise.all(
-                (user?.appointments ?? []).map(id => getData<Appointment>(id, 'appointments'))
+                (userTemp?.appointments ?? []).map(id => getData<Appointment>(id, 'appointments'))
             );
 
             dispatch(setAppointments(results));
         };
 
         fetchAppointments();
-    }, [user?.appointments?.length]);
+    }, []);
 
 
     return (

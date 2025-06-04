@@ -7,7 +7,6 @@ import {
 } from "@ant-design/icons";
 import "./FindDoctor.css";
 import { DoctorCard } from "./DoctorCard";
-import { Footer } from "./Footer";
 import {type Doctor, selectLoading, selectDoctors} from "../../features/doctors/doctorsSlice.tsx";
 import { fetchDoctors } from "../../features/doctors/doctorsSlice.tsx";
 import {useAppSelector, useAppDispatch} from "../../app/hooks.ts";

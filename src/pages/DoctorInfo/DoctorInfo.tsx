@@ -6,6 +6,7 @@ import { DoctorCard } from "../FindDoctor/DoctorCard";
 import "./DoctorInfo.css";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
+import type {Appointment} from "../../features/appointments/appointmentsSlice.ts";
 
 
 const { Title, Paragraph } = Typography;
@@ -33,10 +34,9 @@ const DoctorInfo = () => {
 
   useEffect(() => {
     const loadAppointments = async () => {
-        const allAppointments = await fetchData("appointments");
-        const filtered = allAppointments.filter((a) => a.doc_id === id);
+        const allAppointments = await fetchData<Appointment>("appointments");
+        const filtered = allAppointments.filter((doc) => doc.doc_id === id);
         setAppointments(filtered);
-        console.log(filtered);
     };
     loadAppointments();
   }, [id]);
