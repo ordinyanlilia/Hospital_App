@@ -1,0 +1,41 @@
+.book-appointment {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #f4f8fb;
+    border: 0.2px solid #0077cc;
+
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    margin: 1rem;
+}
+
+.book-appointment .ant-form-item-label > label {
+    color: #003366;
+    font-weight: 500;
+}
+
+.book-appointment .ant-input,
+.book-appointment .ant-picker,
+.book-appointment .ant-select-selector,
+.book-appointment .ant-input-textarea {
+    background-color: #ffffff;
+    border: 1px solid #d0dce9;
+    border-radius: 6px;
+}
+
+.book-appointment .ant-btn-primary {
+    background-color: #0077cc;
+    border-color: #0077cc;
+}
+
+.book-appointment .ant-btn-primary:hover {
+    background-color: #005fa3;
+    border-color: #005fa3;
+}
+
+.doc-info-card{
+    width: 11em ;
+    text-align: center;
+    align-items: center;
+}

@@ -1,14 +1,22 @@
-import './ContactUs.css';
-import { PhoneOutlined, MailOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Typography } from 'antd';
+import "./ContactUs.css";
+import {
+  PhoneOutlined,
+  MailOutlined,
+  EnvironmentOutlined,
+} from "@ant-design/icons";
+import { Card, Row, Col, Typography } from "antd";
+import { useTheme } from "../../context/theme-context";
 
 const { Title, Text } = Typography;
 
 const ContactUs: React.FC = () => {
+  const { darkMode } = useTheme();
   return (
-    <div className="contact-us-container">
-      <Title level={2} className="contact-title">Find Us Here</Title>
-      
+    <div className={`contact-us-container ${darkMode ? "dark" : "light"}`}>
+      <Title level={2} className="contact-title">
+        Find Us Here
+      </Title>
+
       <Row gutter={[16, 16]} justify="center" className="contact-cards">
         <Col xs={24} md={8}>
           <Card className="contact-card" bordered={false}>

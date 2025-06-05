@@ -1,0 +1,234 @@
+.onik-bot-widget {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9999;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
+}
+
+.onik-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: #421da7;
+  color: white;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  height: 32px;
+  max-width: 90px;
+  z-index: 9999;
+}
+
+.onik-toggle img {
+  width: 16px;
+  height: 16px;
+}
+
+.onik-bot-box {
+  flex-direction: column;
+  background-color: #ffffff;
+  width: 270px;
+  max-height: 480px;
+  opacity: 1;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s ease;           /* 👈 Smooth transition added */
+  transform: translateY(20px);         /* 👈 For slide effect */
+  margin-bottom: 60px;
+}
+
+.onik-bot-box.open {
+  transform: translateY(0);            /* 👈 Slide up on open */
+  opacity: 1;
+}
+
+.onik-inner-content {
+  background-color: #f4f7f9;
+  padding: 12px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.greeting {
+  font-size: 13px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.highlight {
+  color: #0077cc;
+  font-weight: bold;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.options-list li {
+  background: #f1f1f1;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.options-list li:hover {
+  background: #e1e1e1;
+}
+
+.medical-chat-option {
+  background-color: #eee;
+  font-style: italic;
+}
+
+/* Chat View */
+.medical-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #f5f7fa;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  opacity: 0;                          /* 👈 Initial state for fade */
+  animation: fadeIn 0.4s ease forwards; /* 👈 Smooth fade in */
+}
+
+.medical-chat-header {
+  background-color: #421da7;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.medical-chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #f4f7f9;
+}
+
+.operator-intro {
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.operator-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 4px auto;
+}
+
+.medical-chat-message {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  font-size: 13px;
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: #421da7;
+  color: white;
+}
+
+.gemini-message {
+  align-self: flex-start;
+  background-color: white;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.medical-chat-input-container {
+  display: flex;
+  padding: 10px;
+  gap: 6px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+}
+
+.medical-chat-textarea {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 13px;
+  resize: none;
+  height: 34px;
+}
+
+.send-button {
+  background-color: #421da7;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading-message {
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 👇 Fade-in animation used by medical-chat-container */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.chat-close-button {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10000;
+  padding: 0;
+  line-height: 1;
+}
+
+.chat-close-button:hover {
+  opacity: 0.6;
+}

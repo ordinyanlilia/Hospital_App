@@ -1,0 +1,114 @@
+.profile {
+    background-color: #fff;
+    color: #4d4d4d;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    border-radius: 15px;
+    box-shadow: 5px 3px 14px 0px rgba(92,131,168,0.75);
+    margin: 3rem auto;
+}
+
+
+.profile-main-info {
+    border-right: 1px solid #eee;
+    text-align: center;
+    padding: 1rem;
+}
+
+.profile-main-info img {
+    width: 140px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.profile-main-info>p {
+    margin: 1.2rem 0;
+    font-weight: 400;
+}
+
+.profile-main-info button {
+    margin-top: 1rem;
+}
+
+.profile-details,
+.profile-history {
+    padding: 1rem;
+}
+
+.dark-theme>.profile {
+    background-color: #3c3e41;
+    color: rgba(255,254,254,0.75);
+}
+
+.profile-details p,
+.profile-history p {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.profile-details .ant-typography,
+.profile-history .ant-typography {
+    display: block;
+    margin-top: 1rem;
+}
+
+.profile li {
+    list-style: none;
+    padding-left: 0;
+}
+
+.ant-list-item {
+    padding: 4px 8px;
+}
+
+.profile .ant-empty {
+    margin: 8px 0;
+    padding: 8px 0;
+}
+
+.profile .ant-empty-image {
+    height: 25px;
+}
+
+.profile .ant-empty-description {
+    font-size: 12px;
+}
+
+.ant-typography.blue-text{
+    color: #0050b3;
+}
+
+
+
+@media (max-width: 768px) {
+    .profile {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0.1rem;
+    }
+    .profile-main-info {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+}
+
+
+.ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-container{
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-uploader .ant-upload-list-picture-circle .ant-upload-list-item {
+    width: 140px ;
+    height: 140px ;
+}

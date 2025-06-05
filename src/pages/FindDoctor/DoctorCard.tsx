@@ -4,13 +4,12 @@ import {
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import defaultDoctorImage from "../../assets/Doctors/user.png";
 import "./DoctorCard.css";
-// new
 import { useNavigate } from "react-router-dom";
-
+import { useTheme } from "../../context/theme-context";
 
 type Doctor = {
+  id?: string;
   name?: string;
   surname?: string;
   specialty?: string;
@@ -19,16 +18,19 @@ type Doctor = {
   email?: string;
   doc_id?: string;
   yearsOfExperience?: number;
-  id?: string;
+  bio?: string;
 };
 
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   const navigate = useNavigate();
-
+  const { darkMode } = useTheme();
   return (
-    <div className="doctor-card-horizontal">
+    <div className={`doctor-card-horizontal ${darkMode ? "dark" : "light"}`}>
       <img
-        src={doctor.photoUrl || defaultDoctorImage}
+        src={
+          doctor.photoUrl ||
+          "https://res.cloudinary.com/healthcareintern/image/upload/v1748634566/59e12228-35cd-4554-956a-7dec683aa497_fbfgrc.png"
+        }
         alt={doctor.name}
         className="doctor-card-avatar"
       />
@@ -47,10 +49,22 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           <p>
             <UserOutlined /> {doctor.gender}
           </p>
+          {/* <p className="bio">{doctor.bio}</p> */}
         </div>
+
         <div className="doctor-card-buttons">
-          <Button type="primary" onClick={() => navigate(`/doctor-info/${doctor.id}`)}>Doctor Profile</Button>
-          <Button>Book Appointment</Button>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/doctor-info/${doctor.id}`)}
+          >
+            Doctor Profile
+          </Button>
+          <Button
+            key={doctor.id}
+            onClick={() => navigate(`/book-appointment/${doctor.id}`)}
+          >
+            Book Appointment
+          </Button>
         </div>
       </div>
     </div>

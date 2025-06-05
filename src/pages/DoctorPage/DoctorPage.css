@@ -1,12 +1,8 @@
 .doctorPage-container {
   margin: 0;
   padding: 0;
-  height: 95vh;
   overflow: hidden;
-  margin: 20px 50px 0;
-  border-radius: 20px;
   background-color: white;
-  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
 .doctorPage-content {
@@ -17,7 +13,24 @@
 
 .doctorPage-main {
   padding: 20px;
-  overflow-y: auto;
   height: 100vh;
   box-sizing: border-box;
+}
+
+
+@media (max-width: 768px){
+  .doctorPage-content {
+  display: flex;
+  height: 100vh;
+}
+
+.leftPanel-container {
+  transition: width 0.3s ease;
+}
+
+.doctorPage-main {
+  flex-grow: 1;
+  padding: 20px;
+  height: 100vh;
+}
 }

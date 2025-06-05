@@ -1,5 +1,30 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark {
+  background-color: #090e1c;
+  color: #f0f0f0;
+}
+
+.layout-container {
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+body.dark .layout-container {
+  background-color: #0e1632;
+  color: #ffffff;
+}
+
+body.light .layout-container {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

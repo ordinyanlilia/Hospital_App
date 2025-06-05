@@ -4,7 +4,8 @@
   align-items: center;
   flex-wrap: wrap;
   margin-top: 60px;
-  justify-content: flex-start;
+  justify-content: center;
+  padding: 20px;
 }
 
 .find-doctor-input,

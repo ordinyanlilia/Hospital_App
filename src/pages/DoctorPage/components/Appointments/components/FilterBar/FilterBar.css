@@ -1,7 +1,7 @@
 .filter-bar-container{
-    background-color: whitesmoke;
+    background-color: white;
     border-radius: 10px;
-    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
 .filter-bar-contnet{

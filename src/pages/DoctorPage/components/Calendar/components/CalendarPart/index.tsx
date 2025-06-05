@@ -1,81 +1,85 @@
 import type { BadgeProps, CalendarProps } from "antd";
 import { Badge, Calendar } from "antd";
 import type { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
-import { fetchData } from "../../../../../../services/apiService";
+import { useEffect } from "react";
 import dayjs from "dayjs";
-import type { Timestamp } from "firebase/firestore";
+import utc from "dayjs/plugin/utc";
+import "./CalendarPart.css";
+import { useDispatch, useSelector } from "react-redux";
+// import type { AppDispatch, RootState } from "../../../../../../Store/store";
+import { fetchDoctorAppointments } from "../../../../../../features/DoctorPageSlice/doctorPageSlice";
+import type { Doctor } from "../../../../../../features/DoctorSlice";
+import type { AppDispatch, RootState } from "../../../../../../app/store";
+// import type { Doctor } from "../../../../../../features/SignInSignUpSlice/DoctorSlice";
+
+dayjs.extend(utc);
+
 
 const CalendarPart: React.FC = () => {
-  type Appointment = {
-    doc_id?: string;
-    patientId: string;
-    date: Timestamp;
-    reason: string;
-    patientName: string;
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { appointments, error } = useSelector(
+    (state: RootState) => state.doctorPage
+  );
+
+  const userData = useSelector((state: RootState) => state.userSlice.data);
+    const userRole = useSelector((state: RootState) => state.userSlice.role);
+  
+    const doctor =
+      userData && userRole === "doctor" && "doc_id" in userData
+        ? (userData as Doctor)
+        : null;
+  
+    const DOCTOR_ID = doctor?.id;
+  
+    useEffect(() => {
+      if (DOCTOR_ID) {
+        dispatch(fetchDoctorAppointments(DOCTOR_ID));
+      }
+    }, [dispatch, DOCTOR_ID]);
+  
+    if (!doctor) {
+      return null;
+    }
+  
+
+  const statusColorMap: Record<string, BadgeProps["status"]> = {
+    visited: "success",
+    scheduled: "processing",
+    unknown: "default",
   };
 
-  type Patient = {
-    doc_id: string;
-    name: string;
-    id: string;
-    appointments?: string[];
-  };
-
-  const [appointments, setAppointment] = useState<Appointment[]>([]);
-
-  useEffect(() => {
-    const getPatients = async (): Promise<Patient[]> => {
-      try {
-        const patients = await fetchData("patients");
-        return patients as Patient[];
-      } catch (error) {
-        console.log(error);
-        return [];
-      }
-    };
-
-    const getAppointments = async () => {
-      try {
-        const data = (await fetchData("appointments")) as Appointment[];
-        const patientsData = await getPatients();
-
-        const finalAppointments = data.map((appointment): Appointment => {
-          const patient = appointment.doc_id
-            ? patientsData.find((p) =>
-                p.appointments?.includes(appointment.doc_id!)
-              )
-            : undefined;
-
-          return {
-            ...appointment,
-            patientName: patient ? patient.name : "unknown",
-          };
-        });
-
-        setAppointment(finalAppointments as Appointment[]);
-      } catch (error) {
-        console.log("Error fetching appointments", error);
-      }
-    };
-
-    getAppointments();
-  }, []);
+  const firstAppointmentDate = appointments.length
+    ? dayjs.utc(appointments[0].date).local()
+    : dayjs();
 
   const getListData = (value: Dayjs) => {
     return appointments
-      .filter((apt) => dayjs(apt.date.toDate()).isSame(value, "day"))
-      .map((apt) => ({
-        type: "success" as BadgeProps["status"],
-        content: `${dayjs(apt.date.toDate()).format("HH:mm")} - ${
-          apt.patientName
-        }`,
-      }));
+      .filter((apt) => {
+        if (!apt?.date) return false;
+        const aptDate = dayjs.utc(apt.date).local();
+        return aptDate.isSame(value, "day");
+      })
+      .map((apt) => {
+        const badgeStatus =
+          statusColorMap[apt.status?.toLowerCase()] || "default";
+
+        return {
+          type: badgeStatus,
+          content: `${dayjs.utc(apt.date).local().format("HH:mm")} - ${
+            apt.patientName ?? "Unknown"
+          }`,
+          status: apt.status?.toLowerCase() ?? "unknown",
+        };
+      });
   };
 
   const dateCellRender = (value: Dayjs) => {
     const listData = getListData(value);
-    const appointmentCount = listData.length;
+
+    const appointmentCount = listData.filter(
+      (item) => item.status === "scheduled"
+    ).length;
 
     return (
       <div className="custom-day-cell">
@@ -102,7 +106,12 @@ const CalendarPart: React.FC = () => {
     return info.originNode;
   };
 
-  return <Calendar cellRender={cellRender} />;
+  return (
+    <div className="calendar-wrapper">
+      {error && <div className="error-message">{error}</div>}
+      <Calendar cellRender={cellRender} defaultValue={firstAppointmentDate} />
+    </div>
+  );
 };
 
 export default CalendarPart;

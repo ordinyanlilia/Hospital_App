@@ -1,16 +1,151 @@
-.doctor-profile-title{
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.doctor-profile-container {
+  font-family: "Inter", sans-serif;
 }
 
-.doctor-profile-title img{
-    width: 36px;
-    height: 36px;
-    margin-right: 10px;
+.doctor-profile-content {
+  margin: 0 auto;
+}
+
+.doctor-profile-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.doctor-profile-title img {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
 }
 
 .doctor-profile-title span {
-    font-family: 'Inter', sans-serif;
-    font-size: 30px;
+  font-size: 30px;
+  color: #333;
+}
+
+.personal-info-container {
+  min-height: 71vh;
+  background-color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.forms-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 50px;
+}
+
+.edit-mode-forms-content{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 50px;
+}
+
+.form-container p {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.form-container span {
+  font-size: 16px;
+  color: #222;
+  font-weight: 500;
+  word-wrap: break-word;
+}
+
+.profile-edit-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.profile-edit-btn button {
+  background-color: #1677ff;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-edit-btn button:hover {
+  background-color: #125bcc;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);
+}
+
+
+.edit-mode-forms-content .form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-mode-forms-content .form-container p {
+  margin: 0 0 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.edit-mode-forms-content .form-container input,
+.edit-mode-forms-content .form-container select {
+padding: 10px 14px;
+  font-size: 15px;
+  border: 1.5px solid #d1d5db; 
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  color: #374151; 
+  outline-offset: 2px;
+}
+
+.edit-mode-forms-content .form-container input:focus,
+.edit-mode-forms-content .form-container select:focus {
+  border-color: #3b82f6; 
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+  outline: none;
+}
+
+.edit-mode-forms-content select {
+  cursor: pointer;
+}
+
+.edit-mode-forms-content option {
+  padding: 8px;
+}
+
+.save-btn{
+  margin-right: 10px;
+}
+
+.edit-mode-forms-content textarea {
+  resize: vertical;
+  min-height: 100px;          
+  max-height: 300px;          
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  color: #374151;
+  outline-offset: 2px;
+  line-height: 1.4;
+  width: 100%;               /* take full container width */
+  box-sizing: border-box;
+}
+
+.edit-mode-forms-content textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+  outline: none;
 }
