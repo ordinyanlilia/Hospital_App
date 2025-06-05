@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../services/apiService";
-import { Card, Row, Col, Typography, Spin, Button, Calendar } from "antd";
+import { Card, Row, Col, Typography, Button, Calendar } from "antd";
 import defaultDoctorImage from "../../assets/Doctors/user.png";
 import { DoctorCard } from "../FindDoctor/DoctorCard";
 import "./DoctorInfo.css";
