@@ -1,5 +1,5 @@
 import {FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
-import {type Appointment, selectAppointments,} from "../../../features/appointments/appointmentsSlice.ts";
+import {type Appointment, MODE_HOURS, selectAppointments,} from "../../../features/appointments/appointmentsSlice.ts";
 import {DatePicker, notification, Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppSelector} from "../../../app/hooks.ts";
@@ -27,24 +27,10 @@ const AppointmentsTable = () => {
             title: 'Mode',
             dataIndex: 'mode',
             key: 'mode',
-            filters: [
-                {
-                    text: 'Online',
-                    value: 'online',
-                },
-                {
-                    text: 'In Person',
-                    value: 'in_person',
-                },
-                {
-                    text: "Phone Call",
-                    value: "phone",
-                },
-                {
-                    text: "Home Visit",
-                    value: "home_visit",
-                },
-            ],
+            filters: Object.keys(MODE_HOURS).map(key => ({
+                text: key.split('_').join(' '),
+                value: key
+            })),
             onFilter: (value, record) => record.mode.indexOf(value as string) === 0,
             render: (text: string) => text.split('_').join(' '),
         },

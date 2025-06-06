@@ -37,9 +37,10 @@ const AuthLoader = ({children}: Props) => {
                     dispatch(setPatient(matchedPatient));
                     try{
                         await dispatch(fetchAppointments({appointments: matchedPatient?.appointments}));
-                        dispatch(resetStatus())
                     }catch(error) {
-                        console.log(error)
+                        console.error(error)
+                    }finally {
+                        dispatch(resetStatus())
                     }
                     dispatch(setUser({data: matchedPatient, role: "patient", token}));
                 }

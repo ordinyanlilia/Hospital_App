@@ -4,9 +4,9 @@ import { arrayUnion } from "firebase/firestore";
 
 export const MODE_HOURS:MODE_HOURS = {
   online: 30,
-  home_visit: 40,
+  home_visit: 90,
   in_person: 30,
-  phone: 10
+  phone: 15
 }
 
 type MODE_HOURS = {

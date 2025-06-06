@@ -15,7 +15,6 @@ import {
     Space,
     Spin,
     Tag,
-    TimePicker,
 } from "antd";
 import {
     addAppointment,
@@ -29,7 +28,7 @@ import {
 
 import {useLocation, useNavigate} from "react-router-dom";
 import {SmileOutlined} from "@ant-design/icons";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
@@ -43,7 +42,7 @@ interface FinishValue {
     notes?: string;
     doc_id?: string;
     date: dayjs.Dayjs;
-    startTime: dayjs.Dayjs;
+    startTime: string;
 }
 
 const BookAppointment = () => {
@@ -76,6 +75,14 @@ const BookAppointment = () => {
     );
 
     const user = useAppSelector(selectPatient);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const status = useAppSelector(selectStatus);
+    const error: string | null = useAppSelector(selectError);
+    const [form] = Form.useForm();
+    const selectedDate = Form.useWatch("date", form);
+    const mode: Mode = Form.useWatch('mode', form);
+    const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
     useEffect(() => {
         dispatch(fetchDoctors());
@@ -88,61 +95,40 @@ const BookAppointment = () => {
         );
     }, [doctors]);
 
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const status = useAppSelector(selectStatus);
-    const error: string | null = useAppSelector(selectError);
-    const [form] = Form.useForm();
-    const selectedDate = Form.useWatch("date", form);
-    const mode: Mode = Form.useWatch('mode', form);
-
-    function range(start: number, end: number) {
-        const result = [];
-        for (let i = start; i <= end; i++) {
-            result.push(i);
+    function getTimeInterval(start: number, end: number, interval: number = 15) {
+        const arr: string[] = [];
+        const startMin = start*60;
+        const endMin = end*60;
+        for (let minutes = startMin; minutes < endMin; minutes += interval) {
+            const h = Math.floor(minutes / 60);
+            const m = minutes % 60;
+            arr.push(`${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`);
         }
-        return result;
+        return arr;
     }
 
-    const disabledTime = useCallback(() => {
-        const isToday = selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day');
-        const duration = MODE_HOURS[mode];
-        const now = dayjs().get('hour');
-        return {
-            disabledHours: () => {
-                if(now >= 9 && now < 20){
-                    return [...range(0, now), ...range(20, 24)]
-                }
+    useEffect(() => {
+        if (!selectedDoctor || !selectedDate) {
+            setAvailableTimes([]);
+            return;
+        }
 
-                return [...range(0, 9), ...range(20, 24)];
-            },
-            disabledMinutes: (selectedHour: number) => {
-                let result: number[] = [];
+        let result = getTimeInterval(9, 20, MODE_HOURS[mode]);
 
-                if (isToday) {
-                    selectedDoctor?.appointments?.forEach((appointment) => {
-                        const appointmentDate = dayjs(appointment.startTime);
-                        if (appointmentDate.isSame(selectedDate, "day")) {
-                            const startHour = appointmentDate.get('hour');
-                            const startMin = appointmentDate.get('minute');
-                            const endHour = dayjs(appointment.endTime).get('hour');
-                            const endMin = dayjs(appointment.endTime).get('minute');
+        selectedDoctor?.appointments?.forEach((appointment) => {
+            if (dayjs(appointment.startTime).isSame(selectedDate, "day")) {
+                const bookedTimeStart = dayjs(appointment.startTime);
+                const bookedTimeEnd = dayjs(appointment.endTime);
+                const appointmentDate = bookedTimeStart.format('YYYY-MM-DD');
+                result = result.filter(time => {
+                    const currentTime = dayjs(`${appointmentDate}T${time}`);
+                    return currentTime.isBefore(bookedTimeStart) || currentTime.isAfter(bookedTimeEnd) || currentTime.isSame(bookedTimeEnd);
+                });
+            }
+        });
+        setAvailableTimes(result);
+    }, [selectedDate, mode, selectedDoctor]);
 
-                            if (selectedHour === startHour && selectedHour === endHour) {
-                                result = [...result,...range(Math.max(0, startMin - duration + 1), endMin)];
-                            } else if (selectedHour === startHour) {
-                                result = [...result,...range(Math.max(0, startMin - duration + 1), 60)];
-                            } else if (selectedHour === endHour) {
-                                result = [...result,...range(0, endMin)];
-                            }
-                        }
-                    });
-                }
-
-                return result;
-            },
-        };
-    }, [selectedDate, mode]);
 
     const onFinish = async (value: FinishValue) => {
         if (!selectedDoctor) {
@@ -155,11 +141,11 @@ const BookAppointment = () => {
 
         try {
             const startDate = dayjs(value.date);
+            const start = value.startTime.split(':');
 
-            const startTime = dayjs(value.startTime)
-                .set('year', startDate.year())
-                .set('month', startDate.month())
-                .set('date', startDate.date());
+            const startTime = startDate
+                .set('hour', +start[0])
+                .set('minute', +start[1]);
 
             const resultValue: Appointment = {
                 reason: value.reason || "",
@@ -189,10 +175,11 @@ const BookAppointment = () => {
 
         } catch (error) {
             console.log(error);
+        } finally {
+            form.resetFields();
+            setSelectedDoctor(null);
+            setSelectedCategory("All");
         }
-        form.resetFields();
-        setSelectedDoctor(null);
-        setSelectedCategory("All");
     };
 
     const handleProfileClick = () => {
@@ -317,7 +304,8 @@ const BookAppointment = () => {
                     <Space align={"center"} wrap style={{justifyContent: "center"}}>
                         {!!paginatedDoctors.length &&
                             paginatedDoctors?.map((doc, index) => (
-                              <DoctorCard key={index} doctor={doc} selectedDoctorId={selectedDoctor?.id} onSetSelectedDoctor={setSelectedDoctor}/>
+                                <DoctorCard key={index} doctor={doc} selectedDoctorId={selectedDoctor?.id}
+                                            onSetSelectedDoctor={setSelectedDoctor}/>
                             ))}
                         {!paginatedDoctors.length && <Spin></Spin>}
                     </Space>
@@ -343,25 +331,11 @@ const BookAppointment = () => {
                             value={"in-person"}
                             placeholder="Select a mode"
                             optionFilterProp="label"
-                            style={{width: 120}}
-                            options={[
-                                {
-                                    label: "In-person",
-                                    value: "in_person",
-                                },
-                                {
-                                    label: "Online",
-                                    value: "online",
-                                },
-                                {
-                                    label: "Phone Call",
-                                    value: "phone",
-                                },
-                                {
-                                    label: "Home Visit",
-                                    value: "home_visit",
-                                },
-                            ]}
+                            style={{width: 200}}
+                            options={Object.entries(MODE_HOURS).map(([key, value]) => ({
+                                label: key.split('_').join(' ') + ` - ${value}min`,
+                                value: key,
+                            }))}
                         />
                     </Form.Item>
 
@@ -382,11 +356,15 @@ const BookAppointment = () => {
                         name="startTime"
                         rules={[{required: true, message: "Please input!"}]}
                     >
-                        <TimePicker
-                            disabledTime={disabledTime}
-                            disabled={!selectedDate}
-                            prefix={<SmileOutlined/>}
-                            format={"HH:mm"}
+                        <Select
+                            showSearch
+                            placeholder="Select a Time"
+                            optionFilterProp="label"
+                            style={{width: 120}}
+                            options={availableTimes.map(time => ({
+                                label: time,
+                                value: time,
+                            }))}
                         />
                     </Form.Item>
 
