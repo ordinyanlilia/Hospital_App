@@ -1,10 +1,10 @@
-import {FileDoneOutlined, InfoCircleTwoTone, ScheduleTwoTone} from '@ant-design/icons'
+import {FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
 import {type Appointment, selectAppointments,} from "../../../features/appointments/appointmentsSlice.ts";
-import { DatePicker, Modal, Space, Table} from "antd";
+import {DatePicker, notification, Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
 import {useAppSelector} from "../../../app/hooks.ts";
 import dayjs, {type Dayjs} from "dayjs";
-import {useEffect, useState} from "react";
+import {useEffect, useRef} from "react";
 
 const AppointmentsTable = () => {
     const columns: ColumnsType<Appointment> = [
@@ -58,10 +58,10 @@ const AppointmentsTable = () => {
             dataIndex: 'startTime',
             key: 'startTime',
             defaultSortOrder: 'ascend',
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-                <div style={{ padding: 8 }}>
+            filterDropdown: ({setSelectedKeys, selectedKeys, confirm}) => (
+                <div style={{padding: 8}}>
                     <DatePicker
-                        onChange={(date:Dayjs) => {
+                        onChange={(date: Dayjs) => {
                             setSelectedKeys(date ? [date.format('YYYY-MM-DD')] : []);
                             confirm();
                         }}
@@ -69,7 +69,7 @@ const AppointmentsTable = () => {
                     />
                 </div>
             ),
-            onFilter: (value, record):boolean => {
+            onFilter: (value, record): boolean => {
                 return dayjs(record.startTime).isSame(dayjs(value as string), 'day');
             },
             sorter: (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf(),
@@ -104,41 +104,39 @@ const AppointmentsTable = () => {
             ),
         },
     ];
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [time, setTime] = useState<string>('');
+
+    const [api, contextHolder] = notification.useNotification();
 
     const appointments = useAppSelector(selectAppointments);
+    const notified = useRef(false);
+
     useEffect(() => {
+        if (notified.current) return;
+
         appointments.forEach(appointment => {
             const date = dayjs(appointment.startTime);
             if (date.isSame(dayjs(), 'day') && !dayjs().isAfter(date)) {
-                setTime(dayjs(appointment.startTime).format('HH:mm'));
-                setIsModalOpen(true);
+                const time = date.format('HH:mm');
+                api.info({
+                    message: 'Upcoming Appointment',
+                    description: `You have an appointment today at ${time}. Please be on time.`,
+                    duration: 0
+                });
             }
         })
-    }, []);
+        notified.current = true;
+    }, [api, appointments]);
 
     return (
         <>
+            {contextHolder}
             <Table
                 columns={columns}
                 dataSource={appointments}
                 rowKey={record => record.doc_id || ''}
                 showSorterTooltip={{target: 'sorter-icon'}}
                 size="small"/>
-            <Modal
-                open={isModalOpen}
-                closable={true}
-                onOk={() => setIsModalOpen(false)}
-                onCancel={() => setIsModalOpen(false)}
-                footer={[
-                    // <Button key="ok" type="primary" onClick={() => setIsModalOpen(false)}>
-                    //     OK
-                    // </Button>
-                ]}
-            >
-                <Space><InfoCircleTwoTone/> Today you have appointment at {time}, Don't be late</Space>
-            </Modal>
+
         </>
     )
 }
