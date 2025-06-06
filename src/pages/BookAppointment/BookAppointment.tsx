@@ -1,9 +1,7 @@
 import "./BookAppointment.css";
 
 import {
-    Avatar,
     Button,
-    Card,
     DatePicker,
     Divider,
     Form,
@@ -20,25 +18,28 @@ import {
     TimePicker,
 } from "antd";
 import {
+    addAppointment,
     type Appointment,
+    type Mode,
+    MODE_HOURS,
     resetStatus,
     selectError,
     selectStatus,
 } from "../../features/appointments/appointmentsSlice.ts";
 
 import {useLocation, useNavigate} from "react-router-dom";
-import {SmileOutlined, UserOutlined} from "@ant-design/icons";
-import {useEffect, useState} from "react";
+import {SmileOutlined} from "@ant-design/icons";
+import {useCallback, useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
-import type {Doctor} from "../../features/doctors/doctorsSlice.tsx";
-import {fetchData} from "../../services/apiService.ts";
+import {type Doctor, fetchDoctors, selectDoctors} from "../../features/doctors/doctorsSlice.tsx";
 import {selectPatient} from "../../features/PatientSlice.ts";
+import DoctorCard from "./DoctorCard.tsx";
 
 interface FinishValue {
     reason: string;
-    mode: string;
+    mode: Mode;
     notes?: string;
     doc_id?: string;
     date: dayjs.Dayjs;
@@ -60,11 +61,12 @@ const BookAppointment = () => {
     const location = useLocation();
 
     const selectedDoctorInitialId = location.pathname.split("/")[2];
-    const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const doctors = useAppSelector(selectDoctors);
     const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+    const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+
     const [selected, setSelectedCategory] = useState<string>("All");
     const [messageApi, contextHolder] = message.useMessage();
-    const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
     const [current, setCurrent] = useState(1);
     const inPageCount = 8;
 
@@ -72,38 +74,75 @@ const BookAppointment = () => {
         (current - 1) * inPageCount,
         current * inPageCount
     );
+
     const user = useAppSelector(selectPatient);
 
     useEffect(() => {
-        fetchData<Doctor>("doctors").then((data: Doctor[]) => {
-            setDoctors(data);
-            setFilteredDoctors(data);
-            setSelectedDoctor(
-                data.find((doc) => doc.id === selectedDoctorInitialId) || null
-            );
-        });
+        dispatch(fetchDoctors());
     }, []);
+
+    useEffect(() => {
+        setFilteredDoctors(doctors);
+        setSelectedDoctor(
+            doctors.find((doc) => doc.id === selectedDoctorInitialId) || null
+        );
+    }, [doctors]);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const status = useAppSelector(selectStatus);
     const error: string | null = useAppSelector(selectError);
     const [form] = Form.useForm();
+    const selectedDate = Form.useWatch("date", form);
+    const mode: Mode = Form.useWatch('mode', form);
 
     function range(start: number, end: number) {
         const result = [];
-        for (let i = start; i < end; i++) {
+        for (let i = start; i <= end; i++) {
             result.push(i);
         }
         return result;
     }
 
-    const disabledTime = () => (
-        {
+    const disabledTime = useCallback(() => {
+        const isToday = selectedDate && dayjs(selectedDate).isSame(dayjs(), 'day');
+        const duration = MODE_HOURS[mode];
+        const now = dayjs().get('hour');
+        return {
             disabledHours: () => {
-                return range(0, 19).splice(0, 9);
+                if(now >= 9 && now < 20){
+                    return [...range(0, now), ...range(20, 24)]
+                }
+
+                return [...range(0, 9), ...range(20, 24)];
             },
-        });
+            disabledMinutes: (selectedHour: number) => {
+                let result: number[] = [];
+
+                if (isToday) {
+                    selectedDoctor?.appointments?.forEach((appointment) => {
+                        const appointmentDate = dayjs(appointment.startTime);
+                        if (appointmentDate.isSame(selectedDate, "day")) {
+                            const startHour = appointmentDate.get('hour');
+                            const startMin = appointmentDate.get('minute');
+                            const endHour = dayjs(appointment.endTime).get('hour');
+                            const endMin = dayjs(appointment.endTime).get('minute');
+
+                            if (selectedHour === startHour && selectedHour === endHour) {
+                                result = [...result,...range(Math.max(0, startMin - duration + 1), endMin)];
+                            } else if (selectedHour === startHour) {
+                                result = [...result,...range(Math.max(0, startMin - duration + 1), 60)];
+                            } else if (selectedHour === endHour) {
+                                result = [...result,...range(0, endMin)];
+                            }
+                        }
+                    });
+                }
+
+                return result;
+            },
+        };
+    }, [selectedDate, mode]);
 
     const onFinish = async (value: FinishValue) => {
         if (!selectedDoctor) {
@@ -115,7 +154,13 @@ const BookAppointment = () => {
         }
 
         try {
-            console.log(value);
+            const startDate = dayjs(value.date);
+
+            const startTime = dayjs(value.startTime)
+                .set('year', startDate.year())
+                .set('month', startDate.month())
+                .set('date', startDate.date());
+
             const resultValue: Appointment = {
                 reason: value.reason || "",
                 mode: value.mode || "",
@@ -124,33 +169,23 @@ const BookAppointment = () => {
                 status: "scheduled",
                 doctorId: selectedDoctor?.id || "",
                 doctorName: selectedDoctor?.name || "",
-                date: value.date.toISOString() || "",
-                startTime: value.startTime.toISOString() || '',
+                startTime: startTime.toISOString() || '',
             };
 
-            const startTime = dayjs(value.startTime);
+            resultValue.endTime = startTime.add(MODE_HOURS[resultValue.mode], 'minute').toISOString();
 
-            if (resultValue.mode === 'phone') {
-                resultValue.endTime = startTime.add(10, 'minute').toISOString();
-            } else if (resultValue.mode === 'in-person' || resultValue.mode === 'online') {
-                resultValue.endTime = startTime.add(30, 'minute').toISOString();
-            } else if (resultValue.mode === 'home-visit') {
-                resultValue.endTime = startTime.add(40, 'minute').toISOString();
-            }
-
-            console.log(resultValue);
 
             if (value.notes) {
                 resultValue.notes = value.notes;
             }
 
-            // await dispatch(
-            //     addAppointment({
-            //         appointment: resultValue,
-            //         doctor_doc_id: selectedDoctor?.doc_id ?? "",
-            //         user_doc_id: user?.doc_id ?? "",
-            //     })
-            // ).unwrap();
+            await dispatch(
+                addAppointment({
+                    appointment: resultValue,
+                    doctor_doc_id: selectedDoctor?.doc_id ?? "",
+                    user_doc_id: user?.doc_id ?? "",
+                })
+            ).unwrap();
 
         } catch (error) {
             console.log(error);
@@ -282,45 +317,7 @@ const BookAppointment = () => {
                     <Space align={"center"} wrap style={{justifyContent: "center"}}>
                         {!!paginatedDoctors.length &&
                             paginatedDoctors?.map((doc, index) => (
-                                <Card
-                                    key={index}
-                                    hoverable
-                                    style={{
-                                        borderColor:
-                                            doc.id === selectedDoctor?.id ? "#1890ff" : "#707070",
-                                        color:
-                                            doc.id === selectedDoctor?.id ? "#1890ff" : "#707070",
-                                        boxShadow:
-                                            doc.id === selectedDoctor?.id
-                                                ? "0 0 3px #1890ff"
-                                                : "0 0 10px #e6f7ff",
-                                    }}
-                                    onClick={() => setSelectedDoctor(doc)}
-                                >
-                                    <Card.Meta
-                                        avatar={
-                                            <Avatar
-                                                size={{md: 50, lg: 64, xl: 70, xxl: 90}}
-                                                src={doc?.photoUrl}
-                                                style={{backgroundColor: "rgba(96,150,186,0.75)"}}
-                                                icon={
-                                                    !doc?.photoUrl && (
-                                                        <UserOutlined
-                                                            style={{fontSize: "30px", color: "#fffefe"}}
-                                                        />
-                                                    )
-                                                }
-                                            />
-                                        }
-                                        title={doc.name}
-                                        className={"doc-info-card"}
-                                        description={
-                                            <>
-                                                <div>{doc.specialty}</div>
-                                            </>
-                                        }
-                                    />
-                                </Card>
+                              <DoctorCard key={index} doctor={doc} selectedDoctorId={selectedDoctor?.id} onSetSelectedDoctor={setSelectedDoctor}/>
                             ))}
                         {!paginatedDoctors.length && <Spin></Spin>}
                     </Space>
@@ -342,6 +339,7 @@ const BookAppointment = () => {
                     >
                         <Select
                             showSearch
+                            disabled={!selectedDoctor}
                             value={"in-person"}
                             placeholder="Select a mode"
                             optionFilterProp="label"
@@ -349,7 +347,7 @@ const BookAppointment = () => {
                             options={[
                                 {
                                     label: "In-person",
-                                    value: "in-person",
+                                    value: "in_person",
                                 },
                                 {
                                     label: "Online",
@@ -361,30 +359,32 @@ const BookAppointment = () => {
                                 },
                                 {
                                     label: "Home Visit",
-                                    value: "home-visit",
+                                    value: "home_visit",
                                 },
                             ]}
                         />
                     </Form.Item>
 
                     <Form.Item
-                        label="DatePicker"
+                        label="Select Day"
                         name="date"
                         rules={[{required: true, message: "Please input!"}]}
                     >
                         <DatePicker
+                            disabled={!mode}
                             disabledDate={(current) =>
                                 current && current < dayjs().startOf("day")
                             }
                         />
                     </Form.Item>
                     <Form.Item
-                        label="TimePicker"
+                        label="Select Time"
                         name="startTime"
                         rules={[{required: true, message: "Please input!"}]}
                     >
                         <TimePicker
                             disabledTime={disabledTime}
+                            disabled={!selectedDate}
                             prefix={<SmileOutlined/>}
                             format={"HH:mm"}
                         />

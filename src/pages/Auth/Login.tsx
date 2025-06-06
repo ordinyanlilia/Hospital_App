@@ -9,6 +9,7 @@ import {type Doctor} from "../../features/DoctorSlice.ts";
 import {setUser} from "../../features/UserSlice.ts";
 import {useAppDispatch} from "../../app/hooks.ts";
 import {signInWithEmailAndPassword} from "firebase/auth";
+import {fetchAppointments} from "../../features/appointments/appointmentsSlice.ts";
 
 
 const Login: React.FC = () => {
@@ -36,9 +37,11 @@ const Login: React.FC = () => {
 
             if (matchedDoctor) {
                 dispatch(setUser({data: matchedDoctor, role: "doctor", token}));
+                await dispatch(fetchAppointments({appointments: matchedDoctor?.appointments}));
                 navigate(DOCTOR_PAGE);
             } else if (matchedPatient) {
                 dispatch(setPatient(matchedPatient));
+                await dispatch(fetchAppointments({appointments: matchedPatient?.appointments}));
                 dispatch(setUser({data: matchedPatient, role: "patient", token}));
                 navigate(PROFILE);
             } else {

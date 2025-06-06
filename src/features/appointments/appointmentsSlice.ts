@@ -1,6 +1,22 @@
-import { setData, updateData } from "../../services/apiService.ts";
+import {getData, setData, updateData} from "../../services/apiService.ts";
 import { createAppSlice } from "../../app/createAppSlice.ts";
 import { arrayUnion } from "firebase/firestore";
+
+export const MODE_HOURS:MODE_HOURS = {
+  online: 30,
+  home_visit: 40,
+  in_person: 30,
+  phone: 10
+}
+
+type MODE_HOURS = {
+  online: number,
+  home_visit: number,
+  in_person: number,
+  phone: number,
+}
+
+export type Mode = keyof MODE_HOURS;
 
 export interface Appointment {
   patientName?: string;
@@ -8,14 +24,19 @@ export interface Appointment {
   doctorId: string;
   doctorName: string;
   reason: string;
-  mode: string;
+  mode: Mode;
   notes?: string;
   status: string;
   doc_id?: string;
-  date: string;
   startTime?: string;
   endTime?: string;
   created_at?: string;
+}
+
+export interface User_Appointment{
+    appointmentId: string;
+    startTime: string;
+    endTime: string;
 }
 
 interface InitialState {
@@ -43,6 +64,34 @@ const appointmentsSlice = createAppSlice({
         state.appointments = action.payload;
       }
     ),
+    fetchAppointments: create.asyncThunk(
+        async (args: {
+          appointments: User_Appointment[] | undefined;
+        }) => {
+          const results = await Promise.all(
+              (args.appointments ?? [])
+                  .filter((appointment:User_Appointment) => !!appointment?.appointmentId)
+                  .map(appointment =>
+                      getData<Appointment>(appointment.appointmentId, 'appointments')
+                  )
+          );
+
+          return [...results];
+        },
+        {
+          pending: (state) => {
+            state.status = "loading";
+          },
+          fulfilled: (state, action) => {
+            state.status = "succeeded";
+            state.appointments = action.payload;
+          },
+          rejected: (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message || null;
+          },
+        }
+    ),
     addAppointment: create.asyncThunk(
       async (args: {
         appointment: Appointment;
@@ -56,11 +105,19 @@ const appointmentsSlice = createAppSlice({
         );
 
         await updateData(doctor_doc_id, "doctors", {
-          appointments: arrayUnion(appointmentId),
+          appointments: arrayUnion({
+            appointmentId,
+            startTime: appointment.startTime,
+            endTime: appointment.endTime,
+          }),
         });
 
         await updateData(user_doc_id, 'patients', {
-          appointments: arrayUnion(appointmentId),
+          appointments: arrayUnion({
+            appointmentId,
+            startTime: appointment.startTime,
+            endTime: appointment.endTime,
+          }),
         });
 
         return { ...appointment, doc_id: appointmentId };
@@ -89,6 +146,6 @@ const appointmentsSlice = createAppSlice({
 
 export const { selectStatus, selectError, selectAppointments } =
   appointmentsSlice.selectors;
-export const { addAppointment, resetStatus, setAppointments } =
+export const { addAppointment, resetStatus, setAppointments, fetchAppointments } =
   appointmentsSlice.actions;
 export default appointmentsSlice;

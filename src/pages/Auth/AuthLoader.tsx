@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {type ReactNode, useEffect, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, fetchData} from '../../services/apiService.ts';
 import {useAppDispatch} from "../../app/hooks.ts";
@@ -6,9 +6,10 @@ import {setUser} from "../../features/UserSlice.ts";
 import {type Patient, setPatient} from "../../features/PatientSlice.ts";
 import {type Doctor} from "../../features/DoctorSlice.ts";
 import {Spin} from "antd";
+import {fetchAppointments, resetStatus} from "../../features/appointments/appointmentsSlice.ts";
 
 type Props = {
-    children: React.ReactNode;
+    children: ReactNode;
 };
 
 const AuthLoader = ({children}: Props) => {
@@ -31,8 +32,15 @@ const AuthLoader = ({children}: Props) => {
 
                 if (matchedDoctor) {
                     dispatch(setUser({data: matchedDoctor, role: "doctor", token}));
+                    dispatch(fetchAppointments({appointments: matchedDoctor?.appointments}));
                 } else if (matchedPatient) {
                     dispatch(setPatient(matchedPatient));
+                    try{
+                        await dispatch(fetchAppointments({appointments: matchedPatient?.appointments}));
+                        dispatch(resetStatus())
+                    }catch(error) {
+                        console.log(error)
+                    }
                     dispatch(setUser({data: matchedPatient, role: "patient", token}));
                 }
             }
