@@ -9,14 +9,15 @@ import { BOOK_APPOINTMENT } from "../../routes/paths.ts";
 import { FileAddOutlined, LoginOutlined } from "@ant-design/icons";
 import EditUserInfo from "./components/EditUserInfo.tsx";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
-import { selectPatient, setPatient } from "../../features/PatientSlice.ts";
+import { setPatient } from "../../features/PatientSlice.ts";
 import { clearUser } from "../../features/UserSlice.ts";
+import { selectAppointments } from "../../features/appointments/appointmentsSlice.ts";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectPatient);
+  const appointments = useAppSelector(selectAppointments);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -53,8 +54,8 @@ const Profile = () => {
           </Button>
         </Space>
       </Divider>
-      {!!user?.appointments?.length && <AppointmentsTable />}
-      {!user?.appointments?.length && (
+      {!!appointments?.length && <AppointmentsTable />}
+      {!appointments?.length && (
         <Alert message="You Don't have appointments yet" type="info" />
       )}
     </>

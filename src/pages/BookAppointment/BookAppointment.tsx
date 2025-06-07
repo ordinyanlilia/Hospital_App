@@ -1,9 +1,7 @@
 import "./BookAppointment.css";
 
 import {
-  Avatar,
   Button,
-  Card,
   DatePicker,
   Divider,
   Form,
@@ -17,36 +15,38 @@ import {
   Space,
   Spin,
   Tag,
-  TimePicker,
 } from "antd";
 import {
   addAppointment,
   type Appointment,
+  type Mode,
+  MODE_HOURS,
   resetStatus,
   selectError,
   selectStatus,
 } from "../../features/appointments/appointmentsSlice.ts";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { SmileOutlined, UserOutlined } from "@ant-design/icons";
+import { SmileOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import Title from "antd/es/typography/Title";
-import type { Doctor } from "../../features/doctors/doctorsSlice.tsx";
-import { fetchData } from "../../services/apiService.ts";
+import {
+  type Doctor,
+  fetchDoctors,
+  selectDoctors,
+} from "../../features/doctors/doctorsSlice.tsx";
 import { selectPatient } from "../../features/PatientSlice.ts";
-import { useTheme } from "../../context/theme-context.tsx";
-import { color } from "framer-motion";
+import DoctorCard from "./DoctorCard.tsx";
+
 interface FinishValue {
-  DatePicker?: dayjs.Dayjs | null;
-  TimePicker?: dayjs.Dayjs | null;
   reason: string;
-  mode: string;
+  mode: Mode;
   notes?: string;
   doc_id?: string;
-  date: string;
-  time?: string;
+  date: dayjs.Dayjs;
+  startTime: string;
 }
 
 const BookAppointment = () => {
@@ -64,42 +64,100 @@ const BookAppointment = () => {
   const location = useLocation();
 
   const selectedDoctorInitialId = location.pathname.split("/")[2];
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const doctors = useAppSelector(selectDoctors);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+
   const [selected, setSelectedCategory] = useState<string>("All");
   const [messageApi, contextHolder] = message.useMessage();
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
   const [current, setCurrent] = useState(1);
   const inPageCount = 8;
+
   const paginatedDoctors = filteredDoctors.slice(
     (current - 1) * inPageCount,
     current * inPageCount
   );
-  const user = useAppSelector(selectPatient);
-  const { darkMode } = useTheme();
-  useEffect(() => {
-    fetchData<Doctor>("doctors").then((data: Doctor[]) => {
-      setDoctors(data);
-      setFilteredDoctors(data);
-      setSelectedDoctor(
-        data.find((doc) => doc.id === selectedDoctorInitialId) || null
-      );
-    });
-  }, []);
 
+  const user = useAppSelector(selectPatient);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const status = useAppSelector(selectStatus);
   const error: string | null = useAppSelector(selectError);
   const [form] = Form.useForm();
+  const selectedDate = Form.useWatch("date", form);
+  const mode: Mode = Form.useWatch("mode", form);
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
-  const disabledTime = () => ({
-    disabledHours: () => {
-      return Array.from({ length: 24 }, (_, i) => i).filter(
-        (hour) => hour < 9 || hour > 17
-      );
-    },
-  });
+  useEffect(() => {
+    dispatch(fetchDoctors());
+  }, []);
+
+  useEffect(() => {
+    setFilteredDoctors(doctors);
+    setSelectedDoctor(
+      doctors.find((doc) => doc.id === selectedDoctorInitialId) || null
+    );
+  }, [doctors]);
+
+  function getTimeInterval(start: number, end: number, interval: number = 15) {
+    const arr: string[] = [];
+    const startMin = start * 60;
+    const endMin = end * 60;
+    for (let minutes = startMin; minutes < endMin; minutes += interval) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      arr.push(`${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`);
+    }
+    return arr;
+  }
+
+  useEffect(() => {
+    if (!selectedDoctor || !selectedDate) {
+      setAvailableTimes([]);
+      return;
+    }
+
+    const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
+    const workingTimeStart = isToday ? dayjs().get("hour") + 1 : 9;
+    const workingTimeEnd = 20;
+
+    if (workingTimeStart > workingTimeEnd) {
+      setAvailableTimes([]);
+      return;
+    }
+
+    let result = getTimeInterval(
+      workingTimeStart,
+      workingTimeEnd,
+      MODE_HOURS[mode]
+    );
+
+    selectedDoctor?.appointments?.forEach((appointment) => {
+      if (dayjs(appointment.startTime).isSame(selectedDate, "day")) {
+        const bookedTimeStart = dayjs(appointment.startTime);
+        const bookedTimeEnd = dayjs(appointment.endTime);
+        const appointmentDate = bookedTimeStart.format("YYYY-MM-DD");
+        result = result.filter((time) => {
+          const currentTime = dayjs(`${appointmentDate}T${time}`);
+          return (
+            currentTime.isBefore(bookedTimeStart) ||
+            currentTime.isAfter(bookedTimeEnd) ||
+            currentTime.isSame(bookedTimeEnd)
+          );
+        });
+      }
+    });
+
+    setAvailableTimes(
+      result.map((item) => {
+        const [hourStr, minuteStr] = item.split(":");
+        const start = dayjs().set("hour", +hourStr).set("minute", +minuteStr);
+        const end = start.add(MODE_HOURS[mode], "minute");
+
+        return `${start.format("HH:mm")}-${end.format("HH:mm")}`;
+      })
+    );
+  }, [selectedDate, mode, selectedDoctor]);
 
   const onFinish = async (value: FinishValue) => {
     if (!selectedDoctor) {
@@ -111,29 +169,27 @@ const BookAppointment = () => {
     }
 
     try {
-      const date = dayjs(value.date);
-      const time = dayjs(value.time);
+      const startDate = dayjs(value.date);
+      const start = value.startTime.split(":");
 
-      const combinedDateTime = date
-        .hour(time.hour())
-        .minute(time.minute())
-        .second(time.second())
-        .toDate()
-        .toISOString();
-
-      delete value.DatePicker;
-      delete value.TimePicker;
+      const startTime = startDate
+        .set("hour", +start[0])
+        .set("minute", +start[1]);
 
       const resultValue: Appointment = {
         reason: value.reason || "",
         mode: value.mode || "",
-        date: combinedDateTime,
         patientId: user?.id || "",
         patientName: user?.name || "",
         status: "scheduled",
         doctorId: selectedDoctor?.id || "",
         doctorName: selectedDoctor?.name || "",
+        startTime: startTime.toISOString() || "",
       };
+
+      resultValue.endTime = startTime
+        .add(MODE_HOURS[resultValue.mode], "minute")
+        .toISOString();
 
       if (value.notes) {
         resultValue.notes = value.notes;
@@ -148,10 +204,11 @@ const BookAppointment = () => {
       ).unwrap();
     } catch (error) {
       console.log(error);
+    } finally {
+      form.resetFields();
+      setSelectedDoctor(null);
+      setSelectedCategory("All");
     }
-    form.resetFields();
-    setSelectedDoctor(null);
-    setSelectedCategory("All");
   };
 
   const handleProfileClick = () => {
@@ -231,21 +288,13 @@ const BookAppointment = () => {
     <>
       {contextHolder}
       <Title level={3}>Make An Appointment</Title>
-      <Row
-        justify="center"
-        align="middle"
-        className="book-appointment"
-        style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
-      >
+      <Row justify="center" align="middle" className="book-appointment">
         <Form
           {...formItemLayout}
           onFinish={onFinish}
           variant={"underlined"}
           form={form}
-          style={{
-            maxWidth: 800,
-            background: darkMode ? "#101832" : "#f5f5f5",
-          }}
+          style={{ maxWidth: 800 }}
           initialValues={{ variant: "underlined" }}
         >
           <Form.Item
@@ -253,14 +302,14 @@ const BookAppointment = () => {
             name="name"
             rules={[{ required: true, message: "Please input!" }]}
           >
-            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
+            <Input />
           </Form.Item>
           <Form.Item
             label="Your Reason"
             name="reason"
             rules={[{ required: true, message: "Please input!" }]}
           >
-            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
+            <Input />
           </Form.Item>
 
           <Divider>Category</Divider>
@@ -284,45 +333,12 @@ const BookAppointment = () => {
           <Space align={"center"} wrap style={{ justifyContent: "center" }}>
             {!!paginatedDoctors.length &&
               paginatedDoctors?.map((doc, index) => (
-                <Card
+                <DoctorCard
                   key={index}
-                  hoverable
-                  style={{
-                    borderColor:
-                      doc.id === selectedDoctor?.id ? "#1890ff" : "#707070",
-                    color:
-                      doc.id === selectedDoctor?.id ? "#1890ff" : "#707070",
-                    boxShadow:
-                      doc.id === selectedDoctor?.id
-                        ? "0 0 3px #1890ff"
-                        : "0 0 10px #e6f7ff",
-                  }}
-                  onClick={() => setSelectedDoctor(doc)}
-                >
-                  <Card.Meta
-                    avatar={
-                      <Avatar
-                        size={{ md: 50, lg: 64, xl: 70, xxl: 90 }}
-                        src={doc?.photoUrl}
-                        style={{ backgroundColor: "rgba(96,150,186,0.75)" }}
-                        icon={
-                          !doc?.photoUrl && (
-                            <UserOutlined
-                              style={{ fontSize: "30px", color: "#fffefe" }}
-                            />
-                          )
-                        }
-                      />
-                    }
-                    title={doc.name}
-                    className={"doc-info-card"}
-                    description={
-                      <>
-                        <div>{doc.specialty}</div>
-                      </>
-                    }
-                  />
-                </Card>
+                  doctor={doc}
+                  selectedDoctorId={selectedDoctor?.id}
+                  onSetSelectedDoctor={setSelectedDoctor}
+                />
               ))}
             {!paginatedDoctors.length && <Spin></Spin>}
           </Space>
@@ -344,67 +360,49 @@ const BookAppointment = () => {
           >
             <Select
               showSearch
+              disabled={!selectedDoctor}
               value={"in-person"}
               placeholder="Select a mode"
               optionFilterProp="label"
-              style={{
-                width: 120,
-                background: darkMode ? "#101832" : "#f5f5f5",
-              }}
-              options={[
-                {
-                  label: "In-person",
-                  value: "in-person",
-                },
-                {
-                  label: "Online",
-                  value: "online",
-                },
-                {
-                  label: "Phone Call",
-                  value: "phone",
-                },
-                {
-                  label: "Home Visit",
-                  value: "home-visit",
-                },
-              ]}
+              style={{ width: 200 }}
+              options={Object.entries(MODE_HOURS).map(([key, value]) => ({
+                label: key.split("_").join(" ") + ` - ${value}min`,
+                value: key,
+              }))}
             />
           </Form.Item>
 
           <Form.Item
-            label="DatePicker"
-            name="DatePicker"
+            label="Select Day"
+            name="date"
             rules={[{ required: true, message: "Please input!" }]}
           >
             <DatePicker
+              disabled={!mode}
               disabledDate={(current) =>
                 current && current < dayjs().startOf("day")
               }
-              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
             />
           </Form.Item>
           <Form.Item
-            label="TimePicker"
-            name="TimePicker"
+            label="Select Time"
+            name="startTime"
             rules={[{ required: true, message: "Please input!" }]}
           >
-            <TimePicker
-              disabledTime={disabledTime}
-              prefix={<SmileOutlined />}
-              format={"HH:mm"}
-              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+            <Select
+              showSearch
+              placeholder="Select a Time"
+              optionFilterProp="label"
+              style={{ width: 150 }}
+              options={availableTimes.map((time) => ({
+                label: time,
+                value: time.split("-")[0],
+              }))}
             />
           </Form.Item>
 
-          <Form.Item
-            label="Notes"
-            name="notes"
-            style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
-          >
-            <Input.TextArea
-              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
-            />
+          <Form.Item label="Notes" name="notes">
+            <Input.TextArea />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
@@ -419,3 +417,4 @@ const BookAppointment = () => {
 };
 
 export default BookAppointment;
+

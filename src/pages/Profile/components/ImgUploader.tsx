@@ -4,10 +4,10 @@ import {PlusOutlined} from '@ant-design/icons';
 import type {UploadFile} from 'antd/es/upload/interface';
 import type {RcFile, UploadChangeParam} from "antd/lib/upload";
 
-
 const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormData: (url: string) => void }) => {
     type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
     const [messageApi, contextHolder] = message.useMessage();
+
     const uploadButton = (
         <button style={{border: 0, background: "none"}} type="button">
             <PlusOutlined/>

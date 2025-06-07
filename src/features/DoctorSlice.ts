@@ -1,5 +1,6 @@
 import { setData } from '../services/apiService.ts';
 import { createAppSlice } from '../app/createAppSlice.ts';
+import type {User_Appointment} from "./appointments/appointmentsSlice.ts";
 
 export interface Doctor {
   id: string;
@@ -11,6 +12,7 @@ export interface Doctor {
   email: string;
   password: string;
   photoUrl?: string;
+  appointments?: User_Appointment[];
 }
 
 interface InitialState {

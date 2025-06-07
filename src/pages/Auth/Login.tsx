@@ -1,5 +1,5 @@
 import "./Login.css";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Form, Input, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DOCTOR_PAGE, PROFILE, SIGNUP } from "../../routes/paths.ts";
@@ -9,9 +9,10 @@ import { type Doctor } from "../../features/DoctorSlice.ts";
 import { setUser } from "../../features/UserSlice.ts";
 import { useAppDispatch } from "../../app/hooks.ts";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { fetchAppointments, resetStatus } from "../../features/appointments/appointmentsSlice.ts";
 import { useTheme } from "../../context/theme-context.tsx";
 
-const Login: React.FC = () => {
+const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -40,9 +41,21 @@ const Login: React.FC = () => {
 
       if (matchedDoctor) {
         dispatch(setUser({ data: matchedDoctor, role: "doctor", token }));
+        await dispatch(
+          fetchAppointments({ appointments: matchedDoctor?.appointments })
+        );
         navigate(DOCTOR_PAGE);
       } else if (matchedPatient) {
         dispatch(setPatient(matchedPatient));
+        try {
+          await dispatch(
+            fetchAppointments({ appointments: matchedPatient?.appointments })
+          );
+        } catch (error) {
+          console.error(error);
+        } finally {
+          dispatch(resetStatus());
+        }
         dispatch(setUser({ data: matchedPatient, role: "patient", token }));
         navigate(PROFILE);
       } else {
