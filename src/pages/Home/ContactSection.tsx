@@ -1,23 +1,36 @@
-import { Form, Input, Button, Typography } from 'antd';
+import { Form, Input, Button, Typography, Row, Col } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { CONTACT_US } from '../../routes/paths';
+import contactusImage from "../../assets/contactus-image.jpg"
+import "./ContactSection.css";
 
-const ContactSection = () => (
-  <div style={{ padding: '4rem 2rem', background: '#fff' }}>
-    <Typography.Title level={2} style={{ textAlign: 'center' }}>Contact Us</Typography.Title>
-    <Form layout="vertical" style={{ maxWidth: 600, margin: 'auto' }}>
-      <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item label="Message" name="message" rules={[{ required: true }]}>
-        <Input.TextArea rows={4} />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">Send</Button>
-      </Form.Item>
-    </Form>
-  </div>
-);
+const ContactSection = () => {
+  const navigate = useNavigate();
+  const handleContactUs = () =>{
+    navigate(CONTACT_US);
+  }
+
+  return (
+   <Row align="middle" gutter={32} className="contact-row">
+  <Col xs={24} md={12}>
+    <img src={contactusImage} alt="Contact us" className="contact-image" />
+  </Col>
+  <Col xs={24} md={12}>
+    <Typography.Title level={2} className="contact-title">
+      Contact Us
+    </Typography.Title>
+    <Typography.Paragraph className="contact-text">
+      Our contact details are available in the Contact Us section. 
+      Click "Show More" to learn how to get in touch with us. We appreciate every 
+      call and message from our users.
+    </Typography.Paragraph>
+    <Button className="contactsection-button" onClick={handleContactUs}>
+      Show More
+    </Button>
+  </Col>
+</Row>
+
+  )
+};
 
 export default ContactSection;

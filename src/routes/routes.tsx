@@ -6,8 +6,8 @@ import About from "../pages/About/About";
 import FindDoctor from "../pages/FindDoctor/FindDoctor";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Profile from "../pages/Profile/Profile";
-import Signup from "../pages/Profile/SignUp";
-import Login from "../pages/Profile/Login";
+import Signup from "../pages/Auth/SignUp";
+import Login from "../pages/Auth/Login";
 import Doctorpage from "../pages/DoctorPage/Doctorpage";
 import BookAppointment from "../pages/BookAppointment/BookAppointment";
 

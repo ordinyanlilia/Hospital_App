@@ -9,7 +9,7 @@ export interface Doctor {
   gender: string;
   specialty: string;
   email: string;
-  password: string;
+  password?: string;
 }
 
 interface InitialState {
