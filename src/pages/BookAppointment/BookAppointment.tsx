@@ -97,8 +97,8 @@ const BookAppointment = () => {
 
     function getTimeInterval(start: number, end: number, interval: number = 15) {
         const arr: string[] = [];
-        const startMin = start*60;
-        const endMin = end*60;
+        const startMin = start * 60;
+        const endMin = end * 60;
         for (let minutes = startMin; minutes < endMin; minutes += interval) {
             const h = Math.floor(minutes / 60);
             const m = minutes % 60;
@@ -126,7 +126,14 @@ const BookAppointment = () => {
                 });
             }
         });
-        setAvailableTimes(result);
+
+        setAvailableTimes(result.map(item => {
+            const [hourStr, minuteStr] = item.split(':');
+            const start = dayjs().set('hour', +hourStr).set('minute', +minuteStr);
+            const end = start.add(MODE_HOURS[mode], 'minute');
+
+            return `${start.format('HH:mm')}-${end.format('HH:mm')}`;
+        }));
     }, [selectedDate, mode, selectedDoctor]);
 
 
@@ -360,10 +367,10 @@ const BookAppointment = () => {
                             showSearch
                             placeholder="Select a Time"
                             optionFilterProp="label"
-                            style={{width: 120}}
+                            style={{width: 150}}
                             options={availableTimes.map(time => ({
                                 label: time,
-                                value: time,
+                                value: time.split('-')[0],
                             }))}
                         />
                     </Form.Item>

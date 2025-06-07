@@ -43,7 +43,6 @@ const AppointmentsTable = () => {
             title: 'Date',
             dataIndex: 'startTime',
             key: 'startTime',
-            defaultSortOrder: 'ascend',
             filterDropdown: ({setSelectedKeys, selectedKeys, confirm}) => (
                 <div style={{padding: 8}}>
                     <DatePicker
@@ -103,9 +102,10 @@ const AppointmentsTable = () => {
             const date = dayjs(appointment.startTime);
             if (date.isSame(dayjs(), 'day') && !dayjs().isAfter(date)) {
                 const time = date.format('HH:mm');
+                const mode = appointment.mode.split('_').join(' ');
                 api.info({
                     message: 'Upcoming Appointment',
-                    description: `You have an appointment today at ${time}. Please be on time.`,
+                    description: `You have ${mode} appointment today at ${time}. Please be on time.`,
                     duration: 0
                 });
             }
