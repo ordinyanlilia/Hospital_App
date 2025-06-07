@@ -1,8 +1,4 @@
 .theme-switch {
-  position: absolute;
-  right: 100px;
-  margin-left: auto;
   display: flex;
   align-items: center;
 }
-

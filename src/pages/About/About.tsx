@@ -1,18 +1,19 @@
 import { Card, Row, Col } from "antd";
 import "./About.css";
-import { Footer } from "../FindDoctor/Footer";
 import { motion } from "framer-motion";
+import { useTheme } from "../../context/theme-context";
 
 const About = () => {
+  const { darkMode } = useTheme();
   return (
     <>
-      <div className="about-container">
+      <div className={`about-container ${darkMode ? "dark" : "light"}`}>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <Card className="about-card">
+          <Card className={`about-card ${darkMode ? "dark" : "light"}`}>
             <div className="about-content">
               <Row gutter={[16, 16]} justify="start">
                 <Col xs={24} md={12}>
@@ -42,7 +43,7 @@ const About = () => {
           </Card>
         </motion.div>
       </div>
-      <div className="container-2">
+      <div className={`container-2 ${darkMode ? "dark" : "light"}`}>
         <Row justify="center" align="middle">
           <Col xs={24} md={24} style={{ textAlign: "center" }}>
             <motion.h1
@@ -141,7 +142,6 @@ const About = () => {
           </Card>
         </motion.div>
       </div>
-      <Footer />
     </>
   );
 };
