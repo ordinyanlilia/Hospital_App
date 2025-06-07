@@ -113,7 +113,10 @@ const BookAppointment = () => {
             return;
         }
 
-        let result = getTimeInterval(9, 20, MODE_HOURS[mode]);
+        const isToday = dayjs(selectedDate).isSame(dayjs(), 'day');
+        const timeStart = isToday ? dayjs().get('hour')+1 : 9;
+
+        let result = getTimeInterval(timeStart, 20, MODE_HOURS[mode]);
 
         selectedDoctor?.appointments?.forEach((appointment) => {
             if (dayjs(appointment.startTime).isSame(selectedDate, "day")) {
