@@ -1,10 +1,10 @@
 import "./Login.css";
-import React, { useState, useEffect } from "react";
-import { Button, Input, Form, Row } from 'antd'
+import React, { useState } from "react";
+import { Button, Input, Form } from 'antd'
 import { useNavigate } from "react-router-dom";
 import { SIGNUP, PROFILE, DOCTOR_PAGE } from "../../routes/paths";
 import { fetchData } from "../../services/apiService";
-import  { type Patient } from "../../features/PatientSlice";
+import  { setPatient, type Patient } from "../../features/PatientSlice";
 import { type Doctor } from "../../features/DoctorSlice";
 import { setUser } from "../../features/UserSlice";
 import { useAppDispatch } from "../../app/hooks";
@@ -50,6 +50,7 @@ const Login: React.FC = () => {
     } 
     else if (matchedPatient) {
       dispatch(setUser({ data: matchedPatient, role: "patient", token }));
+      dispatch(setPatient(matchedPatient));
       navigate(PROFILE);
     } 
     else {

@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, fetchData } from "../../services/apiService.ts";
 import { useAppDispatch } from "../../app/hooks.ts";
 import { setUser, clearUser } from "../../features/UserSlice.ts";
-import { type Patient } from "../../features/PatientSlice.ts";
+import { setPatient, type Patient } from "../../features/PatientSlice.ts";
 import { type Doctor } from "../../features/DoctorSlice.ts";
 import { Spin } from "antd";
 import { fetchAppointments, resetStatus } from "../../features/appointments/appointmentsSlice.ts";
@@ -45,6 +45,7 @@ const AuthLoader = ({ children }: Props) => {
           dispatch(fetchAppointments({ appointments: matchedDoctor.appointments }));
         } else if (matchedPatient) {
           dispatch(setUser({ data: matchedPatient, role: "patient", token }));
+          dispatch(setPatient(matchedPatient));
           try {
             await dispatch(fetchAppointments({ appointments: matchedPatient.appointments }));
           } catch (error) {

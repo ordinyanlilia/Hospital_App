@@ -1,12 +1,12 @@
 import "./Signup.css";
 import type { FormProps } from 'antd';
-import { Button, Row, Form, Input, Select, DatePicker, Card, Space} from 'antd';
+import { Button, Form, Input, Select, DatePicker, Card, Space} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
-import { LOGIN, PROFILE } from '../../routes/paths';
+import { LOGIN } from '../../routes/paths';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useState, useEffect } from 'react';
 import { fetchData } from "../../services/apiService";
-import { addPatient, selectPatientStatus } from '../../features/PatientSlice';
+import { addPatient, selectPatientStatus, setPatient } from '../../features/PatientSlice';
 import { addDoctor, selectDoctorStatus } from '../../features/DoctorSlice';
 import { type Patient } from '../../features/PatientSlice';
 import { type Doctor } from '../../features/DoctorSlice';
@@ -83,6 +83,7 @@ const Signup = () => {
         };
 
         await setData("patients", newPatient, firebaseUID); 
+        dispatch(setPatient(newPatient));
         navigate(LOGIN);                 
       }
 
