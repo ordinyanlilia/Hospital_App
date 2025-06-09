@@ -6,23 +6,6 @@
   margin: 0 auto;
 }
 
-.doctor-profile-title {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.doctor-profile-title img {
-  width: 36px;
-  height: 36px;
-  margin-right: 12px;
-}
-
-.doctor-profile-title span {
-  font-size: 30px;
-  color: #333;
-}
-
 .personal-info-container {
   min-height: 71vh;
   background-color: #fff;

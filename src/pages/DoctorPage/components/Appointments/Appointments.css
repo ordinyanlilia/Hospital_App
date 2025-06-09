@@ -1,17 +1,4 @@
-.appointments-title{
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.appointments-container {
+  height: 100%;
 }
 
-.appointments-title img{
-    width: 36px;
-    height: 36px;
-    margin-right: 10px;
-}
-
-.appointments-title span {
-    font-family: 'Inter', sans-serif;
-    font-size: 30px;
-    color: #333;
-}
