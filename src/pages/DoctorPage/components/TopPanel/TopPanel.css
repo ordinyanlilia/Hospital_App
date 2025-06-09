@@ -1,0 +1,39 @@
+.topPanel-container {
+  width: 100%;
+  background-color: #fff;
+}
+
+.topPanel-container .ant-tabs-tab {
+  font-size: 16px; 
+  font-weight: 500;
+}
+
+.topPanel-container .ant-tabs-nav{
+  padding: 5px 20px 0 20px;
+}
+
+.topPanel-container .ant-tabs-tab .anticon {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+.topPanel-container .ant-tabs-tab a {
+  color: #333;
+}
+.topPanel-container .ant-tabs-tab-active a {
+  color: #1677ff; 
+  font-weight: 600;
+}
+
+.logout-section {
+ font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+.logout-section:hover {
+  color: #a8071a;
+}

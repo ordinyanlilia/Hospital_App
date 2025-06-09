@@ -1,78 +1,62 @@
 import "./DoctorProfile.css";
-import stethoscopeBlueIcon from "../../Icons/stethoscopeBlue.png";
 import { useEffect, useState } from "react";
-// import type { AppDispatch, RootState } from "../../../../Store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchDoctorById, type DoctorA } from "../../../../features/DoctorPageSlice/doctorPageSlice";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import {
+  selectUserData,
+  selectUserRole,
+  selectUserToken,
+  setUser,
+} from "../../../../features/UserSlice";
+import { type Doctor } from "../../../../features/DoctorSlice";
 import { updateData } from "../../../../services/apiService";
-import type { Doctor } from "../../../../features/DoctorSlice";
-import type { AppDispatch, RootState } from "../../../../app/store";
-// import { type Doctor } from "../../../../../src/features/SignInSignUpSlice/DoctorSlice";
-
 
 const DoctorProfile: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { doctor } = useSelector((state: RootState) => state.doctorPage);
+  const dispatch = useAppDispatch();
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editDoctor, setEditDoctor] = useState<Partial<DoctorA> | null>(null);
+  const [editedDoctor, setEditedDoctor] = useState<Partial<Doctor> | null>(
+    null
+  );
+  const user = useAppSelector(selectUserData);
+  const userRole = useAppSelector(selectUserRole);
+  const userToken = useAppSelector(selectUserToken);
 
-  const userData = useSelector((state: RootState) => state.userSlice.data);
-    const userRole = useSelector((state: RootState) => state.userSlice.role);
-  
-    const doctor1 =
-      userData && userRole === "doctor" && "id" in userData
-        ? (userData as Doctor)
-        : null;
-  
-    const DOCTOR_ID = doctor1?.id;
-  
-    useEffect(() => {
-      if (DOCTOR_ID) {
-        dispatch(fetchDoctorById(DOCTOR_ID));
-      }
-    }, [dispatch, DOCTOR_ID]);
+  const doctor = userRole === "doctor" ? (user as Doctor) : null;
 
-  
   useEffect(() => {
     if (isEditMode && doctor) {
-      setEditDoctor({ ...doctor });
+      setEditedDoctor({ ...doctor });
     }
-  }, [isEditMode, doctor]); 
-  
-  if (!doctor1) {
-      return null;
-    }
+  }, [isEditMode, doctor]);
 
-  if (!doctor) {
-    return (
-      <div className="doctor-profile-container">No doctor data available.</div>
-    );
-  }
+  if (!doctor || userRole !== "doctor") return <div>Loading...</div>;
 
-  const handleInputChange = (field: keyof DoctorA, value: string) => {
-    setEditDoctor((prev) => (prev ? { ...prev, [field]: value } : prev));
+  const handleInputChange = (field: keyof Doctor, value: string) => {
+    setEditedDoctor((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
   const handleSave = async () => {
-    if (editDoctor && doctor.id) {
-      await updateData<Partial<DoctorA>>(doctor.id, "doctors", editDoctor);
-      dispatch(fetchDoctorById(doctor.id));
+    if (!editedDoctor || !doctor || !doctor.doc_id) return;
+
+    try {
+      await updateData(doctor.doc_id, "doctors", editedDoctor);
+      dispatch(
+        setUser({
+          data: { ...doctor, ...editedDoctor },
+          role: "doctor",
+          token: userToken!,
+        })
+      );
+
       setIsEditMode(false);
+    } catch (error) {
+      console.error("Error updating doctor profile:", error);
     }
   };
-
-  console.log("edited",doctor);
-  
 
   return (
     <div className="doctor-profile-container">
       <div className="doctor-profile-content">
-        <div className="doctor-profile-title">
-          <img src={stethoscopeBlueIcon} alt="Stethoscope icon" />
-          <span>Profile</span>
-        </div>
-
         <div className="personal-info-container">
           <div className="personal-info-content">
             {!isEditMode ? (
@@ -112,7 +96,7 @@ const DoctorProfile: React.FC = () => {
                   <p>Name</p>
                   <input
                     type="text"
-                    value={editDoctor?.name || ""}
+                    value={editedDoctor?.name || ""}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                   />
                 </div>
@@ -120,7 +104,7 @@ const DoctorProfile: React.FC = () => {
                   <p>Surname</p>
                   <input
                     type="text"
-                    value={editDoctor?.surname || ""}
+                    value={editedDoctor?.surname || ""}
                     onChange={(e) =>
                       handleInputChange("surname", e.target.value)
                     }
@@ -129,13 +113,13 @@ const DoctorProfile: React.FC = () => {
                 <div className="form-container">
                   <p>Gender</p>
                   <select
-                    value={editDoctor?.gender || ""}
+                    value={editedDoctor?.gender || ""}
                     onChange={(e) =>
                       handleInputChange("gender", e.target.value)
                     }
                   >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                   </select>
                 </div>
                 <div className="form-container">
@@ -145,7 +129,7 @@ const DoctorProfile: React.FC = () => {
                 <div className="form-container">
                   <p>Specialty</p>
                   <select
-                    value={editDoctor?.specialty || ""}
+                    value={editedDoctor?.specialty || ""}
                     onChange={(e) =>
                       handleInputChange("specialty", e.target.value)
                     }
@@ -161,7 +145,7 @@ const DoctorProfile: React.FC = () => {
                 <div className="form-container">
                   <p>Years Of Experience</p>
                   <select
-                    value={editDoctor?.yearsOfExperience || ""}
+                    value={editedDoctor?.yearsOfExperience || ""}
                     onChange={(e) =>
                       handleInputChange("yearsOfExperience", e.target.value)
                     }
@@ -176,9 +160,9 @@ const DoctorProfile: React.FC = () => {
                 <div className="form-container">
                   <p>Bio</p>
                   <textarea
-                    value={editDoctor?.bio || ""}
+                    value={editedDoctor?.bio || ""}
                     onChange={(e) => handleInputChange("bio", e.target.value)}
-                    rows={4} // default visible lines, can adjust as needed
+                    rows={4}
                     placeholder="Write a brief bio..."
                   />
                 </div>

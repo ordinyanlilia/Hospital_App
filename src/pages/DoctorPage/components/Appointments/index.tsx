@@ -1,19 +1,25 @@
 import "./Appointments.css";
 import FilterBar from "./components/FilterBar";
-import appointmentsBlueIcon from "../../Icons/appointmentBlue.png";
 import AppointmentsList from "./components/AppointmentsList";
+import { useState } from "react";
 
 const Appointments: React.FC = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   return (
     <div className="appointments-container">
       <div className="appointments-content">
-        <div className="appointments-title">
-          <img src={appointmentsBlueIcon} alt="Appointment icon" />
-          <span>Appointments</span>
-        </div>
-        <FilterBar/>
-        <AppointmentsList />
+        <FilterBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+        />
+        <AppointmentsList
+        searchValue={searchValue}
+        statusFilter={statusFilter}
+        />
       </div>
     </div>
   );
