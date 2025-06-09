@@ -12,7 +12,7 @@ export interface Doctor {
   specialty: string;
   email: string;
   password: string;
-  photoUrl?: string;
+  imageUrl?: string;
   appointments?: User_Appointment[];
   bio?:string
 }

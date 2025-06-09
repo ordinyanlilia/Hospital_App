@@ -37,7 +37,7 @@ const CalendarPart: React.FC = () => {
         return {
           type: badgeStatus,
           content: `${dayjs.utc(apt.startTime).local().format("HH:mm")} - ${
-            apt.patientName ?? "Unknown"
+            dayjs.utc(apt.endTime).local().format("HH:mm")
           }`,
           status: apt.status?.toLowerCase() ?? "unknown",
         };
