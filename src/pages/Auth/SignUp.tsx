@@ -1,13 +1,13 @@
 import "./Signup.css";
 import type { FormProps } from 'antd';
-import { Button, Row, Form, Input, Select, DatePicker, Card, Space, message} from 'antd';
+import { Button, Form, Input, Select, DatePicker, Card, Space, message} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import { LOGIN, PROFILE } from '../../routes/paths';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useState, useEffect } from 'react';
 import { fetchData } from "../../services/apiService";
-import { addPatient, selectPatientStatus } from '../../features/PatientSlice';
-import { addDoctor, selectDoctorStatus } from '../../features/DoctorSlice';
+import { selectPatientStatus, setPatient } from '../../features/PatientSlice';
+import { selectDoctorStatus } from '../../features/DoctorSlice';
 import { type Patient } from '../../features/PatientSlice';
 import { type Doctor } from '../../features/DoctorSlice';
 import { auth } from "../../services/apiService";
@@ -87,6 +87,8 @@ const Signup = () => {
         };
 
         await setData("patients", newPatient, firebaseUID);
+        dispatch(setPatient(newPatient));
+        
         navigate(LOGIN);
       }
 
@@ -107,7 +109,6 @@ const Signup = () => {
 
     } catch (err) {
       console.error('Signup error:', err);
-      console.error("Firebase error:", err);
 
       let messageText = "Something went wrong. Please try again.";
 
