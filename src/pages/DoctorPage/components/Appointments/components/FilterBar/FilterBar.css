@@ -1,15 +1,20 @@
-.filter-bar-container{
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.1);
+.filter-bar-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
-.filter-bar-contnet{
-    padding: 20px;
-    display: flex;
+.filter-bar-contnet {
+  padding: 20px;
+  display: flex;
 }
 
-.input-search-patient{
-    width: 300px;
-    margin-right: 10px;
+.input-search-patient {
+  margin-right: 10px;
+}
+
+@media (max-width: 500px) {
+  .input-search-patient {
+    width: 200px;
+  }
 }
