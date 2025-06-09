@@ -1,4 +1,4 @@
-.calendar-wrapper .ant-picker-panel {
+.calendar-wrapper.ant-picker-panel {
   height: 78vh !important;
   overflow-y: auto;
 }

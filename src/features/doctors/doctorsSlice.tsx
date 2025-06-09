@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {fetchData} from "../../services/apiService";
+import type {User_Appointment} from "../appointments/appointmentsSlice.ts";
 
 export type Doctor = {
     id?: string;
@@ -12,6 +13,7 @@ export type Doctor = {
     doc_id?: string;
     yearsOfExperience?: number;
     bio?: string;
+    appointments?: User_Appointment[];
 };
 
 export const fetchDoctors = createAsyncThunk(
