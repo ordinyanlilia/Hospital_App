@@ -1,5 +1,4 @@
 import "./Profile.css";
-
 import { useState } from "react";
 import { Alert, Button, Divider, Flex, Space } from "antd";
 import AppointmentsTable from "./components/AppointmentsTable.tsx";
@@ -10,6 +9,8 @@ import { FileAddOutlined, LoginOutlined } from "@ant-design/icons";
 import EditUserInfo from "./components/EditUserInfo.tsx";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { setPatient } from "../../features/PatientSlice.ts";
+import { auth } from "../../services/apiService.ts";
+import { signOut } from "firebase/auth";
 import { clearUser } from "../../features/UserSlice.ts";
 import { selectAppointments } from "../../features/appointments/appointmentsSlice.ts";
 
@@ -23,11 +24,11 @@ const Profile = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleLogOutClick = () => {
+  const handleLogOutClick = async () => {
+    await signOut(auth);
+    localStorage.removeItem('authToken');
     dispatch(clearUser());
-    dispatch(setPatient(null));
-    navigate("/login");
-    localStorage.removeItem("authToken");
+    navigate('/login');
   };
 
   return (

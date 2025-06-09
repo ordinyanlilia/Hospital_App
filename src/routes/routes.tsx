@@ -16,6 +16,7 @@ import Calendar from "../pages/DoctorPage/components/Calendar";
 import DoctorInfo from "../pages/DoctorInfo/DoctorInfo";
 
 
+
 export const router = createBrowserRouter([
     {
         path: HOME_PAGE,

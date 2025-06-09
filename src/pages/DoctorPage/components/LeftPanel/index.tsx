@@ -1,4 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../../services/apiService";
 import "./LeftPanel.css";
 import appointmentIcon from "../../Icons/appointments.png";
 import calendarIcon from "../../Icons/calendar.png";
@@ -33,10 +35,11 @@ const LeftPanel: React.FC = () => {
     return null;
   }
 
-  const handleClickLogout = () => {
+  const handleClickLogout = async() => {
+    await signOut(auth);
     dispatch(clearUser());
-    navigate("/login");
     localStorage.removeItem("authToken");
+    navigate("/login");
   };
 
   return (
