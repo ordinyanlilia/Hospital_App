@@ -6,7 +6,6 @@ import DoctorsSlice from "../features/doctors/doctorsSlice.tsx";
 import userSlice from "../features/UserSlice.ts";
 import patientSlice from "../features/PatientSlice.ts";
 import DoctorSlice from "../features/DoctorSlice.ts";
-import doctorPageSlice from "../features/DoctorPageSlice/doctorPageSlice.ts";
 
 const rootReducer = combineSlices(
   AppointmentsSlice,
@@ -14,7 +13,6 @@ const rootReducer = combineSlices(
   userSlice,
   patientSlice,
   DoctorSlice,
-  doctorPageSlice
 );
 
 export type RootState = ReturnType<typeof rootReducer>;

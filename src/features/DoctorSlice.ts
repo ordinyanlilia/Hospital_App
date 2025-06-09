@@ -3,6 +3,7 @@ import { createAppSlice } from '../app/createAppSlice.ts';
 import type {User_Appointment} from "./appointments/appointmentsSlice.ts";
 
 export interface Doctor {
+  doc_id: string;
   id: string;
   name: string;
   surname: string;
@@ -13,6 +14,7 @@ export interface Doctor {
   password: string;
   photoUrl?: string;
   appointments?: User_Appointment[];
+  bio?:string
 }
 
 interface InitialState {
