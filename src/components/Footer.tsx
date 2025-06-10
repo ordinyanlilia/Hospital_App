@@ -2,12 +2,15 @@ import "./Footer.css";
 import { Button, Row, Col } from "antd";
 import {BOOK_APPOINTMENT} from "../routes/paths.ts";
 import {useNavigate} from "react-router-dom";
+import { useTranslate } from "../context/TranslationProvider";
 
 export const Footer = () => {
   const navigate = useNavigate();
   const handleBookAppointment = () => {
     navigate(BOOK_APPOINTMENT);
   }
+  const { translate } = useTranslate();
+
   return (
     <>
       <div className="footer-container">
@@ -24,11 +27,9 @@ export const Footer = () => {
             </Col>
             <Col xs={24} md={12}>
               <div className="footer-text">
-                <p className="footer-heading">
-                  Looking for professional & trusted medical healthcare?
-                </p>
-                <p className="footer-subtext">DON'T HASTITATE TO CONTACT US.</p>
-                <Button className="footer-button" onClick={handleBookAppointment}>MAKE APPOINTMENT</Button>
+                <p className="footer-heading">{translate("lookingFor")}</p>
+                <p className="footer-subtext">{translate("dontHesitate")}</p>
+                <Button className="footer-button" onClick={handleBookAppointment}>{translate("makeAppointment")}</Button>
               </div>{" "}
             </Col>
           </Row>

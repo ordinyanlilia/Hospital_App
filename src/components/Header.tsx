@@ -18,37 +18,40 @@ import {
 } from "@ant-design/icons";
 import { useTheme } from "../context/theme-context";
 import "./Header.css";
+import { Select } from "antd";
+import { useTranslate } from "../context/TranslationProvider";
 
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const { darkMode, toggleTheme } = useTheme();
+  const { language, changeLanguage, translate } = useTranslate();
 
   const menuItems = [
     {
       key: "home",
       icon: <HomeOutlined />,
-      label: <NavLink to={HOME_PAGE}>Home Page</NavLink>,
+      label: <NavLink to={HOME_PAGE}>{translate("home")}</NavLink>,
     },
     {
       key: "about",
       icon: <InfoCircleOutlined />,
-      label: <NavLink to={ABOUT}>About</NavLink>,
+      label: <NavLink to={ABOUT}>{translate("about")}</NavLink>,
     },
     {
       key: "find-doctor",
       icon: <IdcardOutlined />,
-      label: <NavLink to={FIND_DOCTOR}>Find Doctor</NavLink>,
+      label: <NavLink to={FIND_DOCTOR}>{translate("findDoctor")}</NavLink>,
     },
     {
       key: "contact",
       icon: <PhoneOutlined />,
-      label: <NavLink to={CONTACT_US}>Contact Us</NavLink>,
+      label: <NavLink to={CONTACT_US}>{translate("contactUs")}</NavLink>,
     },
     {
       key: "profile",
       icon: <UserOutlined />,
-      label: <NavLink to={PROFILE}>Your Profile</NavLink>,
+      label: <NavLink to={PROFILE}>{translate("profile")}</NavLink>,
     },
   ];
 
@@ -89,6 +92,18 @@ const HeaderComponent = () => {
           unCheckedChildren={<BulbOutlined />}
         />
       </div>
+      <div className="language-selector">
+        <Select
+          defaultValue={language}
+          // style={{ width: 100 }}
+          onChange={changeLanguage}
+          options={[
+            { value: "eng", label: "ENG 🇺🇸" },
+            { value: "arm", label: "ARM 🇦🇲" },
+            { value: "rus", label: "RUS 🇷🇺" },
+          ]}
+        />
+      </div>  
     </Header>
   );
 };
