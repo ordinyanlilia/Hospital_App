@@ -1,6 +1,7 @@
-import { setData } from '../services/apiService.ts';
+import { setData, updateData } from '../services/apiService.ts';
 import { createAppSlice } from '../app/createAppSlice.ts';
 import type {User_Appointment} from "./appointments/appointmentsSlice.ts";
+import { arrayUnion } from 'firebase/firestore';
 
 export interface Doctor {
   doc_id: string;
@@ -52,6 +53,32 @@ const doctorSlice = createAppSlice({
         },
       }
     ),
+    addMedication: create.asyncThunk(
+      async (args: {
+        newMedication: { medication: string; description: string };
+        patient_doc_id: string;
+      }) => {
+        const { newMedication, patient_doc_id } = args;
+
+        await updateData(patient_doc_id, "patients", {
+          currentMedications: arrayUnion(newMedication),
+        });
+
+        return newMedication;
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state) => {
+          state.status = "succeeded";
+        },
+        rejected: (state, action) => {
+          state.status = "failed";
+          state.error = action.error.message || "Something went wrong";
+        },
+      }
+    ),
   }),
   selectors: {
     selectDoctorStatus: state => state.status,
@@ -60,8 +87,8 @@ const doctorSlice = createAppSlice({
   },
 });
 
-export const {selectDoctorStatus, selectDoctorError, selectDoctors,} = doctorSlice.selectors;
+export const {selectDoctorStatus, selectDoctorError, selectDoctors} = doctorSlice.selectors;
 
-export const { addDoctor } = doctorSlice.actions;
+export const { addDoctor, addMedication } = doctorSlice.actions;
 
 export default doctorSlice;
