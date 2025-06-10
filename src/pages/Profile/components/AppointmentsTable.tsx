@@ -1,15 +1,10 @@
 import {FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
-import {useEffect} from "react";
-import {
-    type Appointment,
-    selectAppointments,
-    setAppointments
-} from "../../../features/appointments/appointmentsSlice.ts";
-import {Space, Table} from "antd";
+import {type Appointment, MODE_HOURS, selectAppointments,} from "../../../features/appointments/appointmentsSlice.ts";
+import {DatePicker, notification, Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
-import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import {getData} from "../../../services/apiService.ts";
-import {selectPatient} from "../../../features/PatientSlice.ts";
+import {useAppSelector} from "../../../app/hooks.ts";
+import dayjs, {type Dayjs} from "dayjs";
+import {useEffect, useRef} from "react";
 
 const AppointmentsTable = () => {
     const columns: ColumnsType<Appointment> = [
@@ -32,7 +27,12 @@ const AppointmentsTable = () => {
             title: 'Mode',
             dataIndex: 'mode',
             key: 'mode',
-            render: (text: string) => text.charAt(0).toUpperCase() + text.slice(1),
+            filters: Object.keys(MODE_HOURS).map(key => ({
+                text: key.split('_').join(' '),
+                value: key
+            })),
+            onFilter: (value, record) => record.mode.indexOf(value as string) === 0,
+            render: (text: string) => text.split('_').join(' '),
         },
         {
             title: 'Notes',
@@ -40,9 +40,47 @@ const AppointmentsTable = () => {
             key: 'notes',
         },
         {
+            title: 'Date',
+            dataIndex: 'startTime',
+            key: 'startTime',
+            filterDropdown: ({setSelectedKeys, selectedKeys, confirm}) => (
+                <div style={{padding: 8}}>
+                    <DatePicker
+                        onChange={(date: Dayjs) => {
+                            setSelectedKeys(date ? [date.format('YYYY-MM-DD')] : []);
+                            confirm();
+                        }}
+                        value={selectedKeys[0] ? dayjs(selectedKeys[0] as string) : null}
+                    />
+                </div>
+            ),
+            onFilter: (value, record): boolean => {
+                return dayjs(record.startTime).isSame(dayjs(value as string), 'day');
+            },
+            sorter: (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf(),
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY'),
+        },
+        {
+            title: 'Time',
+            dataIndex: 'startTime',
+            key: 'startTime',
+            render: (date: string) => dayjs(date).format('HH:mm'),
+        },
+        {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            filters: [
+                {
+                    text: 'Scheduled',
+                    value: 'scheduled',
+                },
+                {
+                    text: 'Visited',
+                    value: 'visited',
+                },
+            ],
+            onFilter: (value, record) => record.status.indexOf(value as string) === 0,
             render: (text: string) => (
                 <Space>{text === 'scheduled' ?
                     <ScheduleTwoTone className={'blue-text'}/> :
@@ -52,26 +90,40 @@ const AppointmentsTable = () => {
         },
     ];
 
+    const [api, contextHolder] = notification.useNotification();
+
     const appointments = useAppSelector(selectAppointments);
-    const dispatch = useAppDispatch();
-    const user = useAppSelector(selectPatient);
+    const notified = useRef(false);
 
     useEffect(() => {
-        const fetchAppointments = async () => {
-            const results = await Promise.all(
-                (user?.appointments ?? []).map(id => getData<Appointment>(id, 'appointments'))
-            );
+        if (notified.current) return;
 
-            dispatch(setAppointments(results));
-        };
-
-        fetchAppointments();
-    }, [user?.appointments?.length]);
-
+        appointments.forEach(appointment => {
+            const date = dayjs(appointment.startTime);
+            if (date.isSame(dayjs(), 'day') && !dayjs().isAfter(date)) {
+                const time = date.format('HH:mm');
+                const mode = appointment.mode.split('_').join(' ');
+                api.info({
+                    message: 'Upcoming Appointment',
+                    description: `You have ${mode} appointment today at ${time}. Please be on time.`,
+                    duration: 0
+                });
+            }
+        })
+        notified.current = true;
+    }, [api, appointments]);
 
     return (
-        <Table columns={columns} dataSource={appointments} rowKey={record => record.doc_id || ''}
-               size="small"/>
+        <>
+            {contextHolder}
+            <Table
+                columns={columns}
+                dataSource={appointments}
+                rowKey={record => record.doc_id || ''}
+                showSorterTooltip={{target: 'sorter-icon'}}
+                size="small"/>
+
+        </>
     )
 }
 

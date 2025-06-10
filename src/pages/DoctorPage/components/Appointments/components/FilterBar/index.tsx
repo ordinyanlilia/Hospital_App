@@ -1,53 +1,44 @@
 import "./FilterBar.css";
-import { Input } from "antd";
-// import type { GetProps } from "antd";
-import { Select } from "antd";
-
-// type SearchProps = GetProps<typeof Input.Search>;
+import { Input, Select } from "antd";
 
 const { Search } = Input;
 
-type FilterBarProps = {
-  onSearch: (value: string) => void;
-  setSearchValue:  (value: string) => void;
-  setStatusFilter:  (value: string) => void;
-};
+interface FilterBarProps {
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  statusFilter: string;
+  setStatusFilter: (value: string) => void;
+}
 
-
-const FilterBar: React.FC<FilterBarProps> = ({ setSearchValue, setStatusFilter, onSearch }) => {
+const FilterBar: React.FC<FilterBarProps> = ({
+  searchValue,
+  setSearchValue,
+  statusFilter,
+  setStatusFilter,
+}) => {
   return (
     <div className="filter-bar-container">
       <div className="filter-bar-contnet">
         <div className="input-search-patient">
           <Search
             placeholder="Patient's name"
-            onChange={(e)=> setSearchValue(e.target.value)}
-            onSearch={(value) => {onSearch(value); setSearchValue(""); setStatusFilter("All")} }
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onSearch={(value) => setSearchValue(value)}
+            allowClear
           />
         </div>
         <div className="select-search">
           <Select
-            showSearch
+            value={statusFilter}
             style={{ width: 200 }}
             placeholder="All"
             onChange={(value) => setStatusFilter(value)}
             options={[
-              {
-                value: "All",
-                label: "All",
-              },
-              {
-                value: "upcoming",
-                label: "Upcoming",
-              },
-              {
-                value: "visited",
-                label: "Visited",
-              },
-              {
-                value: "scheduled",
-                label: "Scheduled",
-              },
+              { value: "All", label: "All" },
+              { value: "upcoming", label: "Upcoming" },
+              { value: "visited", label: "Visited" },
+              { value: "scheduled", label: "Scheduled" },
             ]}
           />
         </div>

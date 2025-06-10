@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './OnikBot.css';
 import MedicalChat from './MedicalChat';
-import { useLocation } from 'react-router-dom';
+
 
 
 const faqResponses: Record<string, string> = {

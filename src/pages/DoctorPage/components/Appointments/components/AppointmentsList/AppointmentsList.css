@@ -1,50 +1,143 @@
-.appointments-list-container{
-    margin-top: 20px;
-    background-color: whitesmoke;
-    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-.appointments-list-content{
-    display: flex;
-    flex-direction: column;
-    margin:20px;
+.appointments-list-container {
+  margin-top: 24px;
+  background-color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 100%;
 }
 
 .appointments-list-content table {
   width: 100%;
-  border-collapse: separate; 
-  border-spacing: 0;
-  border-radius: 12px; 
-  overflow: hidden; 
-  margin-bottom: 20px;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  font-family: "Inter", sans-serif;
+  border-radius: 12px;
+  background-color: #ffffff;
 }
 
 .appointments-list-content th,
 .appointments-list-content td {
-  padding: 12px 15px;
+  padding: 14px 18px;
   text-align: left;
-  
+  background-color: #fafafa;
+  border-radius: 10px;
+  transition: background-color 0.2s;
 }
 
-.appointments-list-content thead {
-  background-color: whitesmoke;
-  font-weight: bold;
+.appointments-list-content thead th {
+  background-color: rgba(24, 144, 255, 0.1);
+  color: #333;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 0;
 }
 
-.appointments-list-content tbody{
-    background-color: white;
+.appointments-list-content tbody td {
+  background-color: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #444;
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
-.appointment-status img{
-    width: 24px;
-    height: 24px;
-    margin-right: 5px;
+.appointments-list-content tbody tr {
+  background-color: #fafafa;
+  transition: background-color 0.3s ease;
+  cursor: default;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+}
+
+.appointments-list-content tbody tr:hover td {
+  background-color: #f9f9f9;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.native-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #1890ff; 
+  cursor: pointer;
+  margin: 0;
+}
+
+.patient-name-text {
+  font-size: 14px;
+  color: #444;
 }
 
 .appointment-status {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #444;
+  text-transform: capitalize;
+}
+
+.appointment-status-icon {
+  margin-right: 5px;
+}
+
+.status-icon {
+  font-size: 20px;
 }
 
 
+.loading-message,
+.error-message,
+.no-results-message {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+}
+
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.ant-modal .ant-modal-content{
+  box-shadow: none;
+}
+
+.modal-content{
+  display: flex;
+}
+
+.modal-inputs{
+  margin-right: 5px;
+}
+
+.medication-input{
+  margin-bottom: 5px;
+}
+
+.description-input{
+  margin-bottom: 10px;
+}
+
+.modal-add-btn{
+  width: 30px;
+}

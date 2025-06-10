@@ -1,0 +1,45 @@
+.calendar-wrapper.ant-picker-panel {
+  height: 78vh !important;
+  overflow-y: auto;
+}
+
+.calendar-wrapper .ant-picker-cell-inner {
+  padding: 4px 0;
+  height: 30px;
+  background-color: white !important;
+}
+
+.calendar-wrapper ul.events {
+  list-style-type: none;
+}
+
+.calendar-wrapper ul {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+}
+
+.count-badge {
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 2px 6px;
+  margin-right: 4px;
+  color: white;
+}
+
+.count-badge.scheduled {
+  background-color: #1890ff; 
+}
+
+.count-badge.visited {
+  background-color: #52c41a; 
+}
+
+.count-badge.canceled {
+  background-color: #f5222d; 
+}
+
+.calendar-wrapper .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: white !important;
+}

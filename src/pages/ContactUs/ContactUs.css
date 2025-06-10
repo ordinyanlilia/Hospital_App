@@ -30,3 +30,13 @@
   border-radius: 10px;
   max-width: 100%;
 }
+.contact-us-container.light {
+  background-color: #f7fafd;
+}
+
+.contact-us-container.dark {
+  background-color: #101832;
+}
+.contact-us-container.dark .contact-card {
+  background-color: #252d4c;
+}

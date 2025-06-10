@@ -1,147 +1,173 @@
-import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import "./AppointmentsList.css";
-import { fetchData } from "../../../../../../services/apiService";
-import type { Timestamp } from "firebase/firestore";
-import scheduledIcon from "../../../../Icons/scheduled.png";
-import visitedIcon from "../../../../Icons/visited.png";
-import upcomingIcon from "../../../../Icons/upcoming.png";
+import {
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+  PlusOutlined,
+  ScheduleTwoTone,
+} from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../../../../../app/hooks";
+import {
+  selectAppointments,
+  selectStatus,
+  updateAppointmentStatus,
+} from "../../../../../../features/appointments/appointmentsSlice";
+import { Button, Input, Modal } from "antd";
+import { useState } from "react";
+import TextArea from "antd/es/input/TextArea";
 
-type FilterBarProps = {
+dayjs.extend(utc);
+
+interface AppointmentsListProps {
   searchValue: string;
   statusFilter: string;
-};
+}
 
-const AppointmentsList: React.FC<FilterBarProps> = ({
+const AppointmentsList: React.FC<AppointmentsListProps> = ({
   searchValue,
   statusFilter,
 }) => {
-  type Appointment = {
-    doc_id?: string;
-    id: string;
-    patientId: string;
-    doctorId: string;
-    date: Timestamp;
-    reason: string;
-    notes: string;
-    status: string;
-    patientName?: string;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const appointments = useAppSelector(selectAppointments);
+  const status = useAppSelector(selectStatus);
+  const dispatch = useAppDispatch();
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const id = e.target.value;
+    const checked = e.target.checked;
+    const status = checked ? "visited" : "scheduled";
+    dispatch(updateAppointmentStatus({ id, status }));
   };
 
-  type Patient = {
-    doc_id: string;
-    name: string;
-    id: string;
-    appointments?: string[];
-  };
-
-  const [appointments, setAppointment] = useState<Appointment[]>([]);
-  const [filteredAppointments, setFilteredAppointments] = useState<
-    Appointment[]
-  >([]);
-
-  useEffect(() => {
-    const getPatients = async (): Promise<Patient[]> => {
-      try {
-        const patients = await fetchData("patients");
-        return patients as Patient[];
-      } catch (error) {
-        console.log(error);
-        return [];
-      }
-    };
-
-    const getAppointments = async () => {
-      try {
-        const data = (await fetchData("appointments")) as Appointment[];
-        const patientsData = await getPatients();
-
-        const finalAppointments = data.map((appointment): Appointment => {
-          const patient = appointment.doc_id
-            ? patientsData.find((p) =>
-                p.appointments?.includes(appointment.doc_id!)
-              )
-            : undefined;
-
-          return {
-            ...appointment,
-            patientName: patient ? patient.name : "unknown",
-          };
-        });
-
-        setAppointment(finalAppointments as Appointment[]);
-      } catch (error) {
-        console.log("Error fetching appointments", error);
-      }
-    };
-
-    getAppointments();
-  }, []);
-
-  useEffect(() => {
-    const filtered = appointments.filter((appointment) => {
-      const matchesName = appointment.patientName
+  const filteredAppointments = appointments
+    .filter((appointment) => {
+      const matchesSearch = appointment.patientName
         ?.toLowerCase()
         .includes(searchValue.toLowerCase());
 
       const matchesStatus =
         statusFilter === "All" || appointment.status === statusFilter;
 
-      return matchesName && matchesStatus;
-    });
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) =>
+      dayjs.utc(a.startTime).isAfter(dayjs.utc(b.startTime)) ? 1 : -1
+    );
 
-    setFilteredAppointments(filtered);
-  }, [searchValue, statusFilter, appointments]);
-  
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="appointments-list-container">
       <div className="appointments-list-content">
-        <table>
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Name</th>
-              <th>Date and Time</th>
-              <th>Reason</th>
-              <th>Notes</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAppointments.map((appointment) => appointment.doctorId === '1' ? (
-              <tr key={appointment.id}>
-                <td>{appointment.patientId}</td>
-                <td>{appointment.patientName}</td>
-                <td>
-                  {appointment.date.toDate().toLocaleDateString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </td>
-                <td>{appointment.reason}</td>
-                <td>{appointment.notes}</td>
-                <td>
-                  {appointment.status === "scheduled" ? (
-                    <div className="appointment-status">
-                      <img src={scheduledIcon} alt="Calendar icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  ) : appointment.status === "visited" ? (
-                    <div className="appointment-status">
-                      <img src={visitedIcon} alt="Confirmed icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  ) : (
-                    <div className="appointment-status">
-                      <img src={upcomingIcon} alt="Watch icon" />{" "}
-                      {appointment.status}
-                    </div>
-                  )}
-                </td>
+        {status === "loading" ? (
+          <div className="message-container">
+            <div className="loading-message">Loading appointments...</div>
+          </div>
+        ) : status === "failed" ? (
+          <div className="message-container">
+            <div className="error-message">Error loading appointments</div>
+          </div>
+        ) : status === "succeeded" && filteredAppointments.length === 0 ? (
+          <div className="message-container">
+            <div className="no-results-message">No appointments found.</div>
+          </div>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>NAME</th>
+                <th>DATE AND TIME</th>
+                <th>REASON</th>
+                <th>NOTES</th>
+                <th>STATUS</th>
+                <th>Prescription</th>
               </tr>
-            ) : (null))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredAppointments.map((appointment) => (
+                <tr key={appointment.doc_id}>
+                  <td className="checkbox-name-cell">
+                    <label className="checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        className="native-checkbox"
+                        value={appointment.doc_id}
+                        checked={appointment.status === "visited"}
+                        onChange={handleCheckboxChange}
+                      />
+                      {appointment?.patientName}
+                    </label>
+                  </td>
+                  <td>
+                    {dayjs
+                      .utc(appointment.startTime)
+                      .local()
+                      .format("YYYY-MM-DD HH:mm")}
+                  </td>
+                  <td>{appointment.reason}</td>
+                  <td>{appointment.notes}</td>
+                  <td>
+                    <div className="appointment-status">
+                      <div className="appointment-status-icon">
+                        {appointment.status === "scheduled" ? (
+                          <ScheduleTwoTone className="status-icon" />
+                        ) : appointment.status === "visited" ? (
+                          <CheckCircleTwoTone
+                            className="status-icon"
+                            twoToneColor="#52c41a"
+                          />
+                        ) : (
+                          <CloseCircleTwoTone className="status-icon" />
+                        )}
+                      </div>
+                      {appointment.status}
+                    </div>
+                  </td>
+                  <td>
+                    <Button type="primary" onClick={showModal}>
+                      Add prescription
+                    </Button>
+                    <Modal
+                      className="transparent-modal"
+                      closable={{ "aria-label": "Custom Close Button" }}
+                      title="Prescription"
+                      open={isModalOpen}
+                      onOk={handleOk}
+                      onCancel={handleCancel}
+                    >
+                      <div className="modal-content">
+                        <div className="modal-inputs">
+                          <Input
+                            placeholder="Medication"
+                            allowClear
+                            className="medication-input"
+                          />
+                          <TextArea
+                            placeholder="Description"
+                            allowClear
+                            className="description-input"
+                          />
+                        </div>
+                        <Button className="modal-add-btn"><PlusOutlined /></Button>
+                      </div>
+                    </Modal>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

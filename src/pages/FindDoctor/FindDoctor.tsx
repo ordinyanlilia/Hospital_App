@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Input, Select, Button, Row, Col, Pagination, Spin} from "antd";
+import { Input, Select, Button, Row, Col, Pagination, Spin } from "antd";
 import {
   SearchOutlined,
   UserOutlined,
@@ -7,10 +7,13 @@ import {
 } from "@ant-design/icons";
 import "./FindDoctor.css";
 import { DoctorCard } from "./DoctorCard";
-import { Footer } from "./Footer";
-import {type Doctor, selectLoading, selectDoctors} from "../../features/doctors/doctorsSlice.tsx";
+import {
+  type Doctor,
+  selectLoading,
+  selectDoctors,
+} from "../../features/doctors/doctorsSlice.tsx";
 import { fetchDoctors } from "../../features/doctors/doctorsSlice.tsx";
-import {useAppSelector, useAppDispatch} from "../../app/hooks.ts";
+import { useAppSelector, useAppDispatch } from "../../app/hooks.ts";
 
 const FindDoctor = () => {
   const dispatch = useAppDispatch();
@@ -61,7 +64,7 @@ const FindDoctor = () => {
     }
   }, [doctors]);
 
-  if(loading){
+  if (loading) {
     return <Spin />;
   }
   return (
