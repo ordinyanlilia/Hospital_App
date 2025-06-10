@@ -6,11 +6,12 @@ import { SIGNUP, PROFILE, DOCTOR_PAGE } from "../../routes/paths";
 import { fetchData } from "../../services/apiService";
 import  { setPatient, type Patient } from "../../features/PatientSlice";
 import { type Doctor } from "../../features/DoctorSlice";
-import { setUser } from "../../features/UserSlice";
+import { setEmailVerified, setUser } from "../../features/UserSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { auth } from "../../services/apiService";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import loginImage from "../../assets/login-image.jpg";
+import { tr } from "framer-motion/client";
 
 
 const Login: React.FC = () => {
@@ -46,11 +47,13 @@ const Login: React.FC = () => {
 
     if (matchedDoctor) {
       dispatch(setUser({ data: matchedDoctor, role: "doctor", token }));
+      dispatch(setEmailVerified(true));
       navigate(DOCTOR_PAGE);
     } 
     else if (matchedPatient) {
       dispatch(setUser({ data: matchedPatient, role: "patient", token }));
       dispatch(setPatient(matchedPatient));
+      dispatch(setEmailVerified(true));
       navigate(PROFILE);
     } 
     else {

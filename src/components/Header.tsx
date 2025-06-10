@@ -21,17 +21,18 @@ import {
 import { useTheme } from "../context/theme-context";
 import "./Header.css";
 import { useAppSelector } from "../app/hooks";
-import { selectUserData, selectUserRole } from "../features/UserSlice";
+import { selectUserData, selectUserRole, selectUserStatus } from "../features/UserSlice";
 
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const { darkMode, toggleTheme } = useTheme();
-    const location = useLocation();
+  const location = useLocation();
   const userData = useAppSelector(selectUserData);
   const userRole = useAppSelector(selectUserRole);
-  const isLoggedIn = Boolean(userData);
-  let profileLink: string; 
+  const userStatus = useAppSelector(selectUserStatus);
+  const isLoggedIn = Boolean(userData && userStatus);
+  let profileLink: string = LOGIN; 
   if (isLoggedIn) {
     if (userRole === "doctor") {
       profileLink = DOCTOR_PAGE;
