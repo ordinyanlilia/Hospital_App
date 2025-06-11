@@ -10,7 +10,7 @@ import { useAppDispatch } from "../../../../app/hooks";
 import { clearUser } from "../../../../features/UserSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../services/apiService";
-import { Tabs } from "antd";
+import { Tabs, Select } from "antd";
 import {
   CalendarOutlined,
   LogoutOutlined,
@@ -19,10 +19,12 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 import "./TopPanel.css"; 
+import { useTranslate } from "../../../../context/TranslationProvider";
 
 const TopPanel: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { translate, language, changeLanguage } = useTranslate();
 
   const handleClickLogout = async () => {
     await signOut(auth);
@@ -36,7 +38,7 @@ const TopPanel: React.FC = () => {
       key: "home",
       label: (
         <NavLink to={HOME_PAGE}>
-          <HomeOutlined /> Home
+          <HomeOutlined />{translate("home")}
         </NavLink>
       ),
     },
@@ -44,7 +46,7 @@ const TopPanel: React.FC = () => {
       key: "appointments",
       label: (
         <NavLink to={DOCTOR_APPOINTMENTS}>
-          <ScheduleOutlined /> Appointments
+          <ScheduleOutlined /> {translate("appointments")}
         </NavLink>
       ),
     },
@@ -52,7 +54,7 @@ const TopPanel: React.FC = () => {
       key: "calendar",
       label: (
         <NavLink to={DOCTOR_CALENDAR}>
-          <CalendarOutlined /> Calendar
+          <CalendarOutlined /> {translate("calendar")}
         </NavLink>
       ),
     },
@@ -60,7 +62,7 @@ const TopPanel: React.FC = () => {
       key: "profile",
       label: (
         <NavLink to={DOCTOR_PROFILE}>
-          <ProfileOutlined /> Profile
+          <ProfileOutlined /> {translate("profile")}
         </NavLink>
       ),
     },
@@ -73,9 +75,21 @@ const TopPanel: React.FC = () => {
         items={tabItems}
         tabBarExtraContent={{
           right: (
-            <div className="logout-section" onClick={handleClickLogout}>
-              <LogoutOutlined style={{ marginRight: 4 }} />
-              Log out
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <Select
+                defaultValue={language}
+                onChange={changeLanguage}
+                options={[
+                  { value: "eng", label: "ENG 🇺🇸" },
+                  { value: "arm", label: "ARM 🇦🇲" },
+                  { value: "rus", label: "RUS 🇷🇺" },
+                ]}
+                size="small"
+              />
+              <div className="logout-section" onClick={handleClickLogout}>
+                <LogoutOutlined style={{ marginRight: 4 }} />
+                {translate("logOut")}
+              </div>
             </div>
           ),
         }}

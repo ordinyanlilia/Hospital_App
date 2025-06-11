@@ -1,5 +1,8 @@
+import { useTranslate } from "../../../../../../context/TranslationProvider";
 import "./FilterBar.css";
 import { Input, Select } from "antd";
+import { transliterate as tr } from 'transliteration';
+
 
 const { Search } = Input;
 
@@ -16,15 +19,20 @@ const FilterBar: React.FC<FilterBarProps> = ({
   statusFilter,
   setStatusFilter,
 }) => {
+  const { translate } = useTranslate();
+  const handleSearchChange = (value: string) => {
+    const normalized = tr(value).toLowerCase();
+    setSearchValue(normalized);
+  };
   return (
     <div className="filter-bar-container">
       <div className="filter-bar-contnet">
         <div className="input-search-patient">
           <Search
-            placeholder="Patient's name"
+            placeholder={translate("searchPatientName")}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onSearch={(value) => setSearchValue(value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onSearch={(value) => handleSearchChange(value)}
             allowClear
           />
         </div>
@@ -32,13 +40,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <Select
             value={statusFilter}
             style={{ width: 200 }}
-            placeholder="All"
+            placeholder={translate("all")}
             onChange={(value) => setStatusFilter(value)}
             options={[
-              { value: "All", label: "All" },
-              { value: "upcoming", label: "Upcoming" },
-              { value: "visited", label: "Visited" },
-              { value: "scheduled", label: "Scheduled" },
+              { value: "All", label: translate("all") },
+              { value: "upcoming", label: translate("upcoming") },
+              { value: "visited", label: translate("visited")},
+              { value: "scheduled", label: translate("scheduled") },
             ]}
           />
         </div>

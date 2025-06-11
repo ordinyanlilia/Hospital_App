@@ -16,6 +16,8 @@ import {
 import { Button, Input, Modal } from "antd";
 import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import { useTranslate } from "../../../../../../context/TranslationProvider";
+import { transliterate as tr } from "transliteration";
 
 dayjs.extend(utc);
 
@@ -32,6 +34,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   const appointments = useAppSelector(selectAppointments);
   const status = useAppSelector(selectStatus);
   const dispatch = useAppDispatch();
+  const { translate } = useTranslate();
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
@@ -42,9 +45,12 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
 
   const filteredAppointments = appointments
     .filter((appointment) => {
-      const matchesSearch = appointment.patientName
-        ?.toLowerCase()
-        .includes(searchValue.toLowerCase());
+      // const matchesSearch = appointment.patientName
+      //   ?.toLowerCase()
+      //   .includes(searchValue.toLowerCase());
+      const normalizedSearch = tr(searchValue).toLowerCase();
+      const normalizedName = tr(appointment.patientName ?? "").toLowerCase();
+      const matchesSearch = normalizedName.includes(normalizedSearch);
 
       const matchesStatus =
         statusFilter === "All" || appointment.status === statusFilter;
@@ -72,26 +78,26 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
       <div className="appointments-list-content">
         {status === "loading" ? (
           <div className="message-container">
-            <div className="loading-message">Loading appointments...</div>
+            <div className="loading-message">{translate("loadingApp")}</div>
           </div>
         ) : status === "failed" ? (
           <div className="message-container">
-            <div className="error-message">Error loading appointments</div>
+            <div className="error-message">{translate("errorApp")}</div>
           </div>
         ) : status === "succeeded" && filteredAppointments.length === 0 ? (
           <div className="message-container">
-            <div className="no-results-message">No appointments found.</div>
+            <div className="no-results-message">{translate("noAppFound")}</div>
           </div>
         ) : (
           <table>
             <thead>
               <tr>
-                <th>NAME</th>
-                <th>DATE AND TIME</th>
-                <th>REASON</th>
-                <th>NOTES</th>
-                <th>STATUS</th>
-                <th>Prescription</th>
+                <th>{translate("name")}</th>
+                <th>{translate("dateTime")}</th>
+                <th>{translate("reason")}</th>
+                <th>{translate("notes")}</th>
+                <th>{translate("status")}</th>
+                <th>{translate("prescription")}</th>
               </tr>
             </thead>
             <tbody>
@@ -136,7 +142,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
                   </td>
                   <td>
                     <Button type="primary" onClick={showModal}>
-                      Add prescription
+                      {translate("addPrescriprion")}
                     </Button>
                     <Modal
                       className="transparent-modal"
@@ -149,12 +155,12 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
                       <div className="modal-content">
                         <div className="modal-inputs">
                           <Input
-                            placeholder="Medication"
+                            placeholder={translate("medication")}
                             allowClear
                             className="medication-input"
                           />
                           <TextArea
-                            placeholder="Description"
+                            placeholder={translate("description")}
                             allowClear
                             className="description-input"
                           />

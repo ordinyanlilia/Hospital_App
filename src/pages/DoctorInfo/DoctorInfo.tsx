@@ -150,22 +150,22 @@ const getDateStatus = (date: Dayjs) => {
                   Dr. {doctor.name} {doctor.surname}
                 </Title>
                 <Paragraph>
-                  <strong>{translate("specialty")}</strong> {doctor.specialty}
+                  <strong>{translate("specialty")}:</strong> {doctor.specialty}
                 </Paragraph>
                 <Paragraph>
-                  <strong>{translate("experience")}</strong> {doctor.yearsOfExperience} {translate("years")}
+                  <strong>{translate("experience")}:</strong> {doctor.yearsOfExperience} {translate("years")}
                 </Paragraph>
                 <Paragraph>
-                  <strong>{translate("gender")}</strong> {doctor.gender}
+                  <strong>{translate("gender")}:</strong> {doctor.gender}
                 </Paragraph>
                 <Paragraph>
-                  <strong>{translate("mail")}</strong> {doctor.email}
+                  <strong>{translate("mail")}:</strong> {doctor.email}
                 </Paragraph>
                 <Paragraph>
-                  <strong>{translate("bio")}</strong> {doctor.bio}
+                  <strong>{translate("bio")}:</strong> {doctor.bio}
                 </Paragraph>
                 <Paragraph>
-                  <strong>{translate("workingHours")}</strong>
+                  <strong>{translate("workingHours")}:</strong>
                   <br />
                   {translate("workingTime1")} <br />
                   {translate("workingTime2")}

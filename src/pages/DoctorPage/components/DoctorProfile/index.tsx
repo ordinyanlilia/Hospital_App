@@ -9,9 +9,11 @@ import {
 } from "../../../../features/UserSlice";
 import { type Doctor } from "../../../../features/DoctorSlice";
 import { updateData } from "../../../../services/apiService";
+import { useTranslate } from "../../../../context/TranslationProvider";
 
 const DoctorProfile: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { translate } = useTranslate();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedDoctor, setEditedDoctor] = useState<Partial<Doctor> | null>(
@@ -29,7 +31,7 @@ const DoctorProfile: React.FC = () => {
     }
   }, [isEditMode, doctor]);
 
-  if (!doctor || userRole !== "doctor") return <div>Loading...</div>;
+  if (!doctor || userRole !== "doctor") return <div>{translate("loading")}</div>;
 
   const handleInputChange = (field: keyof Doctor, value: string) => {
     setEditedDoctor((prev) => (prev ? { ...prev, [field]: value } : prev));
@@ -62,38 +64,38 @@ const DoctorProfile: React.FC = () => {
             {!isEditMode ? (
               <div className="forms-content" key={doctor.doc_id}>
                 <div className="form-container">
-                  <p>Name</p>
+                  <p>{translate("name1")}</p>
                   <span>{doctor.name}</span>
                 </div>
                 <div className="form-container">
-                  <p>Surname</p>
+                  <p>{translate("surname")}</p>
                   <span>{doctor.surname}</span>
                 </div>
                 <div className="form-container">
-                  <p>Gender</p>
+                  <p>{translate("gender")}</p>
                   <span>{doctor.gender}</span>
                 </div>
                 <div className="form-container">
-                  <p>Email</p>
+                  <p>{translate("mail")}</p>
                   <span>{doctor.email}</span>
                 </div>
                 <div className="form-container">
-                  <p>Specialty</p>
+                  <p>{translate("specialty")}</p>
                   <span>{doctor.specialty}</span>
                 </div>
                 <div className="form-container">
-                  <p>Years Of Experience</p>
+                  <p>{translate("yearsExperience")}</p>
                   <span>{doctor.yearsOfExperience}</span>
                 </div>
                 <div className="form-container">
-                  <p>Bio</p>
+                  <p>{translate("bio")}</p>
                   <span>{doctor.bio}</span>
                 </div>
               </div>
             ) : (
               <div className="edit-mode-forms-content" key={doctor.doc_id}>
                 <div className="form-container">
-                  <p>Name</p>
+                  <p>{translate("name1")}</p>
                   <input
                     type="text"
                     value={editedDoctor?.name || ""}
@@ -101,7 +103,7 @@ const DoctorProfile: React.FC = () => {
                   />
                 </div>
                 <div className="form-container">
-                  <p>Surname</p>
+                  <p>{translate("surname")}</p>
                   <input
                     type="text"
                     value={editedDoctor?.surname || ""}
@@ -111,7 +113,7 @@ const DoctorProfile: React.FC = () => {
                   />
                 </div>
                 <div className="form-container">
-                  <p>Gender</p>
+                  <p>{translate("gender")}</p>
                   <select
                     value={editedDoctor?.gender || ""}
                     onChange={(e) =>
@@ -123,27 +125,27 @@ const DoctorProfile: React.FC = () => {
                   </select>
                 </div>
                 <div className="form-container">
-                  <p>Email</p>
+                  <p>{translate("mail")}</p>
                   <span>{doctor.email}</span>
                 </div>
                 <div className="form-container">
-                  <p>Specialty</p>
+                  <p>{translate("specialty")}</p>
                   <select
                     value={editedDoctor?.specialty || ""}
                     onChange={(e) =>
                       handleInputChange("specialty", e.target.value)
                     }
                   >
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Endocrinology">Endocrinology</option>
-                    <option value="Gastroenterology">Gastroenterology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Radiology">Radiology</option>
+                    <option value="Cardiology">{translate("cardiology")}</option>
+                    <option value="Dermatology">{translate("dermatology")}</option>
+                    <option value="Endocrinology">{translate("endocrinology")}</option>
+                    <option value="Gastroenterology">{translate("gastroenterology")}</option>
+                    <option value="Neurology">{translate("neurology")}</option>
+                    <option value="Radiology">{translate("radiology")}</option>
                   </select>
                 </div>
                 <div className="form-container">
-                  <p>Years Of Experience</p>
+                  <p>{translate("yearsExperience")}</p>
                   <select
                     value={editedDoctor?.yearsOfExperience || ""}
                     onChange={(e) =>
@@ -158,7 +160,7 @@ const DoctorProfile: React.FC = () => {
                   </select>
                 </div>
                 <div className="form-container">
-                  <p>Bio</p>
+                  <p>{translate("bio")}</p>
                   <textarea
                     value={editedDoctor?.bio || ""}
                     onChange={(e) => handleInputChange("bio", e.target.value)}
@@ -172,13 +174,13 @@ const DoctorProfile: React.FC = () => {
 
           <div className="profile-edit-btn">
             {!isEditMode ? (
-              <button onClick={() => setIsEditMode(true)}>Edit</button>
+              <button onClick={() => setIsEditMode(true)}>{translate("edit")}</button>
             ) : (
               <div className="save-cancel-btns">
                 <button className="save-btn" onClick={handleSave}>
-                  Save
+                  {translate("save")}
                 </button>
-                <button onClick={() => setIsEditMode(false)}>Cancel</button>
+                <button onClick={() => setIsEditMode(false)}>{translate("cancel")}</button>
               </div>
             )}
           </div>

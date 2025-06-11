@@ -3,17 +3,20 @@ import "./DoctorPage.css";
 import { useAppSelector } from "../../app/hooks";
 import { selectUserData, selectUserRole } from "../../features/UserSlice";
 import TopPanel from "./components/TopPanel";
+import { useTranslate } from "../../context/TranslationProvider";
 
 const DoctorPage = () => {
   const user = useAppSelector(selectUserData);
   const userRole = useAppSelector(selectUserRole);
 
   if (!user || userRole !== "doctor") {
+    const { translate } = useTranslate();
+
     return (
       <div className="access-denied-container">
-        <h2>Access Denied</h2>
-        <p>You do not have permission to view this page.</p>
-      </div>
+        <h2>{translate("accessDenied")}</h2>
+        <p>{translate("deniedMessage")}</p>
+      </div> 
     );
   }
 
