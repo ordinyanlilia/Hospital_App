@@ -39,6 +39,7 @@ import {
 } from "../../features/doctors/doctorsSlice.tsx";
 import { selectPatient } from "../../features/PatientSlice.ts";
 import DoctorCard from "./DoctorCard.tsx";
+import { useTheme } from "../../context/theme-context.tsx";
 
 interface FinishValue {
   reason: string;
@@ -62,7 +63,7 @@ const BookAppointment = () => {
     "Cardiology",
   ];
   const location = useLocation();
-
+  const { darkMode } = useTheme();
   const selectedDoctorInitialId = location.pathname.split("/")[2];
   const doctors = useAppSelector(selectDoctors);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -288,7 +289,12 @@ const BookAppointment = () => {
     <>
       {contextHolder}
       <Title level={3}>Make An Appointment</Title>
-      <Row justify="center" align="middle" className="book-appointment">
+      <Row
+        justify="center"
+        align="middle"
+        className="book-appointment"
+        style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+      >
         <Form
           {...formItemLayout}
           onFinish={onFinish}
@@ -302,14 +308,14 @@ const BookAppointment = () => {
             name="name"
             rules={[{ required: true, message: "Please input!" }]}
           >
-            <Input />
+            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
           </Form.Item>
           <Form.Item
             label="Your Reason"
             name="reason"
             rules={[{ required: true, message: "Please input!" }]}
           >
-            <Input />
+            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
           </Form.Item>
 
           <Divider>Category</Divider>
@@ -378,6 +384,7 @@ const BookAppointment = () => {
             rules={[{ required: true, message: "Please input!" }]}
           >
             <DatePicker
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
               disabled={!mode}
               disabledDate={(current) =>
                 current && current < dayjs().startOf("day")
@@ -402,7 +409,9 @@ const BookAppointment = () => {
           </Form.Item>
 
           <Form.Item label="Notes" name="notes">
-            <Input.TextArea />
+            <Input.TextArea
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+            />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
@@ -417,4 +426,3 @@ const BookAppointment = () => {
 };
 
 export default BookAppointment;
-
