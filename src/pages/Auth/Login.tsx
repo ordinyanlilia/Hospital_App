@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { auth } from "../../services/apiService";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import loginImage from "../../assets/login-image.jpg";
+import { useTheme } from "../../context/theme-context.tsx";
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
   const location = useLocation();
   const hasNavigated = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
-
+  const { darkMode } = useTheme();
   const [form] = Form.useForm();
   const signupSuccess = location.state?.signupSuccess;
 
@@ -82,7 +83,10 @@ const Login: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <div className="login-root">
+      <div
+        style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+        className="login-root"
+      >
         <div className="login-wrapper">
           <div className="login-visual">
             <img
@@ -92,13 +96,17 @@ const Login: React.FC = () => {
             />
             <h2>One click to go all digital.</h2>
           </div>
-          <div className="login-container">
+          <div
+            style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+            className="login-container"
+          >
             <Form
               name="login"
               onFinish={onFinish}
               layout="vertical"
               form={form}
               className="login-form"
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
             >
               <Form.Item
                 name="email"
