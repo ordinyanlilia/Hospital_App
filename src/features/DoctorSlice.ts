@@ -12,8 +12,8 @@ export interface Doctor {
   gender: string;
   specialty: string;
   email: string;
-  password: string;
-  imageUrl?: string;
+  password?: string;
+  photoUrl?: string;
   appointments?: User_Appointment[];
   bio?:string
 }
