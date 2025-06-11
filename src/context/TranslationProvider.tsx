@@ -23,6 +23,39 @@ const LANGUAGES = {
     send_button: 'Ուղարկել',
     bot_error: 'Ներողություն, չհաջողվեց ստանալ պատասխան։',
     general_error: 'Տեղի ունեցավ սխալ։ Խնդրում ենք փորձել կրկին։',
+    free: 'Ազատ',
+    partially: "Մասամբ ամրագրված",
+    fully: "Լիովին ամրագրված",
+    doctorNotFound: "Բժիշկը չի գտնվել",
+    specialty: "Մասնագիտություն:",
+    experience: "Փորձ:",
+    years: "տարի",
+    gender: "Սեռ:",
+    mail: "Email:",
+    bio: "Կենսագրություն:",
+    workingHours: "Աշխատանքային ժամեր:",
+    bookAppointment: "Ամրագրեք հանդիպում",
+    avCalendar: "Հասանելիության օրացույց",
+    avStatus: "Հասանելիության կարգավիճակ",
+    recDoctors: "Առաջարկվող այլ բժիշկներ",
+    workingTime1: "Երկ–ուրբ: 09։00 – 17։00",
+    workingTime2: "Շաբաթ: 10:00 – 14:00",
+    docProfile: "Բժշկի էջ",
+    search_placeholder: "Որոնել ըստ անունի",
+    specialty_placeholder: "Ընտրեք մասնագիտությունը",
+    gender_placeholder: "Ընտրեք սեռը",
+    search: "Որոնել",
+    noDoctor: "Օ՜յ, մենք չկարողացանք գտնել ձեր որոնմանը համապատասխանող բժիշկներ",
+    male: "Արական",
+    female: "Իգական",
+    neurology: "Նյարդաբանություն",
+    psychiatry: "Հոգեբուժություն",
+    radiology: "Ռադիոլոգիա",
+    pathology: "Պաթոլոգիա",
+    emergency: "Շտապ օգնություն",
+    cardiology: "Սրտաբանություն",
+    plastic: "Պլաստիկ վիրաբուժություն",
+    dermatology:"Մաշկաբանություն",
   },
   rus: {
     hi: "привет",
@@ -46,6 +79,39 @@ const LANGUAGES = {
     send_button: 'Отправить',
     bot_error: 'Извините, не удалось получить ответ.',
     general_error: 'Произошла ошибка. Пожалуйста, попробуйте снова.',
+    free: "Свободно",
+    partially: "Частично забронировано",
+    fully: "Полностью забронировано",
+    doctorNotFound: "Доктор не найден",
+    specialty: "Специальность:",
+    experience: "Опыт:",
+    years: "годы",
+    gender: "Пол:",
+    mail: "Email:",
+    bio: "Био:",
+    workingHours: "Рабочие часы:",
+    bookAppointment: "Записаться на прием",
+    avCalendar: "Календарь доступности",
+    avStatus: "Статус доступности",
+    recDoctors: "Другие рекомендуемые врачи",
+    workingTime1: "Пн–Пт: 09:00 – 17:00",
+    workingTime2: "Суббота: 10:00 – 14:00",
+    docProfile: "Профиль доктора",
+    search_placeholder: "Поиск по имени",
+    specialty_placeholder: "Выберите специальность",
+    gender_placeholder: "Выберите пол",
+    search: "Поиск",
+    noDoctor: "Упс! Мы не смогли найти врачей, соответствующих вашему поиску. ",
+    male: "Мужской",
+    female: "Женский",
+    neurology: "Неврология",
+    psychiatry: "Психиатрия",
+    radiology: "Радиология",
+    pathology: "Патология",
+    emergency: "Экстренная медицинская помощь",
+    cardiology: "Кардиология",
+    plastic: "Пластическая хирургия",
+    dermatology:"Дерматология",
   },
   eng: {
     hi: "hi",
@@ -69,6 +135,39 @@ const LANGUAGES = {
     send_button: 'Send',
     bot_error: 'Sorry, failed to get a response.',
     general_error: 'An error occurred. Please try again.',
+    free: "Free",
+    partially: "Partially booked",
+    fully: "Fully booked",
+    doctorNotFound: "Doctor is not found",
+    specialty: "Specialty:",
+    experience: "Experience:",
+    years: "years",
+    gender: "Gender:",
+    mail: "Email:",
+    bio: "Bio:",
+    workingHours: "Working Hours:",
+    bookAppointment: "Book an appointment",
+    avCalendar: "Availability Calendar",
+    avStatus: "Availability status",
+    recDoctors: "Other Recommended Doctors",
+    workingTime1: "Mon–Fri: 09:00 – 17:00",
+    workingTime2: "Sat: 10:00 – 14:00",
+    docProfile: "Doctor Profile",
+    search_placeholder: "Search by name",
+    specialty_placeholder: "Select Speciality",
+    gender_placeholder: "Select Gender",
+    search: "Search",
+    noDoctor: "Oops! We couldn’t find any doctors matching your search.",
+    male: "Male",
+    female: "Female",
+    neurology: "Neurology",
+    psychiatry: "Psychiatry",
+    radiology: "Radiology",
+    pathology: "Pathology",
+    emergency: "Emergency Medicine",
+    cardiology: "Cardiology",
+    plastic: "Plastic Surgery",
+    dermatology:"Dermatology",
   },
 } as const;
 
@@ -80,6 +179,7 @@ interface ITranslationContext {
   language: LanguageKey;
   changeLanguage: (lang: LanguageKey) => void;
   translate: (token: TokenKey) => string;
+  translateDynamic: (token?: string) => string;
 }
 
 export const TranslationsContext = createContext<ITranslationContext>(
@@ -96,9 +196,16 @@ export const TranslationProvider = ({ children }: { children: React.ReactNode })
   const translate = (token: TokenKey) => {
     return LANGUAGES[language][token];
   };
+const translateDynamic = (token?: string): string => {
+  if (!token) return "";
+  const lowerKey = token.toLowerCase() as keyof typeof LANGUAGES["eng"];
+  return LANGUAGES[language][lowerKey] ?? token;
+};
+
+
 
   return (
-    <TranslationsContext.Provider value={{ language, changeLanguage, translate }}>
+    <TranslationsContext.Provider value={{ language, changeLanguage, translate, translateDynamic }}>
       {children}
     </TranslationsContext.Provider>
   );

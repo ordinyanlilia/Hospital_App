@@ -7,6 +7,7 @@ import {
 import "./DoctorCard.css";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 
 type Doctor = {
   id?: string;
@@ -24,6 +25,8 @@ type Doctor = {
 export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   const navigate = useNavigate();
   const { darkMode } = useTheme();
+  const { translate, translateDynamic } = useTranslate();
+
   return (
     <div className={`doctor-card-horizontal ${darkMode ? "dark" : "light"}`}>
       <img
@@ -41,15 +44,14 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
             {doctor.name} {doctor.surname}
           </h3>
           <p>
-            <MedicineBoxOutlined /> {doctor.specialty}
+            <MedicineBoxOutlined /> {translateDynamic(doctor.specialty)}
           </p>
           <p>
-            <CalendarOutlined /> {doctor.yearsOfExperience} years
+            <CalendarOutlined /> {doctor.yearsOfExperience} {translate("years")}
           </p>
           <p>
-            <UserOutlined /> {doctor.gender}
+            <UserOutlined /> {translateDynamic(doctor.gender)}
           </p>
-          {/* <p className="bio">{doctor.bio}</p> */}
         </div>
 
         <div className="doctor-card-buttons">
@@ -57,13 +59,13 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
             type="primary"
             onClick={() => navigate(`/doctor-info/${doctor.id}`)}
           >
-            Doctor Profile
+            {translate("docProfile")}
           </Button>
           <Button
             key={doctor.id}
             onClick={() => navigate(`/book-appointment/${doctor.id}`)}
           >
-            Book Appointment
+            {translate("bookAppointment")}
           </Button>
         </div>
       </div>
