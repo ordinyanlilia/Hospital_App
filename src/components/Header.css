@@ -1,4 +1,6 @@
 .theme-switch {
+  margin-left: 4;
   display: flex;
-  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
 }

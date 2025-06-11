@@ -56,39 +56,50 @@ const HeaderComponent = () => {
     <Header
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        width: "100%",
-        zIndex: 1000,
-        backgroundColor: darkMode ? "#1f1f1f" : "#fff",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        padding: "0 24px",
-        height: "64px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    backgroundColor: darkMode ? "#101832" : "#f5f5f5",
+    // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    padding: "0 24px",
+    height: "64px",
+    display: "flex",
+    alignItems: "center",
       }}
     >
+        <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+    }}
+  >
       <Menu
         mode="horizontal"
         defaultSelectedKeys={["home"]}
         items={menuItems}
         style={{
-          display: "flex",
+       backgroundColor: darkMode ? "#101832" : "#f5f5f5",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          // display: "flex",
+          flexGrow:"1",
           justifyContent: "center",
           fontWeight: "bold",
           flex: 1,
+          minWidth:0,
         }}
       />
-      <div className="theme-switch">
+      <div className="theme-switch"
+    >
         <Switch
           checked={darkMode}
           onChange={toggleTheme}
           checkedChildren={<BulbFilled />}
           unCheckedChildren={<BulbOutlined />}
         />
-      </div>
+      </div></div>
     </Header>
   );
 };
