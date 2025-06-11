@@ -25,9 +25,7 @@
   font-size: 16px;
   line-height: 1.7;
   text-align: center !important;
-} 
-
-
+}
 
 .aboutsection-button {
   background-color: #3e51a8;
@@ -69,4 +67,21 @@
     display: block;
     margin: 1rem auto;
   }
+}
+.about-section.light {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.about-section.dark {
+  background-color: #101832;
+  color: #fff;
+}
+
+.about-section.dark .about-title {
+  color: #fff !important;
+}
+
+.about-section.dark .about-text {
+  color: #ddd;
 }
