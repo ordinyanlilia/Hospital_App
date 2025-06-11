@@ -1,0 +1,28 @@
+/* Home.css */
+.home-layout {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.home-content {
+  padding: 40px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Center all text inside content */
+  text-align: center;
+  /* Set a base font size for all text */
+  font-size: 18px;
+}
+
+.home-content * {
+  /* Ensure all child elements inherit the font size and centering */
+  text-align: inherit;
+  font-size: inherit;
+}
+
+@media (max-width: 768px) {
+  .home-content {
+    padding: 20px 10px;
+    font-size: 16px; /* Slightly smaller on mobile */
+  }
+}

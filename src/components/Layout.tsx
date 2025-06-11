@@ -1,8 +1,8 @@
 import { type ReactNode } from "react";
 import HeaderComponent from "./Header";
-import { Footer } from "./Footer";
 import { useTheme } from "../context/theme-context";
 import OnikBot from "./OnikBot";
+import { Footer } from "./Footer";
 
 interface LayoutProps {
   children: ReactNode;

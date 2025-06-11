@@ -1,34 +1,26 @@
+import "./Signup.css";
 import type { FormProps } from "antd";
+import { Button, Form, Input, Select, DatePicker, Card, Space } from "antd";
+import { useNavigate, Link } from "react-router-dom";
+import { LOGIN } from "../../routes/paths";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useState, useEffect } from "react";
+import { fetchData } from "../../services/apiService";
 import {
-  Button,
-  Card,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Row,
-  Select,
-  Space,
-} from "antd";
-import { useNavigate } from "react-router-dom";
-import { LOGIN, PROFILE } from "../../routes/paths.ts";
-import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
-import { useEffect, useState } from "react";
-import { auth, fetchData, setData } from "../../services/apiService.ts";
-import {
-  addPatient,
-  type Patient,
   selectPatientStatus,
-} from "../../features/PatientSlice.ts";
+  setPatient,
+} from "../../features/PatientSlice";
+import { selectDoctorStatus } from "../../features/DoctorSlice";
+import { type Patient } from "../../features/PatientSlice";
+import { type Doctor } from "../../features/DoctorSlice";
+import { auth } from "../../services/apiService";
 import {
-  addDoctor,
-  type Doctor,
-  selectDoctorStatus,
-} from "../../features/DoctorSlice.ts";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setUser } from "../../features/UserSlice.ts";
-import { FirebaseError } from "firebase/app";
-import { useTheme } from "../../context/theme-context.tsx";
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { setData } from "../../services/apiService";
+import { setEmailVerified } from "../../features/UserSlice";
+import loginImage from "../../assets/login-image.jpg";
 
 const { Option } = Select;
 
@@ -41,22 +33,32 @@ const Signup = () => {
   const [selectedRole, setSelectedRole] = useState<"patient" | "doctor" | null>(
     null
   );
-  const [messageApi, contextHolder] = message.useMessage();
-  const { darkMode } = useTheme();
 
   useEffect(() => {
     if (patientStatus === "succeeded" || doctorStatus === "succeeded") {
       navigate(LOGIN);
-    } else if (patientStatus === "failed" || doctorStatus === "failed") {
-      messageApi.open({
-        type: "error",
-        content: "There was an error while signing",
-      });
     }
   }, [patientStatus, doctorStatus, navigate]);
 
   const onFinish: FormProps["onFinish"] = async (values) => {
     try {
+      const [allPatients, allDoctors] = await Promise.all([
+        fetchData<Patient>("patients"),
+        fetchData<Doctor>("doctors"),
+      ]);
+
+      const emailExistsInPatients = allPatients.find(
+        (p) => p.email === values.email
+      );
+      const emailExistsInDoctors = allDoctors.find(
+        (d) => d.email === values.email
+      );
+
+      if (emailExistsInPatients || emailExistsInDoctors) {
+        navigate(LOGIN);
+        return;
+      }
+
       const { email, password } = values;
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -67,13 +69,17 @@ const Signup = () => {
       const firebaseUID = firebaseUser.uid;
       const token = await firebaseUser.getIdToken();
 
+      await sendEmailVerification(firebaseUser)
+        .then(() => {
+          console.log("Verification email sent.");
+        })
+        .catch((error) => {
+          console.error("Error sending email verification:", error);
+        });
+
       if (selectedRole === "patient") {
         if (!values.dob || !values.dob.isValid())
           throw new Error("Date of birth is invalid or missing");
-
-        const allPatients: Patient[] = await fetchData("patients");
-        const exists = allPatients.find((p) => p.email === values.email);
-        if (exists) return navigate(PROFILE);
 
         const newPatient: Patient = {
           id: firebaseUID,
@@ -85,7 +91,6 @@ const Signup = () => {
           phoneNumber: values.phoneNumber,
           bloodType: "unknown",
           registeredAt: new Date().toISOString(),
-          password: values.password,
           allergies: [],
           currentMedications: [],
           medicalHistory: [],
@@ -93,16 +98,13 @@ const Signup = () => {
         };
 
         await setData("patients", newPatient, firebaseUID);
-        dispatch(addPatient(newPatient));
-        dispatch(setUser({ data: newPatient, role: "patient", token }));
+        dispatch(setPatient(newPatient));
+        dispatch(setEmailVerified(false));
+        navigate(LOGIN, { state: { signupSuccess: true } });
       }
 
       if (selectedRole === "doctor") {
-        const allDoctors = await fetchData<Doctor>("doctors");
-        const exists = allDoctors.find((d) => d.email === values.email);
-        if (exists) return navigate(PROFILE);
-
-        const newDoctor: Doctor = {
+        const newDoctor: Partial<Doctor> = {
           id: firebaseUID,
           name: values.name,
           surname: values.surname,
@@ -110,203 +112,158 @@ const Signup = () => {
           gender: values.gender,
           specialty: values.specialty,
           email: values.email,
-          password: values.password,
         };
-
         await setData("doctors", newDoctor, firebaseUID);
-        dispatch(addDoctor(newDoctor));
-        dispatch(setUser({ data: newDoctor, role: "doctor", token }));
+        navigate(LOGIN, { state: { signupSuccess: true } });
       }
     } catch (err) {
-      console.error("Firebase error:", err);
-
-      let messageText = "Something went wrong. Please try again.";
-
-      if (err instanceof FirebaseError) {
-        switch (err.code) {
-          case "auth/weak-password":
-            messageText = "Your password must be at least 6 characters.";
-            break;
-          case "auth/email-already-in-use":
-            messageText = "This email is already registered.";
-            break;
-          case "auth/invalid-email":
-            messageText = "Please enter a valid email address.";
-            break;
-          default:
-            messageText = err.message;
-            break;
-        }
-
-        messageApi.open({
-          type: "error",
-          content: messageText,
-        });
-      }
+      console.error("Signup error:", err);
     }
   };
 
   return (
-    <Row justify="center" align="top" style={{ padding: "2rem" }}>
-      {contextHolder}
-      {!selectedRole && (
-        <Space direction="horizontal">
-          <Card
-            title="Sign up as Patient"
-            hoverable
-            onClick={() => setSelectedRole("patient")}
-            style={{ width: 300, cursor: "pointer" }}
-          >
-            Register to manage your health records and appointments.
-          </Card>
-          <Card
-            title="Sign up as Doctor"
-            hoverable
-            onClick={() => setSelectedRole("doctor")}
-            style={{ width: 300, cursor: "pointer" }}
-          >
-            Join to manage patients and appointments.
-          </Card>
-        </Space>
-      )}
-
-      {selectedRole && (
-        <Form
-          name="signup"
-          onFinish={onFinish}
-          form={form}
-          layout="vertical"
-          style={{ width: 500, background: darkMode ? "#101832" : "#f5f5f5" }}
-        >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Please write your name!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Surname"
-            name="surname"
-            rules={[{ required: true, message: "Please write your surname!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Gender"
-            name="gender"
-            rules={[{ required: true, message: "Gender is required" }]}
-          >
-            <Select placeholder="Gender">
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-              <Option value="other">Other</Option>
-            </Select>
-          </Form.Item>
-
-          {selectedRole === "patient" && (
-            <>
-              <Form.Item
-                label="Birth Date"
-                name="dob"
-                rules={[{ required: true, message: "Birth date is required" }]}
+    <div className="signup-root">
+      <div className="signup-wrapper">
+        <div className="signup-visual">
+          <img
+            src={loginImage}
+            alt="Digital illustration"
+            className="signup-image"
+          />
+          <h2>Create your digital health account</h2>
+        </div>
+        <div className="signup-container">
+          {!selectedRole ? (
+            <Space direction="horizontal" size="large">
+              <Card
+                title="Sign up as Patient"
+                hoverable
+                onClick={() => setSelectedRole("patient")}
+                style={{ width: 250, cursor: "pointer" }}
               >
-                <DatePicker />
-              </Form.Item>
-
-              <Form.Item
-                label="Phone Number"
-                name="phoneNumber"
-                rules={[
-                  {
-                    required: true,
-                    pattern: /^[0-9]{7,15}$/,
-                    message: "Enter a valid phone number",
-                  },
-                ]}
+                Manage your records and appointments.
+              </Card>
+              <Card
+                title="Sign up as Doctor"
+                hoverable
+                onClick={() => setSelectedRole("doctor")}
+                style={{ width: 250, cursor: "pointer" }}
               >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Enter a valid email",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: "Password is required" }]}
-              >
-                <Input.Password />
-              </Form.Item>
-            </>
-          )}
-
-          {selectedRole === "doctor" && (
-            <>
-              <Form.Item
-                label="Years of Experience"
-                name="yearsOfExperience"
-                rules={[
-                  { required: true, message: "Enter years of experience" },
-                ]}
-              >
-                <Input type="number" />
-              </Form.Item>
-
-              <Form.Item
-                label="Specialty"
-                name="specialty"
-                rules={[{ required: true, message: "Enter your speciality" }]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: "Password is required" }]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Enter a valid email",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </>
-          )}
-
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button onClick={() => setSelectedRole(null)}>Back</Button>
+                Manage patients and schedules.
+              </Card>
             </Space>
-          </Form.Item>
-        </Form>
-      )}
-    </Row>
+          ) : (
+            <Form
+              name="signup"
+              onFinish={onFinish}
+              form={form}
+              layout="vertical"
+              className="signup-form"
+            >
+              <Form.Item
+                name="name"
+                label="First Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                name="surname"
+                label="Last Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+
+              {selectedRole === "patient" && (
+                <>
+                  <Form.Item
+                    name="dob"
+                    label="Date of Birth"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select your date of birth",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} />
+                  </Form.Item>
+                  <Form.Item
+                    name="phoneNumber"
+                    label="Phone Number"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </>
+              )}
+
+              {selectedRole === "doctor" && (
+                <>
+                  <Form.Item
+                    name="specialty"
+                    label="Specialty"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="yearsOfExperience"
+                    label="Years of Experience"
+                    rules={[{ required: true }]}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                </>
+              )}
+
+              <Form.Item
+                name="gender"
+                label="Gender"
+                rules={[{ required: true }]}
+              >
+                <Select placeholder="Select gender">
+                  <Option value="male">Male</Option>
+                  <Option value="female">Female</Option>
+                  <Option value="other">Other</Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[{ required: true, type: "email" }]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, min: 6 }]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item>
+                <Space>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                  <Button onClick={() => setSelectedRole(null)}>Back</Button>
+                </Space>
+              </Form.Item>
+
+              <div style={{ marginTop: "1rem", textAlign: "center" }}>
+                Already have an account? <Link to="/login">Login</Link>
+              </div>
+            </Form>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
