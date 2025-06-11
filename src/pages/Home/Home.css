@@ -6,7 +6,8 @@
 
 .home-content {
   padding: 40px 0;
-  max-width: 1200px;
+  /* max-width: 1200px; */
+  width: 100%;
   margin: 0 auto;
   /* Center all text inside content */
   text-align: center;
