@@ -1,7 +1,7 @@
 /* Home.css */
 .home-layout {
   min-height: 100vh;
-  background: #f5f7fa;
+  width: 100%;
 }
 
 .home-content {
@@ -19,7 +19,14 @@
   text-align: inherit;
   font-size: inherit;
 }
+.dark-mode .home-layout {
+  background-color: #101832 !important;
+}
 
+.dark-mode .home-content {
+  background-color: #101832;
+  color: #e0e0e0;
+}
 @media (max-width: 768px) {
   .home-content {
     padding: 20px 10px;
