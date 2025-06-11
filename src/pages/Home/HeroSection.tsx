@@ -18,9 +18,9 @@ const HeroSection = () => {
         style={{ minHeight: '80vh', padding: '2rem', background: '#f0f2f5' }}
         >
         <Col xs={24} md={12}>
-            <Typography.Title className='herosection-title' level={2}>
-            Welcome to HealthCare
-            </Typography.Title>
+            {/*<Typography.Title className='herosection-title' level={2}>*/}
+            {/*Welcome to HealthCare*/}
+            {/*</Typography.Title>*/}
             <Typography.Paragraph className='herosection-text'>
             Experience world-class care for everyone. Our expert team of compassionate doctors, 
             supported by state-of-the-art facilities, is dedicated to providing you with the best
