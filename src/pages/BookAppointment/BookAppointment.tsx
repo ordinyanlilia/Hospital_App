@@ -179,7 +179,7 @@ const BookAppointment = () => {
       const resultValue: Appointment = {
         reason: value.reason || "",
         mode: value.mode || "",
-        patientId: user?.id || "",
+        patientId: user?.doc_id || "",
         patientName: user?.name || "",
         status: "scheduled",
         doctorId: selectedDoctor?.id || "",

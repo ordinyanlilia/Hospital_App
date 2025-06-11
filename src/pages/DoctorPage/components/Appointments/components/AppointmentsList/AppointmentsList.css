@@ -3,28 +3,19 @@
   background-color: #fff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  height: 68vh;
-  overflow: auto;
-  padding: 24px;
-}
-
-.appointments-list-content {
+  padding: 0 24px 24px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  overflow-x: auto;
+  overflow: auto;
+  height: 100%;
 }
 
 .appointments-list-content table {
-    width: 100%;
+  width: 100%;
   border-collapse: separate;
-  border-spacing: 0 12px; /* a bit more vertical spacing */
+  border-spacing: 0 12px;
   font-family: "Inter", sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  overflow: hidden;
   background-color: #ffffff;
 }
 
@@ -38,7 +29,7 @@
 }
 
 .appointments-list-content thead th {
-  background-color: #f0f0f0;
+  background-color: rgba(24, 144, 255, 0.1);
   color: #333;
   font-weight: 600;
   font-family: "Inter", sans-serif;
@@ -69,6 +60,26 @@
   background-color: #f9f9f9;
 }
 
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.native-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #1890ff;
+  cursor: pointer;
+  margin: 0;
+}
+
+.patient-name-text {
+  font-size: 14px;
+  color: #444;
+}
+
 .appointment-status {
   display: flex;
   align-items: center;
@@ -77,12 +88,13 @@
   text-transform: capitalize;
 }
 
-.appointment-status img {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
+.appointment-status-icon {
+  margin-right: 5px;
 }
 
+.status-icon {
+  font-size: 20px;
+}
 
 .loading-message,
 .error-message,
@@ -100,3 +112,37 @@
   min-height: 200px;
   width: 100%;
 }
+
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.ant-modal .ant-modal-content {
+  box-shadow: none;
+}
+
+.modal-content {
+  display: flex;
+}
+
+.modal-inputs {
+  display: flex;
+  align-items: start;
+  margin-right: 5px;
+  gap: 8px;
+}
+
+.medication-input {
+  width: 150px;
+  margin-bottom: 5px;
+}
+
+.description-input {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.modal-add-btn {
+  width: 30px;
+}
+

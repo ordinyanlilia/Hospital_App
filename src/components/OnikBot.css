@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .onik-bot-widget {
   position: fixed;
   bottom: 16px;
@@ -5,12 +11,16 @@
   z-index: 9999;
   font-family: "Segoe UI", sans-serif;
   font-size: 14px;
+  max-width: 340px;           /* 🔄 increased for larger chat box */
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: transparent;
 }
 
 .onik-toggle {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 2px;
+  right: 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +34,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   height: 32px;
   max-width: 90px;
-  z-index: 9999;
+  z-index: 10000;
 }
 
 .onik-toggle img {
@@ -33,21 +43,24 @@
 }
 
 .onik-bot-box {
+  display: flex;
   flex-direction: column;
-  background-color: #ffffff;
-  width: 270px;
-  max-height: 480px;
+  background-color: #f4f7f9;
+  width: 100%;
+  max-height: 600px;
   opacity: 1;
   overflow: hidden;
   border-radius: 14px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s ease;           /* 👈 Smooth transition added */
-  transform: translateY(20px);         /* 👈 For slide effect */
-  margin-bottom: 60px;
+  box-shadow: none;
+  transition: all 0.4s ease;
+  transform: translateY(20px);
+  margin-bottom: 0;
+  border: none;
+  outline: none;
 }
 
 .onik-bot-box.open {
-  transform: translateY(0);            /* 👈 Slide up on open */
+  transform: translateY(0);
   opacity: 1;
 }
 
@@ -55,7 +68,8 @@
   background-color: #f4f7f9;
   padding: 12px;
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 100%;
+  border: none;
 }
 
 .greeting {
@@ -96,16 +110,19 @@
   font-style: italic;
 }
 
-/* Chat View */
+/* 🔄 Enlarged Medical Chat Box */
 .medical-chat-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #f5f7fa;
+  width: 300px;              /* ✅ increased width */
+  height: 400px;             /* ✅ increased height */
+  background-color: #f4f7f9;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
-  opacity: 0;                          /* 👈 Initial state for fade */
-  animation: fadeIn 0.4s ease forwards; /* 👈 Smooth fade in */
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  border: none;
+  outline: none;
 }
 
 .medical-chat-header {
@@ -125,6 +142,7 @@
   flex-direction: column;
   gap: 8px;
   background-color: #f4f7f9;
+  border: none;
 }
 
 .operator-intro {
@@ -142,26 +160,54 @@
   margin: 0 auto 4px auto;
 }
 
-.medical-chat-message {
-  max-width: 85%;
-  padding: 8px 12px;
-  border-radius: 12px;
-  line-height: 1.3;
-  word-wrap: break-word;
-  font-size: 13px;
-}
 
+/* 👤 User message styling */
 .user-message {
   align-self: flex-end;
   background-color: #421da7;
   color: white;
+  font-family: 'Georgia', serif; /* ✅ Minimal/classic */
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 14px;
+  max-width: 85%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* 🤖 Bot message styling */
+.gemini-message {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #333;
+  font-family: 'Georgia', serif; /* ✅ Minimal/classic */
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  max-width: 85%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .gemini-message {
   align-self: flex-start;
-  background-color: white;
+  background-color: #ffffff;
   color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-family: 'Georgia', serif; /* ✅ Minimal/classic */
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  max-width: 85%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .medical-chat-input-container {
@@ -170,6 +216,10 @@
   gap: 6px;
   background-color: white;
   border-top: 1px solid #ddd;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0 0 14px 14px;
 }
 
 .medical-chat-textarea {
@@ -205,7 +255,6 @@
   gap: 6px;
 }
 
-/* 👇 Fade-in animation used by medical-chat-container */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -221,7 +270,7 @@
   right: 12px;
   background: none;
   border: none;
-  color: #333;
+  color: #cfc2c2;
   font-size: 18px;
   cursor: pointer;
   z-index: 10000;
@@ -232,3 +281,51 @@
 .chat-close-button:hover {
   opacity: 0.6;
 }
+
+.chat-box {
+  border: none;
+}
+
+.onik-bot-box {
+  transition: all 0.4s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.onik-bot-box.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.onik-bot-box.closed {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+}
+
+.onik-bot-box {
+  opacity: 0;
+  transform: translateY(20px);     /* ⬅️ Start a little lower */
+  transition: all 0.4s ease;
+  pointer-events: none;            /* Prevent interaction before open */
+}
+
+.onik-bot-box.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.onik-inner-content {
+  animation: fadeIn 0.4s ease;
+}
+
+.onik-bot-box.closed {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+}
+
+
+
+

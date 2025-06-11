@@ -136,6 +136,21 @@ const appointmentsSlice = createAppSlice({
         },
       }
     ),
+     updateAppointmentStatus: create.asyncThunk(
+      async ({ id, status }: { id: string; status: string }) => {
+        await updateData(id, "appointments", { status });
+        return { id, status };
+      },
+      {
+        fulfilled: (state, action) => {
+          const { id, status } = action.payload;
+          const appointment = state.appointments.find((a) => a.doc_id === id);
+          if (appointment) {
+            appointment.status = status; // Update locally in state
+          }
+        },
+      }
+    ),
   }),
   selectors: {
     selectStatus: (state) => state.status,
@@ -146,6 +161,6 @@ const appointmentsSlice = createAppSlice({
 
 export const { selectStatus, selectError, selectAppointments } =
   appointmentsSlice.selectors;
-export const { addAppointment, resetStatus, setAppointments, fetchAppointments } =
+export const { addAppointment, resetStatus, setAppointments, fetchAppointments,updateAppointmentStatus } =
   appointmentsSlice.actions;
 export default appointmentsSlice;
