@@ -9,6 +9,7 @@ import {ThemeProvider} from "./context/theme-context.tsx";
 import { TranslationProvider } from "./context/TranslationProvider";
 
 
+
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Provider store={store}>
@@ -20,5 +21,3 @@ createRoot(document.getElementById("root")!).render(
         </Provider>
     </StrictMode>
 );
-
-

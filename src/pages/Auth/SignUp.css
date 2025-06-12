@@ -1,0 +1,101 @@
+.signup-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f9ff;
+  padding: 24px 12px; /* Less vertical padding */
+}
+
+.signup-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 760px; /* slightly smaller width */
+  height: fit-content;
+  box-shadow: 0 4px 20px rgba(117, 117, 117, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.signup-visual {
+  flex: 1;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  text-align: center;
+}
+
+.signup-image {
+  width: 120px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+.signup-visual h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.signup-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.signup-form {
+  width: 100%;
+  max-width: 340px;
+}
+
+.signup-form .ant-form-item:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+.signup-form .ant-space {
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .signup-wrapper {
+    flex-direction: column;
+  }
+
+  .signup-visual {
+    border-radius: 16px 16px 0 0;
+    padding: 16px 12px;
+  }
+
+  .signup-container {
+    border-radius: 0 0 16px 16px;
+    padding: 16px 12px;
+  }
+
+  .signup-image {
+    width: 100px;
+    margin-bottom: 12px;
+  }
+
+  .signup-visual h2 {
+    font-size: 1.15rem;
+  }
+
+  .signup-form {
+    max-width: 100%;
+  }
+}

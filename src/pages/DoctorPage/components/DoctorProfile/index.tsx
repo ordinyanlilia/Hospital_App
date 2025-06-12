@@ -10,6 +10,7 @@ import {
 import { type Doctor } from "../../../../features/DoctorSlice";
 import { updateData } from "../../../../services/apiService";
 import { useTranslate } from "../../../../context/TranslationProvider";
+import ImgUploader from "../../../Profile/components/ImgUploader";
 
 const DoctorProfile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,10 @@ const DoctorProfile: React.FC = () => {
 
   const handleInputChange = (field: keyof Doctor, value: string) => {
     setEditedDoctor((prev) => (prev ? { ...prev, [field]: value } : prev));
+  };
+
+  const handleImageFileChange = (url: string) => {
+    setEditedDoctor((prev) => ({ ...prev, imageUrl: url }));
   };
 
   const handleSave = async () => {
@@ -63,6 +68,17 @@ const DoctorProfile: React.FC = () => {
           <div className="personal-info-content">
             {!isEditMode ? (
               <div className="forms-content" key={doctor.doc_id}>
+                <div className="form-container-image-email">
+                  <div className="form-container-image">
+                    <img src={doctor.imageUrl} alt="" />
+                  </div>
+                  <div className="form-container-email">
+                    <span>{doctor.email}</span>
+                  </div>
+                </div>
+        
+                <div className="vertical-line"></div>
+                <div className="form-container-info-part">
                 <div className="form-container">
                   <p>{translate("name1")}</p>
                   <span>{doctor.name}</span>
@@ -90,10 +106,24 @@ const DoctorProfile: React.FC = () => {
                 <div className="form-container">
                   <p>{translate("bio")}</p>
                   <span>{doctor.bio}</span>
-                </div>
+                </div>  
+               </div>    
               </div>
             ) : (
-              <div className="edit-mode-forms-content" key={doctor.doc_id}>
+              <div className="edit-mode-forms-content" key={doctor.doc_id}>        
+                <div className="form-container-image-email">
+                  <div className="form-container-image-edit">
+                    <ImgUploader
+                      imageUrl={editedDoctor?.imageUrl || ""}
+                      onSetFormData={handleImageFileChange}
+                    />
+                  </div>
+                  <div className="form-container-email">
+                    <span>{doctor.email}</span>
+                  </div>
+                </div>     
+               <div className="vertical-line"></div>
+               <div className="form-container-info-part">
                 <div className="form-container">
                   <p>{translate("name1")}</p>
                   <input
@@ -120,14 +150,11 @@ const DoctorProfile: React.FC = () => {
                       handleInputChange("gender", e.target.value)
                     }
                   >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male">{translate("male")}</option>
+                    <option value="Female">{translate("female")}</option>
                   </select>
                 </div>
-                <div className="form-container">
-                  <p>{translate("mail")}</p>
-                  <span>{doctor.email}</span>
-                </div>
+            
                 <div className="form-container">
                   <p>{translate("specialty")}</p>
                   <select
@@ -165,13 +192,12 @@ const DoctorProfile: React.FC = () => {
                     value={editedDoctor?.bio || ""}
                     onChange={(e) => handleInputChange("bio", e.target.value)}
                     rows={4}
-                    placeholder="Write a brief bio..."
+                    placeholder={translate("writeBio")}
                   />
                 </div>
               </div>
             )}
           </div>
-
           <div className="profile-edit-btn">
             {!isEditMode ? (
               <button onClick={() => setIsEditMode(true)}>{translate("edit")}</button>

@@ -1,61 +1,48 @@
-import { Card, Carousel, Typography } from "antd";
+import { Card, Typography, Carousel, Row, Col } from "antd";
 import React from "react";
-
-import Slide4 from "../../assets/young-handsome-physician-medical-robe-with-stethoscope.jpg";
-// import Slide2 from '../../assets/hospital1-image.jpg';
-// import Slide3 from '../../assets/hospital2-image.jpg';
-import Slide1 from "../../assets/hospital3-image.jpg";
+import "./WelcomeBanner.css";
+import Slide4 from "../../assets/smilinggirl-image.jpg";
+import Slide1 from "../../assets/happy-surgeon-senior-woman-handshaking-while-greeting-lobby-clinic-focus-is-woman.jpg";
 import Slide5 from "../../assets/care-job-scene-with-patient-being-cared.jpg";
 import { useTheme } from "../../context/theme-context";
 
 const WelcomeBanner: React.FC = () => {
   const { darkMode } = useTheme();
   return (
-    <div
-      style={{
-        padding: "3rem 2rem",
-        background: darkMode ? "#101832" : "#f5f5f5",
-      }}
-    >
-      <Card
-        variant="borderless"
-        style={{
-          maxWidth: 800,
-          margin: "0 auto",
-          textAlign: "center",
-          backgroundColor: darkMode ? "#101832" : "#ffffff",
-          color: darkMode ? "#ffffff" : "#000000",
-          boxShadow: darkMode
-            ? "0 4px 20px rgba(255, 255, 255, 0.05)"
-            : "0 4px 20px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Typography.Title level={2}>Welcome to Healthcare</Typography.Title>
-        <Typography.Paragraph style={{ fontSize: "16px" }}>
-          We are committed to delivering compassionate and world-class medical
-          care. Explore our services, meet our expert team, and discover how we
-          put your health first.
-        </Typography.Paragraph>
-      </Card>
+    <div className={`welcome-banner ${darkMode ? "dark" : "light"}`}>
+      <Row justify="center">
+        <Col xs={24} md={20} lg={16} xl={14}>
+          <Typography.Title className="welcomebanner-title" level={2}>
+            Welcome to Healthcare
+          </Typography.Title>
+          <Card className="welcomebanner-card" bordered={false}>
+            <Typography.Paragraph className="welcomebanner-text">
+              We are dedicated to providing compassionate, personalized, and
+              world-class medical care that puts you and your family’s health
+              first. Explore our comprehensive range of services, meet our
+              highly skilled and caring expert team, and experience a healthcare
+              approach centered on your well-being and comfort every step of the
+              way.
+            </Typography.Paragraph>
+          </Card>
+        </Col>
+      </Row>
 
-      <div style={{ marginTop: "2rem" }}>
-        <Carousel autoplay dots>
-          {[Slide1, Slide4, Slide5].map((img, index) => (
-            <div key={index}>
-              <img
-                src={img}
-                alt={`Slide ${index + 1}`}
-                style={{
-                  width: "100%",
-                  height: "400px",
-                  objectFit: "cover",
-                  borderRadius: "12px",
-                }}
-              />
-            </div>
-          ))}
-        </Carousel>
-      </div>
+      <Row justify="center" className="welcomebanner-carousel">
+        <Col xs={24} md={22} lg={20} xl={18}>
+          <Carousel autoplay dots>
+            {[Slide1, Slide4, Slide5].map((img, index) => (
+              <div key={index} className="welcomebanner-slide">
+                <img
+                  src={img}
+                  alt={`Slide ${index + 1}`}
+                  className="welcomebanner-image"
+                />
+              </div>
+            ))}
+          </Carousel>
+        </Col>
+      </Row>
     </div>
   );
 };

@@ -2,6 +2,11 @@ import {setData, updateData} from '../services/apiService.ts';
 import {createAppSlice} from '../app/createAppSlice.ts';
 import type {User_Appointment} from "./appointments/appointmentsSlice.ts";
 
+interface currentMedication{
+    description: string;
+    medication: string;
+}
+
 export interface Patient {
     id: string;
     name?: string;
@@ -13,14 +18,13 @@ export interface Patient {
     bloodType?: string;
     registeredAt?: string;
     allergies?: string[];
-    currentMedications?: string[];
+    currentMedications?: currentMedication[];
     medicalHistory?: string[];
     appointments?: User_Appointment[];
     password?: string;
     imageUrl?: string;
     doc_id?: string;
 }
-
 
 interface InitialState {
     patient: Patient | null;

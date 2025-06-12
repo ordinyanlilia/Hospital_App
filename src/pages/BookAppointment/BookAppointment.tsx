@@ -40,6 +40,7 @@ import {
 import { selectPatient } from "../../features/PatientSlice.ts";
 import DoctorCard from "./DoctorCard.tsx";
 import { useTranslate } from "../../context/TranslationProvider.tsx";
+import { useTheme } from "../../context/theme-context.tsx";
 
 interface FinishValue {
   reason: string;
@@ -64,7 +65,7 @@ const BookAppointment = () => {
     translate("cardiology"),
   ];
   const location = useLocation();
-
+  const { darkMode } = useTheme();
   const selectedDoctorInitialId = location.pathname.split("/")[2];
   const doctors = useAppSelector(selectDoctors);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -96,9 +97,18 @@ const BookAppointment = () => {
 
   useEffect(() => {
     setFilteredDoctors(doctors);
-    setSelectedDoctor(
-      doctors.find((doc) => doc.id === selectedDoctorInitialId) || null
+
+    const doctorIndex = doctors.findIndex(
+      (doc) => doc.id === selectedDoctorInitialId
     );
+
+    if (doctorIndex !== -1) {
+      const page = Math.floor(doctorIndex / inPageCount) + 1;
+      setCurrent(page);
+      setSelectedDoctor(doctors[doctorIndex]);
+    } else {
+      setSelectedDoctor(null);
+    }
   }, [doctors]);
 
   function getTimeInterval(start: number, end: number, interval: number = 15) {
@@ -290,7 +300,12 @@ const BookAppointment = () => {
     <>
       {contextHolder}
       <Title level={3}>Make An Appointment</Title>
-      <Row justify="center" align="middle" className="book-appointment">
+      <Row
+        justify="center"
+        align="middle"
+        className="book-appointment"
+        style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+      >
         <Form
           {...formItemLayout}
           onFinish={onFinish}
@@ -304,14 +319,14 @@ const BookAppointment = () => {
             name="name"
             rules={[{ required: true, message: translate("inputRequired") }]}
           >
-            <Input />
+            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
           </Form.Item>
           <Form.Item
             label={translate("yourReason")}
             name="reason"
             rules={[{ required: true, message: translate("inputRequired") }]}
           >
-            <Input />
+            <Input style={{ background: darkMode ? "#101832" : "#f5f5f5" }} />
           </Form.Item>
 
           <Divider>{translate("category")}</Divider>
@@ -380,6 +395,7 @@ const BookAppointment = () => {
             rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <DatePicker
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
               disabled={!mode}
               disabledDate={(current) =>
                 current && current < dayjs().startOf("day")
@@ -404,9 +420,11 @@ const BookAppointment = () => {
           </Form.Item>
 
           <Form.Item label={translate("notes1")} name="notes">
-            <Input.TextArea />
+            <Input.TextArea
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+            />
           </Form.Item>
-
+          
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
             <Button type="primary" htmlType="submit">
               {translate("submit")}
@@ -419,4 +437,3 @@ const BookAppointment = () => {
 };
 
 export default BookAppointment;
-

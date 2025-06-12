@@ -43,10 +43,17 @@ const FilterBar: React.FC<FilterBarProps> = ({
             placeholder={translate("all")}
             onChange={(value) => setStatusFilter(value)}
             options={[
+<<<<<<< feature/language-setup
               { value: "All", label: translate("all") },
               { value: "upcoming", label: translate("upcoming") },
               { value: "visited", label: translate("visited")},
               { value: "scheduled", label: translate("scheduled") },
+=======
+              { value: "All", label: "All" },
+              { value: "cancelled", label: "Cancelled" },
+              { value: "visited", label: "Visited" },
+              { value: "scheduled", label: "Scheduled" },
+>>>>>>> main
             ]}
           />
         </div>

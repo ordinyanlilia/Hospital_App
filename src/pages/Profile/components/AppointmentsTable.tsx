@@ -1,8 +1,14 @@
-import {FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
-import {type Appointment, MODE_HOURS, selectAppointments,} from "../../../features/appointments/appointmentsSlice.ts";
-import {DatePicker, notification, Space, Table} from "antd";
+import {CloseCircleOutlined, FileDoneOutlined, ScheduleTwoTone} from '@ant-design/icons'
+import {
+    type Appointment,
+    MODE_HOURS,
+    resetStatus,
+    selectAppointments,
+    updateAppointmentStatus,
+} from "../../../features/appointments/appointmentsSlice.ts";
+import {Button, DatePicker, notification, Popconfirm, Space, Table} from "antd";
 import type {ColumnsType} from 'antd/es/table';
-import {useAppSelector} from "../../../app/hooks.ts";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import dayjs, {type Dayjs} from "dayjs";
 import {useEffect, useRef} from "react";
 import { useTranslate } from '../../../context/TranslationProvider.tsx';
@@ -72,6 +78,7 @@ const AppointmentsTable = () => {
             title: translate("status1"),
             dataIndex: 'status',
             key: 'status',
+            width: '120px',
             filters: [
                 {
                     text: translate("scheduled"),
@@ -81,18 +88,46 @@ const AppointmentsTable = () => {
                     text: translate("visited"),
                     value: 'visited',
                 },
+                {
+                    text: 'Cancelled',
+                    value: 'cancelled',
+                },
             ],
             onFilter: (value, record) => record.status.indexOf(value as string) === 0,
             render: (text: string) => (
-                <Space>{text === 'scheduled' ?
-                    <ScheduleTwoTone className={'blue-text'}/> :
-                    <FileDoneOutlined/>}
+                <Space>{text === 'scheduled' && 
+                    <ScheduleTwoTone className={'blue-text'}/> }
+                    {text === 'visited' && <FileDoneOutlined/>}
+                    {text === 'cancelled' && <CloseCircleOutlined/>}
                     {text}</Space>
             ),
+        },
+        {
+            title: 'Action',
+            dataIndex: 'status',
+            width: '20px',
+            key: 'status',
+            render: (status: string, record: Appointment) => <>{
+                (status !== 'cancelled' &&
+                    dayjs(record.startTime).diff(dayjs(), 'day') >= 2) && (
+                    <Popconfirm
+                        title="Cancel the appointment"
+                        description="Are you sure to cancel this appointment?"
+                        onConfirm={() => handleCancelAppointment(record)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button danger title={'Cancel Appointment'} type={'text'}
+                                style={{padding: 0, textAlign: 'center'}}
+                        >
+                            <CloseCircleOutlined/>
+                        </Button>
+                    </Popconfirm>)}</>,
         },
     ];
 
     const [api, contextHolder] = notification.useNotification();
+    const dispatch = useAppDispatch();
 
     const appointments = useAppSelector(selectAppointments);
     const notified = useRef(false);
@@ -115,6 +150,13 @@ const AppointmentsTable = () => {
         notified.current = true;
     }, [api, appointments, translate]);
 
+    const handleCancelAppointment = async (record: Appointment) => {
+        if (record?.doc_id) {
+            await dispatch(updateAppointmentStatus({id: record?.doc_id, status: 'cancelled'}));
+            dispatch(resetStatus());
+        }
+    }
+
     return (
         <>
             {contextHolder}
@@ -123,8 +165,9 @@ const AppointmentsTable = () => {
                 dataSource={appointments}
                 rowKey={record => record.doc_id || ''}
                 showSorterTooltip={{target: 'sorter-icon'}}
-                size="small"/>
-
+                size="small"
+                scroll={{ x: 'max-content' }}
+            />
         </>
     )
 }

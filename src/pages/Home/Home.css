@@ -1,0 +1,36 @@
+/* Home.css */
+.home-layout {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.home-content {
+  padding: 40px 0;
+  /* max-width: 1200px; */
+  width: 100%;
+  margin: 0 auto;
+  /* Center all text inside content */
+  text-align: center;
+  /* Set a base font size for all text */
+  font-size: 18px;
+}
+
+.home-content * {
+  /* Ensure all child elements inherit the font size and centering */
+  text-align: inherit;
+  font-size: inherit;
+}
+.dark-mode .home-layout {
+  background-color: #101832 !important;
+}
+
+.dark-mode .home-content {
+  background-color: #101832;
+  color: #e0e0e0;
+}
+@media (max-width: 768px) {
+  .home-content {
+    padding: 20px 10px;
+    font-size: 16px; /* Slightly smaller on mobile */
+  }
+}

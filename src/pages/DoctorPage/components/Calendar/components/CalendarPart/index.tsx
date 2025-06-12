@@ -17,8 +17,7 @@ const CalendarPart: React.FC = () => {
   const statusColorMap: Record<string, BadgeProps["status"]> = {
   visited: "success",
   scheduled: "processing",
-  canceled: "error",
-  unknown: "default",
+  cancelled: "default",
 };
 
   const firstAppointmentDate = appointments.length
@@ -36,11 +35,12 @@ const CalendarPart: React.FC = () => {
         const badgeStatus =
           statusColorMap[apt.status?.toLowerCase()] || "default";
 
-        return {
+       return {
           type: badgeStatus,
-          content: `${dayjs.utc(apt.startTime).local().format("HH:mm")} - ${
-            apt.patientName ?? translate("unknownPatient")
-          }`,
+          content: `${dayjs.utc(apt.startTime).local().format("HH:mm")} - ${dayjs
+            .utc(apt.endTime)
+            .local()
+            .format("HH:mm")} ${apt.patientName ?? translate("unknownPatient")}`,
           status: apt.status?.toLowerCase() ?? "unknown",
         };
       });
@@ -52,13 +52,13 @@ const CalendarPart: React.FC = () => {
   const counts = {
     scheduled: 0,
     visited: 0,
-    canceled: 0,
+    cancelled: 0,
   };
 
   listData.forEach((item) => {
     if (item.status === "scheduled") counts.scheduled++;
     else if (item.status === "visited") counts.visited++;
-    else if (item.status === "canceled") counts.canceled++;
+    else if (item.status === "cancelled") counts.cancelled++;
   });
 
   return (
@@ -70,8 +70,8 @@ const CalendarPart: React.FC = () => {
         {counts.visited > 0 && (
           <span className="count-badge visited">{counts.visited}</span>
         )}
-        {counts.canceled > 0 && (
-          <span className="count-badge canceled">{counts.canceled}</span>
+        {counts.cancelled > 0 && (
+          <span className="count-badge canceled">{counts.cancelled}</span>
         )}
       </div>
       <ul className="events">

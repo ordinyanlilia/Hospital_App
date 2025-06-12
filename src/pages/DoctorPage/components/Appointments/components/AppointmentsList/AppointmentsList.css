@@ -70,7 +70,7 @@
 .native-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: #1890ff; 
+  accent-color: #1890ff;
   cursor: pointer;
   margin: 0;
 }
@@ -96,7 +96,6 @@
   font-size: 20px;
 }
 
-
 .loading-message,
 .error-message,
 .no-results-message {
@@ -118,26 +117,32 @@
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-.ant-modal .ant-modal-content{
+.ant-modal .ant-modal-content {
   box-shadow: none;
 }
 
-.modal-content{
+.modal-content {
   display: flex;
 }
 
-.modal-inputs{
+.modal-inputs {
+  display: flex;
+  align-items: start;
   margin-right: 5px;
+  gap: 8px;
 }
 
-.medication-input{
+.medication-input {
+  width: 150px;
   margin-bottom: 5px;
 }
 
-.description-input{
+.description-input {
+  flex: 1;
   margin-bottom: 10px;
 }
 
-.modal-add-btn{
+.modal-add-btn {
   width: 30px;
 }
+
