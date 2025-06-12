@@ -59,7 +59,7 @@ const BookAppointment = () => {
     translate("psychiatry"),
     translate("plastic"),
     translate("radiology"),
-    translate("pathology"), 
+    translate("pathology"),
     translate("emergency"),
     translate("dermatology"),
     translate("cardiology"),
@@ -130,7 +130,8 @@ const BookAppointment = () => {
     }
 
     const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
-    const workingTimeStart = isToday ? dayjs().get("hour") + 1 : 9;
+    const workingTimeStart =
+      isToday && dayjs().get("hour") >= 9 ? dayjs().get("hour") + 1 : 9;
     const workingTimeEnd = 20;
 
     if (workingTimeStart > workingTimeEnd) {
@@ -424,7 +425,7 @@ const BookAppointment = () => {
               style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
             />
           </Form.Item>
-          
+
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
             <Button type="primary" htmlType="submit">
               {translate("submit")}
