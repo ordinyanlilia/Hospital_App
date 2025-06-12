@@ -6,13 +6,12 @@ import utc from "dayjs/plugin/utc";
 import "./CalendarPart.css";
 import { useAppSelector } from "../../../../../../app/hooks";
 import { selectAppointments } from "../../../../../../features/appointments/appointmentsSlice";
-import { useTranslate } from "../../../../../../context/TranslationProvider";
 
 dayjs.extend(utc);
 
 const CalendarPart: React.FC = () => {
   const appointments = useAppSelector(selectAppointments);
-  const { translate } = useTranslate();
+
   
   const statusColorMap: Record<string, BadgeProps["status"]> = {
   visited: "success",
@@ -40,7 +39,7 @@ const CalendarPart: React.FC = () => {
           content: `${dayjs.utc(apt.startTime).local().format("HH:mm")} - ${dayjs
             .utc(apt.endTime)
             .local()
-            .format("HH:mm")} ${apt.patientName ?? translate("unknownPatient")}`,
+            .format("HH:mm")} `,
           status: apt.status?.toLowerCase() ?? "unknown",
         };
       });

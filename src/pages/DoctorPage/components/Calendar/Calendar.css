@@ -17,7 +17,6 @@
 }
 
 .calendar-part-container{
-    height: 86vh;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 16px;
 }
