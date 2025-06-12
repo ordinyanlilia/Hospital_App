@@ -1,5 +1,30 @@
 # React + TypeScript + Vite
 
+A web-based Hospital Management System built using React + TypeScript, designed to streamline administrative workflows such as patient registration, doctor management, and appointment scheduling.
+
+🚀 Features
+👤 User Roles: Secretary and (future support for) Doctors/Admins
+📝 Patient Registration: Add/edit patient information
+📅 Appointment Management: Schedule and manage doctor appointments
+🧑‍⚕️ Doctor Management: View and assign doctors by department
+📊 Reports: Daily/weekly reports for secretary dashboard
+
+🛠 Tech Stack
+Frontend: React (TypeScript)
+Styling: CSS Modules / Ant Design 
+Routing: React Router 
+State Management: Redux Toolkit
+Forms: React Hook Form 
+Backend (optional): Firebase 
+
+📌 Future Enhancements
+🔐 Authentication & Role-based Access
+📧 Email/SMS notifications
+📱 Responsive mobile views
+☁️ Backend integration with Firebase
+🌗 Light/Dark Theme Toggle
+🌐 Multi-language Support
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
