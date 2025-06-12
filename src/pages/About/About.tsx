@@ -112,9 +112,10 @@ const About = () => {
                 <Col xs={24} md={12}>
                   <motion.div
                     className="text-block"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 1 }}
+                   initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 1 }}
                   >
                     <h1>Our Story</h1>
                     <p className="about-text-2">
