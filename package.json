@@ -12,7 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "antd": "^5.25.4",
-    "dayjs-plugin-utc": "^0.1.2",
+    "dayjs": "^1.11.13",
     "firebase": "^11.8.1",
     "framer-motion": "^12.15.0",
     "react": "^19.1.0",
