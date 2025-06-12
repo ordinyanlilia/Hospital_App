@@ -10,7 +10,6 @@ type MessageType = { text: string; sender: 'user' | 'bot' };
 type Props = {
   messages: MessageType[];
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
-  onBack: () => void;
 };
 
 export default function MedicalChat({ messages, setMessages }: Props) {
@@ -21,7 +20,7 @@ export default function MedicalChat({ messages, setMessages }: Props) {
   const { translate } = useTranslate();
 
   useEffect(() => {
-    setTimeout(() => setVisible(true), 10);
+    setTimeout(() => setVisible(true), 10); // fade-in animation
   }, []);
 
   useEffect(() => {
@@ -37,15 +36,14 @@ export default function MedicalChat({ messages, setMessages }: Props) {
     setIsLoading(true);
 
     try {
-      const payload = {
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: input }]
-          }
-        ]
-      };
+      const chatHistory = [
+        {
+          role: 'user',
+          parts: [{ text: input }]
+        }
+      ];
 
+      const payload = { contents: chatHistory };
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
 
       const response = await fetch(apiUrl, {
@@ -59,18 +57,18 @@ export default function MedicalChat({ messages, setMessages }: Props) {
 
       let botReply = translate('bot_error');
 
-      // ✅ Extract text from Gemini response safely
       const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) {
-        botReply = text;
+        botReply = text.replace(/[*_`#>\-]/g, "").trim(); // Optional: strip Markdown
       } else {
-        console.error('Unexpected response structure:', result);
+        console.error('Unexpected Gemini structure:', result);
       }
 
       const geminiMessage: MessageType = { text: botReply, sender: 'bot' };
       setMessages(prev => [...prev, geminiMessage]);
+
     } catch (err) {
-      console.error('API request failed:', err);
+      console.error('API Error:', err);
       setMessages(prev => [...prev, {
         text: translate('general_error'),
         sender: 'bot'
@@ -82,9 +80,7 @@ export default function MedicalChat({ messages, setMessages }: Props) {
 
   return (
     <div className={`medical-chat-container ${visible ? 'fade-in' : ''}`}>
-      <div className="medical-chat-header">
-        {translate('operator_title')}
-      </div>
+      <div className="medical-chat-header">{translate('operator_title')}</div>
 
       <div className="medical-chat-messages">
         <div className="operator-intro">{translate('operator_intro')}</div>
