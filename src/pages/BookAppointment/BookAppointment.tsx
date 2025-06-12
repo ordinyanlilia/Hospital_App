@@ -39,6 +39,7 @@ import {
 } from "../../features/doctors/doctorsSlice.tsx";
 import { selectPatient } from "../../features/PatientSlice.ts";
 import DoctorCard from "./DoctorCard.tsx";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
 
 interface FinishValue {
   reason: string;
@@ -50,16 +51,17 @@ interface FinishValue {
 }
 
 const BookAppointment = () => {
+  const { translate } = useTranslate();
   const categories = [
-    "All",
-    "Neurology",
-    "Psychiatry",
-    "Plastic Surgery",
-    "Radiology",
-    "Pathology",
-    "Emergency Medicine",
-    "Dermatology",
-    "Cardiology",
+    translate("all"),
+    translate("neurology"),
+    translate("psychiatry"),
+    translate("plastic"),
+    translate("radiology"),
+    translate("pathology"), 
+    translate("emergency"),
+    translate("dermatology"),
+    translate("cardiology"),
   ];
   const location = useLocation();
 
@@ -163,7 +165,7 @@ const BookAppointment = () => {
     if (!selectedDoctor) {
       messageApi.open({
         type: "error",
-        content: "Please select a doctor.",
+        content: translate("selectDoctorError"),
       });
       return;
     }
@@ -234,10 +236,10 @@ const BookAppointment = () => {
     return (
       <Result
         icon={<SmileOutlined />}
-        title="Great, we have done all the operations!"
+        title={translate("successTitle")}
         extra={
           <Button type="primary" onClick={handleProfileClick}>
-            Go to Profile
+            {translate("goToProfile")}
           </Button>
         }
       />
@@ -246,18 +248,18 @@ const BookAppointment = () => {
     return (
       <Result
         status="error"
-        title="Submission Failed"
+        title={translate("submissionFailed")}
         subTitle={error}
         extra={
           <Button type="primary" onClick={handleProfileClick}>
-            Go to Profile
+            {translate("goToProfile")}
           </Button>
         }
       />
     );
   } else if (status === "loading") {
     return (
-      <Spin tip="Booking appointment..." fullscreen>
+      <Spin tip={translate("bookingAppointment")} fullscreen>
         <div
           style={{
             padding: 50,
@@ -298,21 +300,21 @@ const BookAppointment = () => {
           initialValues={{ variant: "underlined" }}
         >
           <Form.Item
-            label="Your Name"
+            label={translate("yourName")}
             name="name"
-            rules={[{ required: true, message: "Please input!" }]}
+            rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Your Reason"
+            label={translate("yourReason")}
             name="reason"
-            rules={[{ required: true, message: "Please input!" }]}
+            rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <Input />
           </Form.Item>
 
-          <Divider>Category</Divider>
+          <Divider>{translate("category")}</Divider>
           <Space wrap>
             {categories.map((category) => (
               <Tag.CheckableTag
@@ -329,7 +331,7 @@ const BookAppointment = () => {
               </Tag.CheckableTag>
             ))}
           </Space>
-          <Divider>Doctors</Divider>
+          <Divider>{translate("doctors")}</Divider>
           <Space align={"center"} wrap style={{ justifyContent: "center" }}>
             {!!paginatedDoctors.length &&
               paginatedDoctors?.map((doc, index) => (
@@ -354,15 +356,15 @@ const BookAppointment = () => {
           )}
           <Divider></Divider>
           <Form.Item
-            label="Mode"
+            label={translate("mode")}
             name="mode"
-            rules={[{ required: true, message: "Please input!" }]}
+            rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <Select
               showSearch
               disabled={!selectedDoctor}
               value={"in-person"}
-              placeholder="Select a mode"
+              placeholder={translate("selectMode")}
               optionFilterProp="label"
               style={{ width: 200 }}
               options={Object.entries(MODE_HOURS).map(([key, value]) => ({
@@ -373,9 +375,9 @@ const BookAppointment = () => {
           </Form.Item>
 
           <Form.Item
-            label="Select Day"
+            label={translate("selectDay")}
             name="date"
-            rules={[{ required: true, message: "Please input!" }]}
+            rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <DatePicker
               disabled={!mode}
@@ -385,13 +387,13 @@ const BookAppointment = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Select Time"
+            label={translate("selectTime")}
             name="startTime"
-            rules={[{ required: true, message: "Please input!" }]}
+            rules={[{ required: true, message: translate("inputRequired") }]}
           >
             <Select
               showSearch
-              placeholder="Select a Time"
+              placeholder={translate("selectTime")}
               optionFilterProp="label"
               style={{ width: 150 }}
               options={availableTimes.map((time) => ({
@@ -401,13 +403,13 @@ const BookAppointment = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Notes" name="notes">
+          <Form.Item label={translate("notes1")} name="notes">
             <Input.TextArea />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
             <Button type="primary" htmlType="submit">
-              Submit
+              {translate("submit")}
             </Button>
           </Form.Item>
         </Form>

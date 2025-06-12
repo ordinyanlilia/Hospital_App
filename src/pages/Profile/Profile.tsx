@@ -12,12 +12,15 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { setPatient } from "../../features/PatientSlice.ts";
 import { clearUser } from "../../features/UserSlice.ts";
 import { selectAppointments } from "../../features/appointments/appointmentsSlice.ts";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(selectAppointments);
+  const { translate } = useTranslate();
+
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -33,7 +36,7 @@ const Profile = () => {
   return (
     <>
       <Flex align={"center"} justify={"end"}>
-        <span>Log out </span>
+        <span>{translate("logOut")}</span>
         <LoginOutlined style={{ color: "red" }} onClick={handleLogOutClick} />
       </Flex>
       {!isEditing ? (
@@ -43,14 +46,14 @@ const Profile = () => {
       )}
       <Divider>
         <Space>
-          Your Appointments
+          {translate("yourApp")}
           <Button
             color="default"
             variant="outlined"
             onClick={() => navigate(BOOK_APPOINTMENT)}
           >
             <FileAddOutlined />
-            Book Appointment
+            {translate("bookAppointment")}
           </Button>
         </Space>
       </Divider>

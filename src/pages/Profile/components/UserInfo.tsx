@@ -19,6 +19,7 @@ import {
   selectPatientStatus,
 } from "../../../features/PatientSlice.ts";
 import { useTheme } from "../../../context/theme-context.tsx";
+import { useTranslate } from "../../../context/TranslationProvider.tsx";
 const { Text } = Typography;
 
 const UserInfo = ({
@@ -28,6 +29,7 @@ const UserInfo = ({
 }) => {
   const user = useAppSelector(selectPatient);
   const { darkMode } = useTheme();
+  const { translate } = useTranslate();
   const registeredDate = dayjs(user?.registeredAt).format("MMM D, YYYY");
   const dobDate = dayjs(user?.dob).format("DD/MM/YYYY");
   const [messageApi, contextHolder] = message.useMessage();
@@ -35,7 +37,7 @@ const UserInfo = ({
   const status = useAppSelector(selectPatientStatus);
   const error = useAppSelector(selectPatientError);
   if (status === "loading") {
-    return <Spin fullscreen>Loading</Spin>;
+    return <Spin fullscreen>{translate("loading")}</Spin>;
   } else if (status === "error") {
     messageApi.open({
       type: "error",
@@ -77,28 +79,28 @@ const UserInfo = ({
           </p>
           <Space direction="vertical">
             <Text type="secondary" strong>
-              Registered At:{registeredDate}
+              {translate("registeredAt")}{registeredDate}
             </Text>
-            <Button onClick={onSetIsEditing}>Edit Profile</Button>
+            <Button onClick={onSetIsEditing}>{translate("editProfile")}</Button>
           </Space>
         </div>
       </Col>
       <Col span={8}>
         <div className="profile-details">
           <Text type="secondary" strong>
-            Gender
+            {translate("gender")}
           </Text>
           <p>{user?.gender}</p>
           <Text type="secondary" strong>
-            Date of Birth
+            {translate("dateOfBirth")}
           </Text>
           <p>{dobDate}</p>
           <Text type="secondary" strong>
-            Blood
+            {translate("bloodType")}
           </Text>
           <p>{user?.bloodType}</p>
           <Text type="secondary" strong>
-            Allergies
+            {translate("allergies")}
           </Text>
           <List
             size="small"
@@ -111,7 +113,7 @@ const UserInfo = ({
       <Col span={6}>
         <div className="profile-history">
           <Text type="secondary" strong>
-            Medical History
+            {translate("medHistory")}
           </Text>
           <List
             size="small"
@@ -119,7 +121,7 @@ const UserInfo = ({
             renderItem={(item: string) => <List.Item>{item}</List.Item>}
           />
           <Text type="secondary" strong>
-            Current Medications
+            {translate("currentMed")}
           </Text>
           <List
             size="small"
