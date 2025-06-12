@@ -3,8 +3,13 @@ import "./DoctorPage.css";
 import { useAppSelector } from "../../app/hooks";
 import { selectUserData, selectUserRole } from "../../features/UserSlice";
 import TopPanel from "./components/TopPanel";
+import OnikBot from "../../components/OnikBot";
 
-const DoctorPage = () => {
+interface CahtProp {
+  showChatbot?: boolean;
+}
+
+const DoctorPage: React.FC<CahtProp> = ({ showChatbot = false }) => {
   const user = useAppSelector(selectUserData);
   const userRole = useAppSelector(selectUserRole);
 
@@ -18,14 +23,17 @@ const DoctorPage = () => {
   }
 
   return (
-    <div className="doctorPage-container">
-      <div className="doctorPage-content">
-        <TopPanel />
-        <div className="doctorPage-main">
-          <Outlet />
+    <>
+      {showChatbot && <OnikBot />}
+      <div className="doctorPage-container">
+        <div className="doctorPage-content">
+          <TopPanel />
+          <div className="doctorPage-main">
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

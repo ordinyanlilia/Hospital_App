@@ -92,9 +92,7 @@ export const router = createBrowserRouter([
   {
     path: DOCTOR_PAGE,
     element: (
-      <Layout showChatbot={false}>
-        <DoctorPage />
-      </Layout>
+        <DoctorPage showChatbot={false}/>
     ),
     children: [
       { index: true, element: <Navigate to={DOCTOR_APPOINTMENTS} replace /> },
