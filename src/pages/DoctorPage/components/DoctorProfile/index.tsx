@@ -11,6 +11,7 @@ import { type Doctor } from "../../../../features/DoctorSlice";
 import { updateData } from "../../../../services/apiService";
 import { useTranslate } from "../../../../context/TranslationProvider";
 import ImgUploader from "../../../Profile/components/ImgUploader";
+import userImage from "../../Icons/user.png"
 
 const DoctorProfile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +24,6 @@ const DoctorProfile: React.FC = () => {
   const userRole = useAppSelector(selectUserRole);
   const userToken = useAppSelector(selectUserToken);
 
-  // Only allow editing if userRole is "doctor"
   const doctor = userRole === "doctor" ? (user as Doctor) : null;
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const DoctorProfile: React.FC = () => {
               <div className="forms-content" key={doctor.doc_id}>
                 <div className="form-container-image-email">
                   <div className="form-container-image">
-                    <img src={doctor.photoUrl} alt="Doctor" />
+                    <img src={doctor.photoUrl ? (doctor.photoUrl) : userImage} />
                   </div>
                   <div className="form-container-email">
                     <span>{doctor.email}</span>

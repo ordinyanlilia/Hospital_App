@@ -1,8 +1,7 @@
 import { useTranslate } from "../../../../../../context/TranslationProvider";
 import "./FilterBar.css";
 import { Input, Select } from "antd";
-import { transliterate as tr } from 'transliteration';
-
+import { transliterate as tr } from "transliteration";
 
 const { Search } = Input;
 
@@ -43,10 +42,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
             placeholder={translate("all")}
             onChange={(value) => setStatusFilter(value)}
             options={[
-              { value: "All", label: translate("all") },
-              { value: "upcoming", label: translate("upcoming") },
-              { value: "visited", label: translate("visited")},
-              { value: "scheduled", label: translate("scheduled") },
+              { value: "All", label: "All" },
+              { value: "visited", label: "Visited" },
+              { value: "scheduled", label: "Scheduled" },
+              { value: "cancelled", label: "Cancelled" }
             ]}
           />
         </div>
