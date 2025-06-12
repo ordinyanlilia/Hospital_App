@@ -12,6 +12,7 @@ const AboutSection = () => {
     navigate(ABOUT);
   };
   const { darkMode } = useTheme();
+
   return (
     <div className={`about-section ${darkMode ? "dark" : "light"}`}>
       <Row

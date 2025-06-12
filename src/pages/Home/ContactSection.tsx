@@ -1,12 +1,15 @@
-import { Form, Input, Button, Typography, Row, Col } from "antd";
+import { Button, Typography, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CONTACT_US } from "../../routes/paths";
 import contactusImage from "../../assets/contactus-image.jpg";
 import "./ContactSection.css";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 
 const ContactSection = () => {
   const navigate = useNavigate();
+  const { translate } = useTranslate();
+
   const handleContactUs = () => {
     navigate(CONTACT_US);
   };
@@ -23,15 +26,13 @@ const ContactSection = () => {
         </Col>
         <Col xs={24} md={12}>
           <Typography.Title level={2} className="contact-title">
-            Contact Us
+            {translate("contactUs")}
           </Typography.Title>
           <Typography.Paragraph className="contact-text">
-            Our contact details are available in the Contact Us section. Click
-            "Show More" to learn how to get in touch with us. We appreciate
-            every call and message from our users.
+            {translate("contactSectionText")}
           </Typography.Paragraph>
           <Button className="contactsection-button" onClick={handleContactUs}>
-            Show More
+            {translate("showMore")}
           </Button>
         </Col>
       </Row>

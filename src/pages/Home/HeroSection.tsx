@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { BOOK_APPOINTMENT } from "../../routes/paths";
 import "./HeroSection.css";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const { translate } = useTranslate();
+
   const handleBookAppointments = () => {
     navigate(BOOK_APPOINTMENT);
   };
@@ -27,14 +30,10 @@ const HeroSection = () => {
         {/*Welcome to HealthCare*/}
         {/*</Typography.Title>*/}
         <Typography.Paragraph className="herosection-text">
-          Experience world-class care for everyone. Our expert team of
-          compassionate doctors, supported by state-of-the-art facilities, is
-          dedicated to providing you with the best healthcare experience
-          possible. To get started, simply click the button below to easily book
-          your appointment and take the first step toward better health.
+          {translate("heroDescription")}
         </Typography.Paragraph>
         <Button className="herosection-button" onClick={handleBookAppointments}>
-          Book Appointment
+          {translate("bookAppointment")}
         </Button>
       </Col>
 

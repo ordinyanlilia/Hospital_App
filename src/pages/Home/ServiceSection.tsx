@@ -4,34 +4,34 @@ import CardiologyImage from "../../assets/cardiology-image.jpg";
 import OrthopedicsImage from "../../assets/orthopedic-image.jpg";
 import "./ServiceSection.css";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 
-const services = [
-  {
-    title: "Emergency",
-    img: EmergencyImage,
-    description:
-      "Our Emergency specialists provide rapid, expert care for urgent medical conditions, available 24/7 to save lives.",
-  },
-  {
-    title: "Cardiology",
-    img: CardiologyImage,
-    description:
-      "Our Cardiology experts offer advanced heart care, focusing on diagnosis, treatment, and prevention of cardiovascular diseases.",
-  },
-  {
-    title: "Orthopedics",
-    img: OrthopedicsImage,
-    description:
-      "Our Orthopedics team delivers personalized treatment for bone, joint, and muscle disorders to restore your mobility and comfort.",
-  },
-];
+
 
 const ServicesSection = () => {
+  const { translate } = useTranslate();
   const { darkMode } = useTheme();
+  const services = [
+  {
+    title: translate("emergencyTitle"),
+    img: EmergencyImage,
+    description: translate("emergencyDescription"),
+    },
+  {
+    title:translate("cardiology"),
+    img: CardiologyImage,
+    description: translate("cardiologyDesc"),
+  },
+  {
+    title: translate("orthopedics"),
+    img: OrthopedicsImage,
+    description: translate("orthopedicsDesc"),
+  },
+];
   return (
     <div className={`services-section ${darkMode ? "dark" : "light"}`}>
       <Typography.Title level={2} className="services-title">
-        Our Services
+        {translate("ourServices")}
       </Typography.Title>
 
       <Row gutter={[24, 24]} justify="center">
