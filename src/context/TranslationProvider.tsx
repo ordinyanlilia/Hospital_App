@@ -130,6 +130,9 @@ const LANGUAGES = {
     selectDay: "Ընտրեք օր",
     selectTime: "Ընտրեք Ժամանակը",
     submit: "Ներկայացնել",
+    login: "Մուտք գործել",
+    writeBio: "Գրեք կարճ կենսագրություն:",
+    seeDescription: "Տես նկարագրությունը",
   },
   rus: {
     hi: "привет",
@@ -260,6 +263,9 @@ const LANGUAGES = {
     selectDay: "Выберите день",
     selectTime: "Выберите время",
     submit: "Отправить",
+    login: "Авторизоваться",
+    writeBio: "Напишите краткую биографию.",
+    seeDescription: "Смотреть описание",
   },
   eng: {
     hi: "hi",
@@ -390,6 +396,9 @@ const LANGUAGES = {
     selectDay: "Select Day",
     selectTime: "Select Time",
     submit: "Submit",
+    login: "Login",
+    writeBio: "Write a short bio.",
+    seeDescription: "See Description",
   },
 } as const;
 

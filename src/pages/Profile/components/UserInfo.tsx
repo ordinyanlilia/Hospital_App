@@ -1,7 +1,6 @@
 import {Avatar, Button, Col, Descriptions, List, message, Modal, Row, Space, Spin, Typography,} from "antd";
 import {MailOutlined, PhoneOutlined, UserOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
-<<<<<<< feature/language-setup
 import type { MouseEventHandler } from "react";
 import { useAppSelector } from "../../../app/hooks.ts";
 import {
@@ -12,129 +11,16 @@ import {
 import { useTheme } from "../../../context/theme-context.tsx";
 import { useTranslate } from "../../../context/TranslationProvider.tsx";
 const { Text } = Typography;
-=======
-import type {MouseEventHandler} from "react";
-import {useAppSelector} from "../../../app/hooks.ts";
-import {selectPatient, selectPatientError, selectPatientStatus,} from "../../../features/PatientSlice.ts";
-import {useTheme} from "../../../context/theme-context.tsx";
 
-const {Text} = Typography;
->>>>>>> main
 
 const UserInfo = ({
                       onSetIsEditing,
                   }: {
     onSetIsEditing: MouseEventHandler<HTMLElement>;
 }) => {
-<<<<<<< feature/language-setup
-  const user = useAppSelector(selectPatient);
-  const { darkMode } = useTheme();
-  const { translate } = useTranslate();
-  const registeredDate = dayjs(user?.registeredAt).format("MMM D, YYYY");
-  const dobDate = dayjs(user?.dob).format("DD/MM/YYYY");
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const status = useAppSelector(selectPatientStatus);
-  const error = useAppSelector(selectPatientError);
-  if (status === "loading") {
-    return <Spin fullscreen>{translate("loading")}</Spin>;
-  } else if (status === "error") {
-    messageApi.open({
-      type: "error",
-      content: `${error}`,
-    });
-  }
-
-  return (
-    <Row
-      gutter={[16, 16]}
-      className={"profile"}
-      style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
-    >
-      {contextHolder}
-      <Col span={8}>
-        <div className="profile-main-info">
-          {!!user?.imageUrl && (
-            <img src={user?.imageUrl} alt="profile picture" />
-          )}
-          {!user?.imageUrl && (
-            <Avatar
-              size={104}
-              style={{ backgroundColor: "rgba(96,150,186,0.75)" }}
-              icon={
-                <UserOutlined style={{ fontSize: "30px", color: "#fffefe" }} />
-              }
-            />
-          )}
-          <h3>
-            {user?.name} {user?.surname}
-          </h3>
-          <p>
-            <PhoneOutlined />
-            {user?.phoneNumber}
-          </p>
-          <p>
-            <MailOutlined />
-            {user?.email}
-          </p>
-          <Space direction="vertical">
-            <Text type="secondary" strong>
-              {translate("registeredAt")}{registeredDate}
-            </Text>
-            <Button onClick={onSetIsEditing}>{translate("editProfile")}</Button>
-          </Space>
-        </div>
-      </Col>
-      <Col span={8}>
-        <div className="profile-details">
-          <Text type="secondary" strong>
-            {translate("gender")}
-          </Text>
-          <p>{user?.gender}</p>
-          <Text type="secondary" strong>
-            {translate("dateOfBirth")}
-          </Text>
-          <p>{dobDate}</p>
-          <Text type="secondary" strong>
-            {translate("bloodType")}
-          </Text>
-          <p>{user?.bloodType}</p>
-          <Text type="secondary" strong>
-            {translate("allergies")}
-          </Text>
-          <List
-            size="small"
-            itemLayout={"horizontal"}
-            dataSource={user?.allergies}
-            renderItem={(item: string) => <List.Item>{item}</List.Item>}
-          />
-        </div>
-      </Col>
-      <Col span={6}>
-        <div className="profile-history">
-          <Text type="secondary" strong>
-            {translate("medHistory")}
-          </Text>
-          <List
-            size="small"
-            dataSource={user?.medicalHistory}
-            renderItem={(item: string) => <List.Item>{item}</List.Item>}
-          />
-          <Text type="secondary" strong>
-            {translate("currentMed")}
-          </Text>
-          <List
-            size="small"
-            dataSource={user?.currentMedications}
-            renderItem={(item: string) => <List.Item>{item}</List.Item>}
-          />
-        </div>
-      </Col>
-    </Row>
-  );
-=======
     const user = useAppSelector(selectPatient);
     const {darkMode} = useTheme();
+    const { translate } = useTranslate();
     const registeredDate = dayjs(user?.registeredAt).format("MMM D, YYYY");
     const dobDate = dayjs(user?.dob).format("DD/MM/YYYY");
     const [messageApi, contextHolder] = message.useMessage();
@@ -144,7 +30,7 @@ const UserInfo = ({
     const status = useAppSelector(selectPatientStatus);
     const error = useAppSelector(selectPatientError);
     if (status === "loading") {
-        return <Spin fullscreen>Loading</Spin>;
+        return <Spin fullscreen>{translate("loading")}</Spin>;
     } else if (status === "error") {
         messageApi.open({
             type: "error",
@@ -198,41 +84,33 @@ const UserInfo = ({
                     </p>
                     <Space direction="vertical">
                         <Text type="secondary" strong>
-                            Registered At:{registeredDate}
+                          {translate("registeredAt")} {registeredDate}
                         </Text>
-                        <Button onClick={onSetIsEditing}>Edit Profile</Button>
+                        <Button onClick={onSetIsEditing}>{translate("editProfile")}</Button>
                     </Space>
                 </div>
             </Col>
             <Col span={8} xs={24} sm={12} md={12} xl={8} lg={12}>
                 <div className="profile-details">
                     <Text type="secondary" strong>
-                        Gender
+                        {translate("gender")}
                     </Text>
                     <p>{user?.gender}</p>
                     <Text type="secondary" strong>
-                        Date of Birth
+                        {translate("dateOfBirth")}
                     </Text>
                     <p>{dobDate}</p>
                     <Text type="secondary" strong>
-                        Blood
+                        {translate("bloodType")}
                     </Text>
                     <p>{user?.bloodType}</p>
                     <Text type="secondary" strong>
-                        Allergies
+                        {translate("allergies")}
                     </Text>
                     <List
                         size="small"
                         itemLayout={"horizontal"}
                         dataSource={user?.allergies}
-                        renderItem={(item: string) => <List.Item>{item}</List.Item>}
-                    />
-                    <Text type="secondary" strong>
-                        Medical History
-                    </Text>
-                    <List
-                        size="small"
-                        dataSource={user?.medicalHistory}
                         renderItem={(item: string) => <List.Item>{item}</List.Item>}
                     />
                 </div>
@@ -242,7 +120,7 @@ const UserInfo = ({
                     {user?.currentMedications && (
                         <>
                             <Text type="secondary" strong>
-                                Current Medications
+                              {translate("currentMed")}
                             </Text>
                             <Descriptions
                                 bordered
@@ -258,7 +136,7 @@ const UserInfo = ({
                                                 className='profile-history-button'
                                                 onClick={() => handleSeeDescription(item.medication, item.description)}
                                             >
-                                                See Description
+                                                {translate("seeDescription")} 
                                             </Button>
                                         </div>
                                     ),
@@ -269,7 +147,6 @@ const UserInfo = ({
             </Col>
         </Row>
     );
->>>>>>> main
 };
 
 export default UserInfo;

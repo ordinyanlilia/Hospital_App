@@ -8,7 +8,7 @@ import {
   DOCTOR_PAGE,
   LOGIN,
 } from "../routes/paths";
-import { Layout, Menu, Switch } from "antd";
+import { Layout, Menu, Switch, Select } from "antd";
 import {
   HomeOutlined,
   UserOutlined,
@@ -20,25 +20,19 @@ import {
 } from "@ant-design/icons";
 import { useTheme } from "../context/theme-context";
 import "./Header.css";
-<<<<<<< feature/language-setup
-import { Select } from "antd";
 import { useTranslate } from "../context/TranslationProvider";
-=======
 import { useAppSelector } from "../app/hooks";
 import {
   selectUserData,
   selectUserRole,
   selectUserStatus,
 } from "../features/UserSlice";
->>>>>>> main
 
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const { darkMode, toggleTheme } = useTheme();
-<<<<<<< feature/language-setup
   const { language, changeLanguage, translate } = useTranslate();
-=======
   const location = useLocation();
   const userData = useAppSelector(selectUserData);
   const userRole = useAppSelector(selectUserRole);
@@ -67,7 +61,6 @@ const HeaderComponent = () => {
 
     return "";
   };
->>>>>>> main
 
   const menuItems = [
     {
@@ -93,15 +86,11 @@ const HeaderComponent = () => {
     {
       key: "profile",
       icon: <UserOutlined />,
-<<<<<<< feature/language-setup
-      label: <NavLink to={PROFILE}>{translate("profile")}</NavLink>,
-=======
       label: (
         <NavLink to={profileLink}>
-          {isLoggedIn ? "Your Profile" : "Login"}
+          {isLoggedIn ? translate("profile") : translate("login") }
         </NavLink>
       ),
->>>>>>> main
     },
   ];
 
