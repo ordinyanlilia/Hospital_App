@@ -36,7 +36,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             onChange={(value) => setStatusFilter(value)}
             options={[
               { value: "All", label: "All" },
-              { value: "upcoming", label: "Upcoming" },
+              { value: "cancelled", label: "Cancelled" },
               { value: "visited", label: "Visited" },
               { value: "scheduled", label: "Scheduled" },
             ]}
