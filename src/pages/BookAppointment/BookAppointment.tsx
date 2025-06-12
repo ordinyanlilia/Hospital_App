@@ -95,9 +95,18 @@ const BookAppointment = () => {
 
   useEffect(() => {
     setFilteredDoctors(doctors);
-    setSelectedDoctor(
-      doctors.find((doc) => doc.id === selectedDoctorInitialId) || null
+
+    const doctorIndex = doctors.findIndex(
+      (doc) => doc.id === selectedDoctorInitialId
     );
+
+    if (doctorIndex !== -1) {
+      const page = Math.floor(doctorIndex / inPageCount) + 1;
+      setCurrent(page);
+      setSelectedDoctor(doctors[doctorIndex]);
+    } else {
+      setSelectedDoctor(null);
+    }
   }, [doctors]);
 
   function getTimeInterval(start: number, end: number, interval: number = 15) {
