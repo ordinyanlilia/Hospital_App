@@ -19,10 +19,12 @@ import { setData } from "../../services/apiService";
 import { setEmailVerified } from "../../features/UserSlice";
 import loginImage from "../../assets/login-image.jpg";
 import { useTheme } from "../../context/theme-context.tsx";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
 const { Option } = Select;
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { translate } = useTranslate();
   const dispatch = useAppDispatch();
   const patientStatus = useAppSelector(selectPatientStatus);
   const doctorStatus = useAppSelector(selectDoctorStatus);
@@ -130,7 +132,7 @@ const Signup = () => {
             alt="Digital illustration"
             className="signup-image"
           />
-          <h2>Create your digital health account</h2>
+          <h2>{translate("createAccountTitle")}</h2>
         </div>
         <div
           style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
@@ -148,7 +150,7 @@ const Signup = () => {
                 onClick={() => setSelectedRole("patient")}
                 style={{ width: 250, cursor: "pointer" }}
               >
-                Manage your records and appointments.
+                {translate("patientCardText")}
               </Card>
               <Card
                 title="Sign up as Doctor"
@@ -156,7 +158,7 @@ const Signup = () => {
                 onClick={() => setSelectedRole("doctor")}
                 style={{ width: 250, cursor: "pointer" }}
               >
-                Manage patients and schedules.
+                {translate("doctorCardText")}
               </Card>
             </Space>
           ) : (
@@ -170,7 +172,7 @@ const Signup = () => {
             >
               <Form.Item
                 name="name"
-                label="First Name"
+                label= {translate("firstName")}
                 rules={[{ required: true }]}
               >
                 <Input />
@@ -178,7 +180,7 @@ const Signup = () => {
 
               <Form.Item
                 name="surname"
-                label="Last Name"
+                label= {translate("lastName")}
                 rules={[{ required: true }]}
               >
                 <Input />
@@ -188,11 +190,11 @@ const Signup = () => {
                 <>
                   <Form.Item
                     name="dob"
-                    label="Date of Birth"
+                    label={translate("dateOfBirth")}
                     rules={[
                       {
                         required: true,
-                        message: "Please select your date of birth",
+                        message: translate("dobMessage")
                       },
                     ]}
                   >
@@ -200,7 +202,7 @@ const Signup = () => {
                   </Form.Item>
                   <Form.Item
                     name="phoneNumber"
-                    label="Phone Number"
+                    label={translate("phoneNumber")}
                     rules={[{ required: true }]}
                   >
                     <Input />
@@ -212,14 +214,14 @@ const Signup = () => {
                 <>
                   <Form.Item
                     name="specialty"
-                    label="Specialty"
+                    label={translate("specialty")}
                     rules={[{ required: true }]}
                   >
                     <Input />
                   </Form.Item>
                   <Form.Item
                     name="yearsOfExperience"
-                    label="Years of Experience"
+                    label={translate("yearsExperience")}
                     rules={[{ required: true }]}
                   >
                     <Input type="number" />
@@ -229,19 +231,19 @@ const Signup = () => {
 
               <Form.Item
                 name="gender"
-                label="Gender"
+                label={translate("gender")}
                 rules={[{ required: true }]}
               >
                 <Select placeholder="Select gender">
-                  <Option value="male">Male</Option>
-                  <Option value="female">Female</Option>
-                  <Option value="other">Other</Option>
+                  <Option value="male">{translate("male")}</Option>
+                  <Option value="female">{translate("female")}</Option>
+                  <Option value="other">{translate("other")}</Option>
                 </Select>
               </Form.Item>
 
               <Form.Item
                 name="email"
-                label="Email"
+                label={translate("mail")}
                 rules={[{ required: true, type: "email" }]}
               >
                 <Input />
@@ -249,7 +251,7 @@ const Signup = () => {
 
               <Form.Item
                 name="password"
-                label="Password"
+                label={translate("password")}
                 rules={[{ required: true, min: 6 }]}
               >
                 <Input.Password />
@@ -258,14 +260,14 @@ const Signup = () => {
               <Form.Item>
                 <Space>
                   <Button type="primary" htmlType="submit">
-                    Submit
+                    {translate("submit")}
                   </Button>
-                  <Button onClick={() => setSelectedRole(null)}>Back</Button>
+                  <Button onClick={() => setSelectedRole(null)}>{translate("back")}</Button>
                 </Space>
               </Form.Item>
 
               <div style={{ marginTop: "1rem", textAlign: "center" }}>
-                Already have an account? <Link to="/login">Login</Link>
+                {translate("haveAccount")} <Link to="/login">{translate("login")}</Link>
               </div>
             </Form>
           )}

@@ -230,7 +230,7 @@ return (
                         {translate("addAllergy")}
                     </Button>
                         <Text type="secondary" strong className={"blue-text"}>
-                  Medical History
+                  {translate("medHistory")}
                 </Text>
                 <List
                   dataSource={formData.medicalHistory}
@@ -262,7 +262,7 @@ return (
                   )}
                 />
                 <Button onClick={() => handleAddListItem("medicalHistory")}>
-                  Add your Medical History
+                  {translate("addMedHistory")}
                 </Button>
                 </div>
             </Col>

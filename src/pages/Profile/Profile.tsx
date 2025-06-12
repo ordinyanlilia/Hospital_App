@@ -59,7 +59,7 @@ return (
       </Divider>
       {!!appointments?.length && <AppointmentsTable />}
       {!appointments?.length && (
-        <Alert message="You Don't have appointments yet" type="info" />
+        <Alert message={translate("alertMessage")} type="info" />
       )}
     </>
   );

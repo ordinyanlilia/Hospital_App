@@ -2,9 +2,12 @@ import { Card, Row, Col } from "antd";
 import "./About.css";
 import { motion } from "framer-motion";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 
 const About = () => {
   const { darkMode } = useTheme();
+  const { translate } = useTranslate();
+
   return (
     <>
       <div className={`about-container ${darkMode ? "dark" : "light"}`}>
@@ -33,9 +36,7 @@ const About = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.5 }}
                   >
-                    Our experienced doctors are always ready to help you. We
-                    provide high-quality medical services with care and
-                    professionalism.
+                    {translate("aboutDoctorsText")}
                   </motion.p>{" "}
                 </Col>
               </Row>
@@ -51,14 +52,14 @@ const About = () => {
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ duration: 1 }}
             >
-              Our Values
+              {translate("ourValues")}
             </motion.h1>
             <motion.p
               initial={{ x: -100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ duration: 1 }}
             >
-              Patient-centered care with compassion and professionalism
+              {translate("valuesText")}
             </motion.p>
           </Col>
         </Row>
@@ -76,7 +77,7 @@ const About = () => {
               alt="heart"
               className="card-icon"
             />
-            <p>Predominance of visitor</p>
+            <p>{translate("value1")}</p>
           </Card>
         </motion.div>
         <motion.div whileHover={{ scale: 1.25 }}>
@@ -86,7 +87,7 @@ const About = () => {
               alt="Dignity Icon"
               className="card-icon"
             />
-            <p>Staff dignity</p>
+            <p>{translate("value2")}</p>
           </Card>
         </motion.div>
         <motion.div whileHover={{ scale: 1.25 }}>
@@ -96,7 +97,7 @@ const About = () => {
               alt="Integrity Icon"
               className="card-icon"
             />
-            <p>Integrity of staff</p>
+            <p>{translate("value3")}</p>
           </Card>
         </motion.div>
       </motion.div>
@@ -119,12 +120,7 @@ const About = () => {
                   >
                     <h1>Our Story</h1>
                     <p className="about-text-2">
-                      For 19 years now, we have been providing people with the
-                      medical services they need, combining professionalism and
-                      modern technology. What makes us different?
-                      Professionalism and experience: our doctors are constantly
-                      improving their qualifications, following the latest
-                      trends in medicine.
+                      {translate("ourStoryText")}                      
                     </p>
                   </motion.div>
                 </Col>

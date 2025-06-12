@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { ABOUT } from "../../routes/paths";
 import "./AboutSection.css";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
 const { Title, Paragraph } = Typography;
 
 const AboutSection = () => {
   const navigate = useNavigate();
+  const { translate } = useTranslate();
   const handleAbout = () => {
     navigate(ABOUT);
   };
@@ -26,16 +28,13 @@ const AboutSection = () => {
         </Col>
         <Col xs={24} md={12}>
           <Title level={2} className="about-title">
-            About HealthCare
+            {translate("aboutHealthcare")}
           </Title>
           <Paragraph className="about-text">
-            HealthCare is committed to providing easy access to quality medical
-            services through innovative technology. Our platform connects you
-            with expert doctors and personalized care, making healthcare simple
-            and reliable. We put your health first, every step of the way.
+            {translate("aboutHealthInfo")}
           </Paragraph>
           <Button className="aboutsection-button" onClick={handleAbout}>
-            Show More
+            {translate("showMore")}
           </Button>
         </Col>
       </Row>

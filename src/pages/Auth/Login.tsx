@@ -12,10 +12,12 @@ import { auth } from "../../services/apiService";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import loginImage from "../../assets/login-image.jpg";
 import { useTheme } from "../../context/theme-context.tsx";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { translate } = useTranslate();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const hasNavigated = useRef(false);
@@ -28,7 +30,7 @@ const Login: React.FC = () => {
     if (signupSuccess && !hasNavigated.current) {
       messageApi.open({
         type: "success",
-        content: "Sign up successful! You can now log in.",
+        content: translate("successSigned"),
       });
       hasNavigated.current = true;
       navigate(location.pathname, { replace: true, state: {} });
@@ -94,7 +96,7 @@ const Login: React.FC = () => {
               alt="Digital illustration"
               className="login-image"
             />
-            <h2>One click to go all digital.</h2>
+            <h2>{translate("oneClick")}</h2>
           </div>
           <div
             style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
@@ -110,14 +112,14 @@ const Login: React.FC = () => {
             >
               <Form.Item
                 name="email"
-                label="Email"
+                label= {translate("mail")}
                 rules={[{ required: true, type: "email" }]}
               >
                 <Input size="middle" />
               </Form.Item>
               <Form.Item
                 name="password"
-                label="Password"
+                label={translate("password")}
                 rules={[{ required: true }]}
               >
                 <Input.Password size="middle" />
@@ -125,12 +127,12 @@ const Login: React.FC = () => {
               {error && <p style={{ color: "red" }}>{error}</p>}
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>
-                  Log In
+                  {translate("login")}
                 </Button>
               </Form.Item>
               <Form.Item>
                 <Button type="primary" onClick={() => navigate(SIGNUP)} block>
-                  Sign Up
+                  {translate("signUp")}
                 </Button>
               </Form.Item>
             </Form>
