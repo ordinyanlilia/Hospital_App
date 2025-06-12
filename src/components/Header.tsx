@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   HOME_PAGE,
   ABOUT,
@@ -33,7 +33,6 @@ const { Header } = Layout;
 const HeaderComponent = () => {
   const { darkMode, toggleTheme } = useTheme();
   const { language, changeLanguage, translate } = useTranslate();
-  const location = useLocation();
   const userData = useAppSelector(selectUserData);
   const userRole = useAppSelector(selectUserRole);
   const userStatus = useAppSelector(selectUserStatus);
@@ -49,18 +48,18 @@ const HeaderComponent = () => {
     profileLink = LOGIN;
   }
 
-  const getSelectedKey = () => {
-    const path = location.pathname.toLowerCase();
+  // const getSelectedKey = () => {
+  //   const path = location.pathname.toLowerCase();
 
-    if (path === HOME_PAGE.toLowerCase() || path === "/") return "home";
-    if (path.startsWith(ABOUT.toLowerCase())) return "about";
-    if (path.startsWith(FIND_DOCTOR.toLowerCase())) return "find-doctor";
-    if (path.startsWith(CONTACT_US.toLowerCase())) return "contact";
-    if (path.startsWith(PROFILE.toLowerCase())) return "profile";
-    if (path.startsWith(LOGIN.toLowerCase())) return "profile";
+  //   if (path === HOME_PAGE.toLowerCase() || path === "/") return "home";
+  //   if (path.startsWith(ABOUT.toLowerCase())) return "about";
+  //   if (path.startsWith(FIND_DOCTOR.toLowerCase())) return "find-doctor";
+  //   if (path.startsWith(CONTACT_US.toLowerCase())) return "contact";
+  //   if (path.startsWith(PROFILE.toLowerCase())) return "profile";
+  //   if (path.startsWith(LOGIN.toLowerCase())) return "profile";
 
-    return "";
-  };
+  //   return "";
+  // };
 
   const menuItems = [
     {
@@ -153,7 +152,7 @@ const HeaderComponent = () => {
             { value: "rus", label: "RUS 🇷🇺" },
           ]}
         />
-      </div>  
+      </div>
     </Header>
   );
 };

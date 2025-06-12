@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import { selectUserData } from "../../features/UserSlice";
-import { LOGIN } from "../../routes/paths";
 
 type PrivateRouteProps = {
   children: React.ReactNode;

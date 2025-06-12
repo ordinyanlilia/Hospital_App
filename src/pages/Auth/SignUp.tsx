@@ -66,7 +66,7 @@ const Signup = () => {
       );
       const firebaseUser = userCredential.user;
       const firebaseUID = firebaseUser.uid;
-      const token = await firebaseUser.getIdToken();
+      await firebaseUser.getIdToken();
 
       await sendEmailVerification(firebaseUser)
         .then(() => {
