@@ -54,18 +54,36 @@ export default function MedicalChat({ messages, setMessages }: Props) {
 
       const result = await response.json();
       console.log('Gemini Response:', result);
+      
+if (result.error) {
+  console.error('Gemini API Error:', result.error);
 
-      let botReply = translate('bot_error');
+  let errorMessage = "Oops! Something went wrong. Please try again later.";
 
-      const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) {
-        botReply = text.replace(/[*_`#>\-]/g, "").trim(); // Optional: strip Markdown
-      } else {
-        console.error('Unexpected Gemini structure:', result);
-      }
+  if (result.error.status === 'UNAVAILABLE') {
+    errorMessage = "The AI is currently overloaded. Please try again in a few moments.";
+  }
 
-      const geminiMessage: MessageType = { text: botReply, sender: 'bot' };
-      setMessages(prev => [...prev, geminiMessage]);
+  setMessages(prev => [
+    ...prev,
+    { text: errorMessage, sender: 'bot' }
+  ]);
+
+} else {
+  const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const cleaned = text?.replace(/[*_`#>\-]/g, "").trim();
+
+  if (cleaned) {
+    const geminiMessage: MessageType = { text: cleaned, sender: 'bot' };
+    setMessages(prev => [...prev, geminiMessage]);
+  } else {
+    console.warn('Bot reply was empty, skipping message.');
+    setMessages(prev => [
+      ...prev,
+      { text: "Sorry, I didn't understand that. Could you rephrase?", sender: 'bot' }
+    ]);
+  }
+}
 
     } catch (err) {
       console.error('API Error:', err);
