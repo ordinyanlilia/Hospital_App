@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, fetchData } from "../../services/apiService.ts";
 import { useAppDispatch } from "../../app/hooks.ts";
-import { setUser, clearUser } from "../../features/UserSlice.ts";
+import { setUser, clearUser, setEmailVerified } from "../../features/UserSlice.ts";
 import { setPatient, type Patient } from "../../features/PatientSlice.ts";
 import { type Doctor } from "../../features/DoctorSlice.ts";
 import { Spin } from "antd";
@@ -19,18 +19,20 @@ const AuthLoader = ({ children }: Props) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
 
-      if (!user) {
-        localStorage.removeItem("authToken");
-        dispatch(clearUser());
-        dispatch(resetStatus());
-        setLoading(false);
-        return;
-      }
+    if (!user) {
+      localStorage.removeItem("authToken");
+      dispatch(clearUser());
+      dispatch(setEmailVerified(false));
+      dispatch(resetStatus());
+      setLoading(false);
+      return;
+    }
 
 
       try {
         const token = await user.getIdToken(true); 
         localStorage.setItem("authToken", token);
+        dispatch(setEmailVerified(user.emailVerified));
 
         const [patients, doctors] = await Promise.all([
           fetchData<Patient>("patients"),
