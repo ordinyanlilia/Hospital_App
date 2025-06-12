@@ -6,7 +6,7 @@ import { useTranslate } from '../context/TranslationProvider';
 
 
 export default function OnikBot() {
-  
+
   const { translate } = useTranslate();
   const [opened, setOpened] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -50,7 +50,7 @@ export default function OnikBot() {
       ...prev,
       { text: question, sender: 'user' },
       { text: answer, sender: 'bot' }
-   
+
     ]);
     setView('medicalChat');
   };
@@ -59,9 +59,6 @@ export default function OnikBot() {
     setView('medicalChat');
   };
 
-  const handleBackToFaq = (): void => {
-    setView('faq');
-  };
 
   return (
     <div className="onik-bot-widget">
@@ -94,7 +91,6 @@ export default function OnikBot() {
               <MedicalChat
                 messages={messages}
                 setMessages={setMessages}
-                onBack={handleBackToFaq}
               />
             </div>
           )}
