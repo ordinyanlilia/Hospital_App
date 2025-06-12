@@ -1,14 +1,8 @@
 import "./Footer.css";
-import { Button, Row, Col } from "antd";
-import {BOOK_APPOINTMENT} from "../routes/paths.ts";
-import {useNavigate} from "react-router-dom";
+import { Row, Col } from "antd";
 import { useTranslate } from "../context/TranslationProvider";
 
 export const Footer = () => {
-  const navigate = useNavigate();
-  const handleBookAppointment = () => {
-    navigate(BOOK_APPOINTMENT);
-  }
   const { translate } = useTranslate();
 
   return (
@@ -29,7 +23,6 @@ export const Footer = () => {
               <div className="footer-text">
                 <p className="footer-heading">{translate("lookingFor")}</p>
                 <p className="footer-subtext">{translate("dontHesitate")}</p>
-                <Button className="footer-button" onClick={handleBookAppointment}>{translate("makeAppointment")}</Button>
               </div>{" "}
             </Col>
           </Row>
