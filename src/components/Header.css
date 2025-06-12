@@ -28,3 +28,9 @@
   white-space: nowrap !important;
   font-weight: normal !important;
 }
+
+@media (max-width: 768px) {
+  main{
+    padding: 10px !important;
+  }
+}

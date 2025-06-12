@@ -51,7 +51,7 @@ const UserInfo = ({
         >
             {contextHolder}
             {contextHolder1}
-            <Col span={8}>
+            <Col span={8} xs={24} sm={12} md={12} xl={8} lg={12}>
                 <div className="profile-main-info">
                     {!!user?.imageUrl && (
                         <img src={user?.imageUrl} alt="profile picture"/>
@@ -84,7 +84,7 @@ const UserInfo = ({
                     </Space>
                 </div>
             </Col>
-            <Col span={8}>
+            <Col span={8} xs={24} sm={12} md={12} xl={8} lg={12}>
                 <div className="profile-details">
                     <Text type="secondary" strong>
                         Gender
@@ -117,7 +117,7 @@ const UserInfo = ({
                     />
                 </div>
             </Col>
-            <Col span={8}>
+            <Col span={8} xs={24} sm={12} md={11} xl={8} lg={10}>
                 <div className="profile-history">
                     {user?.currentMedications && (
                         <>
@@ -126,16 +126,16 @@ const UserInfo = ({
                             </Text>
                             <Descriptions
                                 bordered
-                                column={1}
-                                style={{ marginTop: '1rem' }}
+                                style={{marginTop: '1rem'}}
                                 items={user?.currentMedications.map((item, index) => ({
                                     key: index.toString(),
                                     label: item.medication,
                                     span: 3,
                                     children: (
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                                             <Button
                                                 type="default"
+                                                className='profile-history-button'
                                                 onClick={() => handleSeeDescription(item.medication, item.description)}
                                             >
                                                 See Description

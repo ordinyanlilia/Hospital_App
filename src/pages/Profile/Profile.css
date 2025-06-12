@@ -85,24 +85,6 @@
     color: #0050b3;
 }
 
-
-
-@media (max-width: 768px) {
-    .profile {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 0.1rem;
-    }
-    .profile-main-info {
-        border-right: none;
-        border-bottom: 1px solid #eee;
-    }
-}
-
-
 .ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-container{
     width: 140px;
     height: 140px;
@@ -117,3 +99,35 @@
     width: 140px ;
     height: 140px ;
 }
+
+.profile-history-button{
+    width: 100%;
+    max-width: 200px;
+}
+
+
+@media (max-width: 768px) {
+    .profile {
+        display: flex;
+        padding: 0.1rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .profile-main-info {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .profile-details{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .profile-history-button{
+        width: auto;
+    }
+}
+
+

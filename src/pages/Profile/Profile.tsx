@@ -44,7 +44,7 @@ const Profile = () => {
                 <EditUserInfo onSetIsEditing={handleEdit}/>
             )}
             <Divider>
-                <Space>
+                <Space wrap>
                     Your Appointments
                     <Button
                         color="default"

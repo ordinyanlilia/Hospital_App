@@ -1,5 +1,5 @@
 import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography,} from "antd";
-import {DeleteTwoTone, MailOutlined, PhoneOutlined,} from "@ant-design/icons";
+import {DeleteTwoTone, PhoneOutlined,} from "@ant-design/icons";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
 import ImgUploader from "./ImgUploader.tsx";
@@ -32,6 +32,10 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
             setFormData((prev) => ({...prev, [field]: value}));
         };
 
+    const handleSelectChange = (field: string) => (value: string) => {
+        console.log(value);
+        setFormData((prev) => ({...prev, [field]: value}));
+    }
     const handleListChange = (
         field: "allergies",
         index: number,
@@ -84,7 +88,7 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
             className="profile"
             style={{background: darkMode ? "#101832" : "#f5f5f5"}}
         >
-            <Col span={12}>
+            <Col sm={12} xs={24}>
                 <Flex vertical gap={"small"}>
                     <ImgUploader
                         imageUrl={formData.imageUrl}
@@ -115,15 +119,15 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                         value={formData.phoneNumber}
                         onChange={handleChange("phoneNumber")}
                     />
-                    <Text type="secondary" strong className={"blue-text"}>
-                        Email
-                    </Text>
-                    <Input
-                        prefix={<MailOutlined/>}
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange("email")}
-                    />
+                    {/*<Text type="secondary" strong className={"blue-text"}>*/}
+                    {/*    Email*/}
+                    {/*</Text>*/}
+                    {/*<Input*/}
+                    {/*    prefix={<MailOutlined/>}*/}
+                    {/*    placeholder="Email"*/}
+                    {/*    value={formData.email}*/}
+                    {/*    onChange={handleChange("email")}*/}
+                    {/*/>*/}
                     <Space align={"center"}>
                         <Button onClick={handleSave}>Save</Button>
                         <Button
@@ -137,16 +141,14 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                 </Flex>
             </Col>
 
-            <Col span={12}>
+            <Col sm={12} xs={24}>
                 <div className="profile-details">
                     <Text type="secondary" strong className={"blue-text"}>
                         Gender
                     </Text>
                     <Select
                         value={formData.gender}
-                        onChange={(value) =>
-                            setFormData((prev) => ({...prev, gender: value}))
-                        }
+                        onChange={handleSelectChange('gender')}
                         style={{width: "100%"}}
                     >
                         <Option value="male">Male</Option>
@@ -167,11 +169,27 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                     <Text type="secondary" strong className={"blue-text"}>
                         Blood Type
                     </Text>
-                    <Input
-                        placeholder="Blood Type"
+                    <Select
+                        allowClear
                         value={formData.bloodType}
-                        onChange={handleChange("bloodType")}
-                    />
+                        onChange={handleSelectChange('bloodType')}
+                        style={{width: "100%"}}
+                        placeholder="Select Blood Type"
+                    >
+                        <Option value="A+">A+</Option>
+                        <Option value="A-">A−</Option>
+                        <Option value="B+">B+</Option>
+                        <Option value="B-">B−</Option>
+                        <Option value="AB+">AB+</Option>
+                        <Option value="AB-">AB−</Option>
+                        <Option value="O+">O+</Option>
+                        <Option value="O-">O−</Option>
+                    </Select>
+                    {/*<Input*/}
+                    {/*    placeholder="Blood Type"*/}
+                    {/*    value={formData.bloodType}*/}
+                    {/*    onChange={handleChange("bloodType")}*/}
+                    {/*/>*/}
 
                     <Text type="secondary" strong className={"blue-text"}>
                         Allergies
