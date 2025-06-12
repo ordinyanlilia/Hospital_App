@@ -11,26 +11,28 @@ import type {ColumnsType} from 'antd/es/table';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import dayjs, {type Dayjs} from "dayjs";
 import {useEffect, useRef} from "react";
+import { useTranslate } from '../../../context/TranslationProvider.tsx';
 
 const AppointmentsTable = () => {
+    const { translate } = useTranslate();
     const columns: ColumnsType<Appointment> = [
         {
-            title: 'Patient',
+            title: translate("patient"),
             dataIndex: 'patientName',
             key: 'patientName',
         },
         {
-            title: 'Doctor',
+            title: translate("doctor"),
             dataIndex: 'doctorName',
             key: 'doctorName',
         },
         {
-            title: 'Reason',
+            title: translate("reason1"),
             dataIndex: 'reason',
             key: 'reason',
         },
         {
-            title: 'Mode',
+            title: translate("mode"),
             dataIndex: 'mode',
             key: 'mode',
             filters: Object.keys(MODE_HOURS).map(key => ({
@@ -41,12 +43,12 @@ const AppointmentsTable = () => {
             render: (text: string) => text.split('_').join(' '),
         },
         {
-            title: 'Notes',
+            title: translate("notes1"),
             dataIndex: 'notes',
             key: 'notes',
         },
         {
-            title: 'Date',
+            title: translate("date"),
             dataIndex: 'startTime',
             key: 'startTime',
             filterDropdown: ({setSelectedKeys, selectedKeys, confirm}) => (
@@ -67,23 +69,23 @@ const AppointmentsTable = () => {
             render: (date: string) => dayjs(date).format('DD/MM/YYYY'),
         },
         {
-            title: 'Time',
+            title: translate("time"),
             dataIndex: 'startTime',
             key: 'startTime',
             render: (date: string) => dayjs(date).format('HH:mm'),
         },
         {
-            title: 'Status',
+            title: translate("status1"),
             dataIndex: 'status',
             key: 'status',
             width: '120px',
             filters: [
                 {
-                    text: 'Scheduled',
+                    text: translate("scheduled"),
                     value: 'scheduled',
                 },
                 {
-                    text: 'Visited',
+                    text: translate("visited"),
                     value: 'visited',
                 },
                 {
@@ -139,14 +141,14 @@ const AppointmentsTable = () => {
                 const time = date.format('HH:mm');
                 const mode = appointment.mode.split('_').join(' ');
                 api.info({
-                    message: 'Upcoming Appointment',
-                    description: `You have ${mode} appointment today at ${time}. Please be on time.`,
+                    message: translate("upcomingAppointment"),
+                    description: `${translate("youHave")} ${mode} ${translate("appointmentTodayAt")} ${time}. ${translate("beOnTime")}`,
                     duration: 0
                 });
             }
         })
         notified.current = true;
-    }, [api, appointments]);
+    }, [api, appointments, translate]);
 
     const handleCancelAppointment = async (record: Appointment) => {
         if (record?.doc_id) {

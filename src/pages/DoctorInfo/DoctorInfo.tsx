@@ -7,6 +7,7 @@ import "./DoctorInfo.css";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
 import type {Appointment} from "../../features/appointments/appointmentsSlice.ts";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
 
 
 const { Title, Paragraph } = Typography;
@@ -30,6 +31,7 @@ const DoctorInfo = () => {
   const [otherDoctors, setOtherDoctors] = useState<Doctor[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { translate } = useTranslate();
 
 
   useEffect(() => {
@@ -79,15 +81,15 @@ const getDateStatus = (date: Dayjs) => {
     switch (status) {
       case "free":
         color = "white";
-        text = "Free";
+        text = translate("free");
         break;
       case "partial":
         color = "#cceeff";
-        text = "Partially booked";
+        text = translate("partially");
         break;
       case "full":
         color = "#1890ff";
-        text = "Fully booked";
+        text = translate("fully");
         break;
     }
 
@@ -107,7 +109,7 @@ const getDateStatus = (date: Dayjs) => {
 
 
 
-  if (!doctor) return <Title level={3}>Doctor not found</Title>;
+  if (!doctor) return <Title level={3}>{translate("doctorNotFound")}</Title>;
 
   return (
     <div className="doctor-info-container">
@@ -148,50 +150,50 @@ const getDateStatus = (date: Dayjs) => {
                   Dr. {doctor.name} {doctor.surname}
                 </Title>
                 <Paragraph>
-                  <strong>Specialty:</strong> {doctor.specialty}
+                  <strong>{translate("specialty")}:</strong> {doctor.specialty}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Experience:</strong> {doctor.yearsOfExperience} years
+                  <strong>{translate("experience")}:</strong> {doctor.yearsOfExperience} {translate("years")}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Gender:</strong> {doctor.gender}
+                  <strong>{translate("gender")}:</strong> {doctor.gender}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Email:</strong> {doctor.email}
+                  <strong>{translate("mail")}:</strong> {doctor.email}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Bio:</strong> {doctor.bio}
+                  <strong>{translate("bio")}:</strong> {doctor.bio}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Working Hours:</strong>
+                  <strong>{translate("workingHours")}:</strong>
                   <br />
-                  Mon–Fri: 09:00 – 17:00 <br />
-                  Sat: 10:00 – 14:00
+                  {translate("workingTime1")} <br />
+                  {translate("workingTime2")}
                 </Paragraph>
                 <Button type="primary" onClick={() => navigate(`/book-appointment/${id}`)}>
-                    Book Appointment
+                    {translate("bookAppointment")}
                 </Button>
 
               </Col>
 
               <Col xs={24} sm={24} md={6} lg={7}>
-                <Title level={5}>Availability Calendar</Title>
+                <Title level={5}>{translate("avCalendar")}</Title>
                 <Calendar fullscreen={false} cellRender={cellRender} />
 
                 <div style={{ marginTop: "16px" }}>
-                  <Title level={5}>Availability status</Title>
+                  <Title level={5}>{translate("avStatus")}</Title>
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <div style={{ width: "16px", height: "16px", backgroundColor: "white", border: "1px solid #ccc" }} />
-                      <span>Free</span>
+                      <span>{translate("free")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <div style={{ width: "16px", height: "16px", backgroundColor: "#cceeff" }} />
-                      <span>Partially booked</span>
+                      <span>{translate("partially")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <div style={{ width: "16px", height: "16px", backgroundColor: "#1890ff" }} />
-                      <span>Fully booked</span>
+                      <span>{translate("fully")}</span>
                     </div>
                   </div>
                 </div>
@@ -202,7 +204,7 @@ const getDateStatus = (date: Dayjs) => {
       </Row>
 
       <Title level={4} className="recommended-title">
-        Other Recommended Doctors
+        {translate("recDoctors")}
       </Title>
       <Row gutter={[24, 24]} className="recommended-doctors">
         {otherDoctors.map((doc) => (

@@ -3,29 +3,35 @@ import {DeleteOutlined, DeleteTwoTone, PhoneOutlined,} from "@ant-design/icons";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
 import ImgUploader from "./ImgUploader.tsx";
-import {editPatient, type Patient, selectPatient,} from "../../../features/PatientSlice.ts";
-import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import {useTheme} from "../../../context/theme-context.tsx";
-
+import {
+  editPatient,
+  type Patient,
+  selectPatient,
+} from "../../../features/PatientSlice.ts";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks.ts";
+import { useTheme } from "../../../context/theme-context.tsx";
+import { useTranslate } from "../../../context/TranslationProvider.tsx";
 const {Text} = Typography;
 const {Option} = Select;
 
-const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
-    const user: Patient | null = useAppSelector(selectPatient);
-    const dispatch = useAppDispatch();
-    const {darkMode} = useTheme();
-    const [formData, setFormData] = useState({
-        name: user?.name || "",
-        surname: user?.surname || "",
-        phoneNumber: user?.phoneNumber || "",
-        email: user?.email || "",
-        gender: user?.gender || "",
-        dob: user?.dob || "",
-        bloodType: user?.bloodType || "",
-        allergies: user?.allergies || [],
-        imageUrl: user?.imageUrl || "",
-        medicalHistory: user?.medicalHistory || [],
-    });
+const EditUserInfo = ({ onSetIsEditing }: { onSetIsEditing: () => void }) => {
+  const user: Patient | null = useAppSelector(selectPatient);
+  const dispatch = useAppDispatch();
+  const { darkMode } = useTheme();
+  const { translate } = useTranslate();
+
+  const [formData, setFormData] = useState({
+    name: user?.name || "",
+    surname: user?.surname || "",
+    phoneNumber: user?.phoneNumber || "",
+    email: user?.email || "",
+    gender: user?.gender || "",
+    dob: user?.dob || "",
+    bloodType: user?.bloodType || "",
+    allergies: user?.allergies || [],
+    currentMedications: user?.currentMedications || [],
+    imageUrl: user?.imageUrl || "",
+  });
 
     const handleChange =
         (field: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +89,7 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
         setFormData((prev) => ({...prev, imageUrl: url}));
     };
 
-    return (
+return (
         <Row
             gutter={[16, 16]}
             className="profile"
@@ -96,27 +102,28 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                         onSetFormData={handleImageFileChange}
                     />
                     <Text type="secondary" strong className={"blue-text"}>
-                        Name
+                      {translate("name1")}
                     </Text>
                     <Input
-                        placeholder="Name"
+                        placeholder={translate("name1")}
                         value={formData.name}
                         onChange={handleChange("name")}
                     />
                     <Text type="secondary" strong className={"blue-text"}>
-                        Surname
+                        {translate("surname")}
                     </Text>
                     <Input
-                        placeholder="Surname"
+                        placeholder={translate("surname")}
                         value={formData.surname}
                         onChange={handleChange("surname")}
                     />
+                  
                     <Text type="secondary" strong className={"blue-text"}>
-                        Phone Number
+                        {translate("phoneNumber")}
                     </Text>
                     <Input
                         prefix={<PhoneOutlined/>}
-                        placeholder="Phone Number"
+                        placeholder={translate("phoneNumber")}
                         value={formData.phoneNumber}
                         onChange={handleChange("phoneNumber")}
                     />
@@ -130,13 +137,13 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                     {/*    onChange={handleChange("email")}*/}
                     {/*/>*/}
                     <Space align={"center"}>
-                        <Button onClick={handleSave}>Save</Button>
+                        <Button onClick={handleSave}>{translate("save")}</Button>
                         <Button
                             onClick={() => onSetIsEditing()}
                             danger
                             style={{marginLeft: 8}}
                         >
-                            Cancel
+                            {translate("cancel")}
                         </Button>
                     </Space>
                 </Flex>
@@ -145,20 +152,20 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
             <Col sm={12} xs={24}>
                 <div className="profile-details">
                     <Text type="secondary" strong className={"blue-text"}>
-                        Gender
+                        {translate("gender")}
                     </Text>
                     <Select
                         value={formData.gender}
                         onChange={handleSelectChange('gender')}
                         style={{width: "100%"}}
                     >
-                        <Option value="male">Male</Option>
-                        <Option value="female">Female</Option>
-                        <Option value="other">Other</Option>
+                        <Option value="male">{translate("male")}</Option>
+                        <Option value="female">{translate("female")}</Option>
+                        <Option value="other">{translate("other")}</Option>
                     </Select>
 
                     <Text type="secondary" strong className={"blue-text"}>
-                        Date of Birth
+                        {translate("dateOfBirth")}
                     </Text>
                     <DatePicker
                         value={dayjs(formData.dob, "YYYY/MM/DD")}
@@ -168,14 +175,14 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                     />
 
                     <Text type="secondary" strong className={"blue-text"}>
-                        Blood Type
+                        {translate("bloodType")}
                     </Text>
                     <Select
                         allowClear
                         value={formData.bloodType}
                         onChange={handleSelectChange('bloodType')}
                         style={{width: "100%"}}
-                        placeholder="Select Blood Type"
+                        placeholder={translate("bloodType")}
                     >
                         <Option value="A+">A+</Option>
                         <Option value="A-">A−</Option>
@@ -186,9 +193,14 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                         <Option value="O+">O+</Option>
                         <Option value="O-">O−</Option>
                     </Select>
+                    {/*<Input*/}
+                    {/*    placeholder="Blood Type"*/}
+                    {/*    value={formData.bloodType}*/}
+                    {/*    onChange={handleChange("bloodType")}*/}
+                    {/*/>*/}
 
                     <Text type="secondary" strong className={"blue-text"}>
-                        Allergies
+                        {translate("allergies")}
                     </Text>
                     <List
                         className={"edit-list"}
@@ -216,46 +228,50 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                         )}
                     />
                     <Button onClick={() => handleAddListItem("allergies")}>
-                        Add Allergy
+                        {translate("addAllergy")}
                     </Button>
-
-                    <Text type="secondary" strong className={"blue-text"}>
-                  Medical History
-                </Text>
-                <List
-                  dataSource={formData.medicalHistory}
-                  renderItem={(item, index) => (
-                    <List.Item
-                      key={index}
-                      style={{
-                        border: "none",
-                        padding: "8px",
-                      }}
-                    >
-                      <Input
-                        value={item}
-                        onChange={(e) =>
-                          handleListChange(
-                            "medicalHistory",
-                            index,
-                            e.target.value
-                          )
-                        }
-                      />
-                      <DeleteOutlined
-                        style={{ cursor: "pointer", marginLeft: 8 }}
-                        onClick={() =>
-                          handleDeleteListItem("medicalHistory", index)
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-                <Button onClick={() => handleAddListItem("medicalHistory")}>
-                  Add your Medical History
-                </Button>
                 </div>
             </Col>
+
+            {/*<Col span={8}>*/}
+            {/*  <div className="profile-history">*/}
+            {/*    <Text type="secondary" strong className={"blue-text"}>*/}
+            {/*      Current Medications*/}
+            {/*    </Text>*/}
+            {/*    <List*/}
+            {/*      dataSource={formData.currentMedications}*/}
+            {/*      renderItem={(item, index) => (*/}
+            {/*        <List.Item*/}
+            {/*          key={index}*/}
+            {/*          style={{*/}
+            {/*            border: "none",*/}
+            {/*            padding: "8px",*/}
+            {/*          }}*/}
+            {/*        >*/}
+            {/*          <Input*/}
+            {/*            value={item}*/}
+            {/*            onChange={(e) =>*/}
+            {/*              handleListChange(*/}
+            {/*                "currentMedications",*/}
+            {/*                index,*/}
+            {/*                e.target.value*/}
+            {/*              )*/}
+            {/*            }*/}
+            {/*          />*/}
+            {/*          <DeleteOutlined*/}
+            {/*            style={{ cursor: "pointer", marginLeft: 8 }}*/}
+            {/*            onClick={() =>*/}
+            {/*              handleDeleteListItem("currentMedications", index)*/}
+            {/*            }*/}
+            {/*          />*/}
+            {/*        </List.Item>*/}
+            {/*      )}*/}
+            {/*    />*/}
+            {/*    <Button onClick={() => handleAddListItem("currentMedications")}>*/}
+            {/*      Add Medication*/}
+            {/*    </Button>*/}
+            {/*  </div>*/}
+            {/*</Col>*/}
         </Row>
     );
 };

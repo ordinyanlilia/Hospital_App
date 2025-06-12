@@ -6,37 +6,41 @@ import {
 } from "@ant-design/icons";
 import { Card, Row, Col, Typography } from "antd";
 import { useTheme } from "../../context/theme-context";
+import { useTranslate } from "../../context/TranslationProvider";
+
 
 const { Title, Text } = Typography;
 
 const ContactUs: React.FC = () => {
   const { darkMode } = useTheme();
+  const { translate } = useTranslate();
+
   return (
     <div className={`contact-us-container ${darkMode ? "dark" : "light"}`}>
       <Title level={2} className="contact-title">
-        Find Us Here
+        {translate("findUsHere")}
       </Title>
 
       <Row gutter={[16, 16]} justify="center" className="contact-cards">
         <Col xs={24} md={8}>
           <Card className="contact-card" bordered={false}>
             <PhoneOutlined className="contact-icon" />
-            <Title level={5}>Phone</Title>
+            <Title level={5}>{translate("phone")}</Title>
             <Text>(010) 583935</Text>
           </Card>
         </Col>
         <Col xs={24} md={8}>
           <Card className="contact-card" bordered={false}>
             <MailOutlined className="contact-icon" />
-            <Title level={5}>Email</Title>
+            <Title level={5}>{translate("email")}</Title>
             <Text>info@aawc.am</Text>
           </Card>
         </Col>
         <Col xs={24} md={8}>
           <Card className="contact-card" bordered={false}>
             <EnvironmentOutlined className="contact-icon" />
-            <Title level={5}>Location</Title>
-            <Text>5 Heratsu Street, Yerevan 0025</Text>
+            <Title level={5}>{translate("location")}</Title>
+            <Text>{translate("place")}</Text>
           </Card>
         </Col>
       </Row>

@@ -17,7 +17,12 @@ import {
 import { Button, Input, message, Modal } from "antd";
 import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+<<<<<<< feature/language-setup
+import { useTranslate } from "../../../../../../context/TranslationProvider";
+import { transliterate as tr } from "transliteration";
+=======
 import { addMedication } from "../../../../../../features/DoctorSlice";
+>>>>>>> main
 
 dayjs.extend(utc);
 
@@ -34,6 +39,9 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   const appointments = useAppSelector(selectAppointments);
   const status = useAppSelector(selectStatus);
   const dispatch = useAppDispatch();
+<<<<<<< feature/language-setup
+  const { translate } = useTranslate();
+=======
   const [prescriptionInputs, setPrescriptionInputs] = useState([
     { medication: "", description: "" },
   ]);
@@ -41,6 +49,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
     null
   );
   const [messageApi, contextHolder] = message.useMessage();
+>>>>>>> main
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
@@ -64,9 +73,12 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
 
   const filteredAppointments = appointments
     .filter((appointment) => {
-      const matchesSearch = appointment.patientName
-        ?.toLowerCase()
-        .includes(searchValue.toLowerCase());
+      // const matchesSearch = appointment.patientName
+      //   ?.toLowerCase()
+      //   .includes(searchValue.toLowerCase());
+      const normalizedSearch = tr(searchValue).toLowerCase();
+      const normalizedName = tr(appointment.patientName ?? "").toLowerCase();
+      const matchesSearch = normalizedName.includes(normalizedSearch);
 
       const matchesStatus =
         statusFilter === "All" || appointment.status === statusFilter;
@@ -117,6 +129,98 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   };
 
   return (
+<<<<<<< feature/language-setup
+    <div className="appointments-list-container">
+      <div className="appointments-list-content">
+        {status === "loading" ? (
+          <div className="message-container">
+            <div className="loading-message">{translate("loadingApp")}</div>
+          </div>
+        ) : status === "failed" ? (
+          <div className="message-container">
+            <div className="error-message">{translate("errorApp")}</div>
+          </div>
+        ) : status === "succeeded" && filteredAppointments.length === 0 ? (
+          <div className="message-container">
+            <div className="no-results-message">{translate("noAppFound")}</div>
+          </div>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>{translate("name")}</th>
+                <th>{translate("dateTime")}</th>
+                <th>{translate("reason")}</th>
+                <th>{translate("notes")}</th>
+                <th>{translate("status")}</th>
+                <th>{translate("prescription")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAppointments.map((appointment) => (
+                <tr key={appointment.doc_id}>
+                  <td className="checkbox-name-cell">
+                    <label className="checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        className="native-checkbox"
+                        value={appointment.doc_id}
+                        checked={appointment.status === "visited"}
+                        onChange={handleCheckboxChange}
+                      />
+                      {appointment?.patientName}
+                    </label>
+                  </td>
+                  <td>
+                    {dayjs
+                      .utc(appointment.startTime)
+                      .local()
+                      .format("YYYY-MM-DD HH:mm")}
+                  </td>
+                  <td>{appointment.reason}</td>
+                  <td>{appointment.notes}</td>
+                  <td>
+                    <div className="appointment-status">
+                      <div className="appointment-status-icon">
+                        {appointment.status === "scheduled" ? (
+                          <ScheduleTwoTone className="status-icon" />
+                        ) : appointment.status === "visited" ? (
+                          <CheckCircleTwoTone
+                            className="status-icon"
+                            twoToneColor="#52c41a"
+                          />
+                        ) : (
+                          <CloseCircleTwoTone className="status-icon" />
+                        )}
+                      </div>
+                      {appointment.status}
+                    </div>
+                  </td>
+                  <td>
+                    <Button type="primary" onClick={showModal}>
+                      {translate("addPrescriprion")}
+                    </Button>
+                    <Modal
+                      className="transparent-modal"
+                      closable={{ "aria-label": "Custom Close Button" }}
+                      title="Prescription"
+                      open={isModalOpen}
+                      onOk={handleOk}
+                      onCancel={handleCancel}
+                    >
+                      <div className="modal-content">
+                        <div className="modal-inputs">
+                          <Input
+                            placeholder={translate("medication")}
+                            allowClear
+                            className="medication-input"
+                          />
+                          <TextArea
+                            placeholder={translate("description")}
+                            allowClear
+                            className="description-input"
+                          />
+=======
     <>
       {contextHolder}
       <div className="appointments-list-container">
@@ -181,6 +285,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
                           ) : (
                             <CloseCircleTwoTone className="status-icon" />
                           )}
+>>>>>>> main
                         </div>
                         {appointment.status}
                       </div>

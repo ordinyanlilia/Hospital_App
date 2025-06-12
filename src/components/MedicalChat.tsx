@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './OnikBot.css';
 import { apiKey } from '../services/constants';
+import { useTranslate } from '../context/TranslationProvider';
+
 
 const geminiKey = apiKey;
 
@@ -12,11 +14,12 @@ type Props = {
   onBack: () => void;
 };
 
-export default function MedicalChat({ messages, setMessages, onBack }: Props) {
+export default function MedicalChat({ messages, setMessages }: Props) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { translate } = useTranslate();
 
   useEffect(() => {
     setTimeout(() => setVisible(true), 10); // Trigger fade-in transition
@@ -48,7 +51,7 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
 
       const result = await response.json();
 
-      let geminiText = 'Ներողություն, չհաջողվեց ստանալ պատասխան։';
+      let geminiText = translate('bot_error');
 
       if (result?.candidates?.[0]?.content?.parts?.[0]?.text) {
         geminiText = result.candidates[0].content.parts[0].text;
@@ -58,7 +61,7 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
       setMessages(prev => [...prev, geminiMessage]);
     } catch (err) {
       setMessages(prev => [...prev, {
-        text: 'Տեղի ունեցավ սխալ։ Խնդրում ենք փորձել կրկին։',
+        text: translate('general_error'),
         sender: 'bot'
       }]);
     } finally {
@@ -69,14 +72,12 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
   return (
     <div className={`medical-chat-container ${visible ? 'fade-in' : ''}`}>
       <div className="medical-chat-header">
-        «911» Օպերատոր
-       
+        {translate('operator_title')}
       </div>
 
       <div className="medical-chat-messages">
         <div className="operator-intro">
-          
-          Բարի գալուստ։ Խնդրում ենք գրել ձեր հարցը։
+          {translate('operator_intro')}
         </div>
 
         {messages.map((msg, index) => (
@@ -85,7 +86,7 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
           </div>
         ))}
 
-        {isLoading && <div className="loading-message">Մուտքագրում...</div>}
+        {isLoading && <div className="loading-message">{translate('typing')}</div>}
         <div ref={messagesEndRef} />
       </div>
 
@@ -93,7 +94,7 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
         <textarea
           className="medical-chat-textarea"
           rows={1}
-          placeholder="Մուտքագրեք..."
+          placeholder={translate('enter_placeholder')}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -108,7 +109,7 @@ export default function MedicalChat({ messages, setMessages, onBack }: Props) {
           onClick={sendMessage}
           disabled={isLoading || input.trim() === ''}
         >
-          Ուղարկել
+          {translate('send_button')}
         </button>
       </div>
     </div>

@@ -14,6 +14,8 @@ import {
 } from "../../features/doctors/doctorsSlice.tsx";
 import { fetchDoctors } from "../../features/doctors/doctorsSlice.tsx";
 import { useAppSelector, useAppDispatch } from "../../app/hooks.ts";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
+import { transliterate as tr } from 'transliteration';
 
 const FindDoctor = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +30,7 @@ const FindDoctor = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const [noDoctorsFound, setNoDoctorsFound] = useState(false);
+  const { translate } = useTranslate();
 
   const paginatedDoctors = (
     filteredDoctors.length > 0 ? filteredDoctors : doctors
@@ -36,13 +39,13 @@ const FindDoctor = () => {
   useEffect(() => {
     dispatch(fetchDoctors());
   }, []);
+  const normalize = (str: string) => tr(str.toLowerCase().trim().replace(/\s+/g, ""));
 
   const filterDoctors = () => {
     const filtered = doctors.filter((doctor) => {
-      const fullName = `${doctor.name ?? ""} ${
-        doctor.surname ?? ""
-      }`.toLowerCase();
-      const matchesName = fullName.includes(searchByName.toLowerCase());
+      const fullName = `${doctor.name ?? ""} ${doctor.surname ?? ""}`.toLowerCase();
+
+      const matchesName = normalize(fullName).includes(normalize(searchByName));
       const matchesSpecialty = selectedSpecialty
         ? doctor.specialty?.toLowerCase() === selectedSpecialty.toLowerCase()
         : true;
@@ -72,7 +75,7 @@ const FindDoctor = () => {
       <div className="find-doctor-container">
         <Input
           className="find-doctor-input"
-          placeholder="Search By Name"
+          placeholder= {translate("search_placeholder")}
           prefix={<SearchOutlined />}
           value={searchByName}
           onChange={(e) => setSearchByName(e.target.value)}
@@ -82,7 +85,7 @@ const FindDoctor = () => {
           showSearch
           allowClear
           className="find-doctor-select"
-          placeholder="Select Speciality"
+          placeholder={translate("specialty_placeholder")}
           prefix={<SnippetsOutlined />}
           value={selectedSpecialty}
           onChange={(value) => setSelectedSpecialty(value)}
@@ -95,35 +98,35 @@ const FindDoctor = () => {
           options={[
             {
               value: "Neurology",
-              label: "Neurology",
+              label: translate("neurology"),
             },
             {
               value: "Psychiatry",
-              label: "Psychiatry",
+              label: translate("psychiatry"),
             },
             {
               value: "Radiology",
-              label: "Radiology",
+              label: translate("radiology"),
             },
             {
               value: "Pathology",
-              label: "Pathology",
+              label: translate("pathology"),
             },
             {
               value: "Emergency Medicine",
-              label: "Emergency Medicine",
+              label: translate("emergency"),
             },
             {
               value: "Cardiology",
-              label: "Cardiology",
+              label: translate("cardiology"),
             },
             {
               value: "Plastic Surgery",
-              label: "Plastic Surgery",
+              label: translate("plastic"),
             },
             {
               value: "Dermatology",
-              label: "Dermatology",
+              label: translate("dermatology"),
             },
           ]}
         />
@@ -133,7 +136,7 @@ const FindDoctor = () => {
           showSearch
           className="find-doctor-select"
           prefix={<UserOutlined />}
-          placeholder="Select Gender"
+          placeholder={translate("gender_placeholder")}
           value={selectedGender}
           onChange={(value) => setSelectedGender(value)}
           optionFilterProp="label"
@@ -145,11 +148,11 @@ const FindDoctor = () => {
           options={[
             {
               value: "Male",
-              label: "Male",
+              label: translate("male"),
             },
             {
               value: "Female",
-              label: "Female",
+              label: translate("female"),
             },
           ]}
         />
@@ -158,12 +161,12 @@ const FindDoctor = () => {
           icon={<SearchOutlined />}
           onClick={filterDoctors}
         >
-          Search
+          {translate("search")}
         </Button>
       </div>
       <div className="container">
         {noDoctorsFound ? (
-          <p>Oops! We couldn’t find any doctors matching your search.</p>
+          <p>{translate("noDoctor")}</p>
         ) : (
           <Row gutter={[16, 16]} justify="start">
             {paginatedDoctors.map((doctor) => (

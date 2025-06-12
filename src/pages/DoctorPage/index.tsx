@@ -3,6 +3,7 @@ import "./DoctorPage.css";
 import { useAppSelector } from "../../app/hooks";
 import { selectUserData, selectUserRole } from "../../features/UserSlice";
 import TopPanel from "./components/TopPanel";
+import { useTranslate } from "../../context/TranslationProvider";
 import OnikBot from "../../components/OnikBot";
 
 interface CahtProp {
@@ -14,11 +15,13 @@ const DoctorPage: React.FC<CahtProp> = ({ showChatbot = false }) => {
   const userRole = useAppSelector(selectUserRole);
 
   if (!user || userRole !== "doctor") {
+    const { translate } = useTranslate();
+
     return (
       <div className="access-denied-container">
-        <h2>Access Denied</h2>
-        <p>You do not have permission to view this page.</p>
-      </div>
+        <h2>{translate("accessDenied")}</h2>
+        <p>{translate("deniedMessage")}</p>
+      </div> 
     );
   }
 

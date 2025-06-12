@@ -4,9 +4,17 @@
   flex-shrink: 0;
   white-space: nowrap;
 }
+<<<<<<< feature/language-setup
+.language-selector{
+  margin: 12px;
+  padding-right: 25px;
+  
+}
+=======
 
 @media (max-width: 768px) {
   main{
     padding: 10px !important;
   }
 }
+>>>>>>> main

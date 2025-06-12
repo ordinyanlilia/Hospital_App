@@ -7,6 +7,21 @@ import {useNavigate} from "react-router-dom";
 import {BOOK_APPOINTMENT} from "../../routes/paths.ts";
 import {FileAddOutlined, LoginOutlined} from "@ant-design/icons";
 import EditUserInfo from "./components/EditUserInfo.tsx";
+<<<<<<< feature/language-setup
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import { setPatient } from "../../features/PatientSlice.ts";
+import { clearUser } from "../../features/UserSlice.ts";
+import { selectAppointments } from "../../features/appointments/appointmentsSlice.ts";
+import { useTranslate } from "../../context/TranslationProvider.tsx";
+
+const Profile = () => {
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useAppDispatch();
+  const appointments = useAppSelector(selectAppointments);
+  const { translate } = useTranslate();
+
+=======
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {auth} from "../../services/apiService.ts";
 import {signOut} from "firebase/auth";
@@ -18,6 +33,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const dispatch = useAppDispatch();
     const appointments = useAppSelector(selectAppointments);
+>>>>>>> main
 
     const handleEdit = () => {
         setIsEditing(!isEditing);
@@ -30,6 +46,38 @@ const Profile = () => {
         navigate('/login');
     };
 
+<<<<<<< feature/language-setup
+  return (
+    <>
+      <Flex align={"center"} justify={"end"}>
+        <span>{translate("logOut")}</span>
+        <LoginOutlined style={{ color: "red" }} onClick={handleLogOutClick} />
+      </Flex>
+      {!isEditing ? (
+        <UserInfo onSetIsEditing={handleEdit} />
+      ) : (
+        <EditUserInfo onSetIsEditing={handleEdit} />
+      )}
+      <Divider>
+        <Space>
+          {translate("yourApp")}
+          <Button
+            color="default"
+            variant="outlined"
+            onClick={() => navigate(BOOK_APPOINTMENT)}
+          >
+            <FileAddOutlined />
+            {translate("bookAppointment")}
+          </Button>
+        </Space>
+      </Divider>
+      {!!appointments?.length && <AppointmentsTable />}
+      {!appointments?.length && (
+        <Alert message="You Don't have appointments yet" type="info" />
+      )}
+    </>
+  );
+=======
     return (
         <>
             <Flex align={"center"} justify={"end"}>
@@ -62,6 +110,7 @@ const Profile = () => {
             )}
         </>
     );
+>>>>>>> main
 };
 
 export default Profile;

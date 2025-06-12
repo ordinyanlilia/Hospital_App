@@ -3,15 +3,17 @@ import {Flex, message, Upload} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
 import type {UploadFile} from 'antd/es/upload/interface';
 import type {RcFile, UploadChangeParam} from "antd/lib/upload";
+import { useTranslate } from '../../../context/TranslationProvider';
 
 const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormData: (url: string) => void }) => {
     type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
     const [messageApi, contextHolder] = message.useMessage();
+    const { translate } = useTranslate();
 
     const uploadButton = (
         <button style={{border: 0, background: "none"}} type="button">
             <PlusOutlined/>
-            <div style={{marginTop: 8}}>Upload</div>
+            <div style={{marginTop: 8}}>{translate("upload")}</div>
         </button>
     );
 
@@ -25,7 +27,8 @@ const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormDat
         } else if (file.status === 'error') {
             messageApi.open({
                 type: 'error',
-                content: `${file.name} file upload failed.`,
+                content: `${file.name} ${translate("uploadFailed")}`
+
             });
             return;
         }
@@ -51,7 +54,7 @@ const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormDat
         if (!isJpgOrPng) {
             messageApi.open({
                 type: 'error',
-                content: 'You can only upload JPG/PNG file!',
+                content: translate("onlyJpgPng"),
             });
             return Upload.LIST_IGNORE;
         }
@@ -59,7 +62,7 @@ const ImgUploader = ({imageUrl, onSetFormData}: { imageUrl: string, onSetFormDat
         if (!isLt2M) {
             messageApi.open({
                 type: 'error',
-                content: 'Image must smaller than 2MB!',
+                content: translate("imageSmaller"),
             });
             return Upload.LIST_IGNORE;
         }
