@@ -1,5 +1,5 @@
 import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography,} from "antd";
-import {DeleteOutlined, DeleteTwoTone, PhoneOutlined,} from "@ant-design/icons";
+import {DeleteOutlined, PhoneOutlined,} from "@ant-design/icons";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
 import ImgUploader from "./ImgUploader.tsx";
@@ -116,7 +116,7 @@ return (
                         value={formData.surname}
                         onChange={handleChange("surname")}
                     />
-                  
+
                     <Text type="secondary" strong className={"blue-text"}>
                         {translate("phoneNumber")}
                     </Text>
@@ -219,7 +219,7 @@ return (
                                         handleListChange("allergies", index, e.target.value)
                                     }
                                 />
-                                <DeleteTwoTone
+                                <DeleteOutlined
                                     onClick={() => handleDeleteListItem("allergies", index)}
                                     style={{cursor: "pointer", marginLeft: 8}}
                                 />

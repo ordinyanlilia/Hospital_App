@@ -113,6 +113,12 @@ const UserInfo = ({
                         dataSource={user?.allergies}
                         renderItem={(item: string) => <List.Item>{item}</List.Item>}
                     />
+                             <Text type="secondary" strong>Medical History</Text>
+                    <List
+                        size="small"
+                        dataSource={user?.medicalHistory}
+                        renderItem={(item: string) => <List.Item>{item}</List.Item>}
+                    />
                 </div>
             </Col>
             <Col span={8} xs={24} sm={12} md={11} xl={8} lg={10}>
@@ -136,7 +142,7 @@ const UserInfo = ({
                                                 className='profile-history-button'
                                                 onClick={() => handleSeeDescription(item.medication, item.description)}
                                             >
-                                                {translate("seeDescription")} 
+                                                {translate("seeDescription")}
                                             </Button>
                                         </div>
                                     ),
