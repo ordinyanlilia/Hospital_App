@@ -10,7 +10,7 @@
   right: 16px;
   z-index: 9999;
   font-family: "Segoe UI", sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   max-width: 340px;           /* 🔄 increased for larger chat box */
   overflow: hidden;
   border-radius: 14px;
@@ -24,22 +24,23 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   background-color: #421da7;
   color: white;
-  border-radius: 16px;
-  padding: 4px 10px;
-  font-size: 12px;
+  border-radius: 20px;
+  padding: 8px 14px;         /* ⬅️ increase padding */
+  font-size: 14px;           /* ⬅️ increase font size */
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  height: 32px;
-  max-width: 90px;
+  height: 37px;              /* ⬅️ increase height */
+  max-width: 110px;          /* ⬅️ increase width */
   z-index: 10000;
 }
 
+
 .onik-toggle img {
-  width: 16px;
-  height: 16px;
+  width: 18px;               /* ⬅️ larger icon */
+  height: 18px;
 }
 
 .onik-bot-box {
@@ -248,7 +249,7 @@
 }
 
 .loading-message {
-  font-size: 13px;
+  font-size: 10px;
   color: #666;
   display: flex;
   align-items: center;
@@ -325,6 +326,11 @@
   transform: translateY(40px);
   pointer-events: none;
 }
+
+
+
+
+
 
 
 
