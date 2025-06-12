@@ -29,7 +29,7 @@ const EditUserInfo = ({ onSetIsEditing }: { onSetIsEditing: () => void }) => {
     dob: user?.dob || "",
     bloodType: user?.bloodType || "",
     allergies: user?.allergies || [],
-    currentMedications: user?.currentMedications || [],
+    medicalHistory: user?.medicalHistory || [],
     imageUrl: user?.imageUrl || "",
   });
 
@@ -40,7 +40,6 @@ const EditUserInfo = ({ onSetIsEditing }: { onSetIsEditing: () => void }) => {
         };
 
     const handleSelectChange = (field: string) => (value: string) => {
-        console.log(value);
         setFormData((prev) => ({...prev, [field]: value}));
     }
     const handleListChange = (
@@ -230,48 +229,43 @@ return (
                     <Button onClick={() => handleAddListItem("allergies")}>
                         {translate("addAllergy")}
                     </Button>
+                        <Text type="secondary" strong className={"blue-text"}>
+                  Medical History
+                </Text>
+                <List
+                  dataSource={formData.medicalHistory}
+                  renderItem={(item, index) => (
+                    <List.Item
+                      key={index}
+                      style={{
+                        border: "none",
+                        padding: "8px",
+                      }}
+                    >
+                      <Input
+                        value={item}
+                        onChange={(e) =>
+                          handleListChange(
+                            "medicalHistory",
+                            index,
+                            e.target.value
+                          )
+                        }
+                      />
+                      <DeleteOutlined
+                        style={{ cursor: "pointer", marginLeft: 8 }}
+                        onClick={() =>
+                          handleDeleteListItem("medicalHistory", index)
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+                <Button onClick={() => handleAddListItem("medicalHistory")}>
+                  Add your Medical History
+                </Button>
                 </div>
             </Col>
-
-            {/*<Col span={8}>*/}
-            {/*  <div className="profile-history">*/}
-            {/*    <Text type="secondary" strong className={"blue-text"}>*/}
-            {/*      Current Medications*/}
-            {/*    </Text>*/}
-            {/*    <List*/}
-            {/*      dataSource={formData.currentMedications}*/}
-            {/*      renderItem={(item, index) => (*/}
-            {/*        <List.Item*/}
-            {/*          key={index}*/}
-            {/*          style={{*/}
-            {/*            border: "none",*/}
-            {/*            padding: "8px",*/}
-            {/*          }}*/}
-            {/*        >*/}
-            {/*          <Input*/}
-            {/*            value={item}*/}
-            {/*            onChange={(e) =>*/}
-            {/*              handleListChange(*/}
-            {/*                "currentMedications",*/}
-            {/*                index,*/}
-            {/*                e.target.value*/}
-            {/*              )*/}
-            {/*            }*/}
-            {/*          />*/}
-            {/*          <DeleteOutlined*/}
-            {/*            style={{ cursor: "pointer", marginLeft: 8 }}*/}
-            {/*            onClick={() =>*/}
-            {/*              handleDeleteListItem("currentMedications", index)*/}
-            {/*            }*/}
-            {/*          />*/}
-            {/*        </List.Item>*/}
-            {/*      )}*/}
-            {/*    />*/}
-            {/*    <Button onClick={() => handleAddListItem("currentMedications")}>*/}
-            {/*      Add Medication*/}
-            {/*    </Button>*/}
-            {/*  </div>*/}
-            {/*</Col>*/}
         </Row>
     );
 };
