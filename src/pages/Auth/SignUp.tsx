@@ -1,4 +1,4 @@
-import "./Signup.css";
+import "./SignUp.css";
 import type { FormProps } from "antd";
 import { Button, Form, Input, Select, DatePicker, Card, Space } from "antd";
 import { useNavigate, Link } from "react-router-dom";
@@ -172,7 +172,7 @@ const Signup = () => {
             >
               <Form.Item
                 name="name"
-                label= {translate("firstName")}
+                label={translate("firstName")}
                 rules={[{ required: true }]}
               >
                 <Input />
@@ -180,7 +180,7 @@ const Signup = () => {
 
               <Form.Item
                 name="surname"
-                label= {translate("lastName")}
+                label={translate("lastName")}
                 rules={[{ required: true }]}
               >
                 <Input />
@@ -194,7 +194,7 @@ const Signup = () => {
                     rules={[
                       {
                         required: true,
-                        message: translate("dobMessage")
+                        message: translate("dobMessage"),
                       },
                     ]}
                   >
@@ -262,12 +262,15 @@ const Signup = () => {
                   <Button type="primary" htmlType="submit">
                     {translate("submit")}
                   </Button>
-                  <Button onClick={() => setSelectedRole(null)}>{translate("back")}</Button>
+                  <Button onClick={() => setSelectedRole(null)}>
+                    {translate("back")}
+                  </Button>
                 </Space>
               </Form.Item>
 
               <div style={{ marginTop: "1rem", textAlign: "center" }}>
-                {translate("haveAccount")} <Link to="/login">{translate("login")}</Link>
+                {translate("haveAccount")}{" "}
+                <Link to="/login">{translate("login")}</Link>
               </div>
             </Form>
           )}
