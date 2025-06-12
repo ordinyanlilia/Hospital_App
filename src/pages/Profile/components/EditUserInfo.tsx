@@ -1,5 +1,5 @@
 import {Button, Col, DatePicker, Flex, Input, List, Row, Select, Space, Typography,} from "antd";
-import {DeleteTwoTone, PhoneOutlined,} from "@ant-design/icons";
+import {DeleteOutlined, DeleteTwoTone, PhoneOutlined,} from "@ant-design/icons";
 import {type ChangeEvent, useState} from "react";
 import dayjs from "dayjs";
 import ImgUploader from "./ImgUploader.tsx";
@@ -24,6 +24,7 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
         bloodType: user?.bloodType || "",
         allergies: user?.allergies || [],
         imageUrl: user?.imageUrl || "",
+        medicalHistory: user?.medicalHistory || [],
     });
 
     const handleChange =
@@ -37,7 +38,7 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
         setFormData((prev) => ({...prev, [field]: value}));
     }
     const handleListChange = (
-        field: "allergies",
+        field: "allergies"| "medicalHistory",
         index: number,
         value: string
     ) => {
@@ -46,12 +47,12 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
         setFormData((prev) => ({...prev, [field]: updatedList}));
     };
 
-    const handleAddListItem = (field: "allergies") => {
+    const handleAddListItem = (field: "allergies" | "medicalHistory") => {
         setFormData((prev) => ({...prev, [field]: [...prev[field], ""]}));
     };
 
     const handleDeleteListItem = (
-        field: "allergies",
+        field: "allergies" | "medicalHistory",
         index: number
     ) => {
         const updatedList = formData[field].filter(
@@ -185,11 +186,6 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                         <Option value="O+">O+</Option>
                         <Option value="O-">O−</Option>
                     </Select>
-                    {/*<Input*/}
-                    {/*    placeholder="Blood Type"*/}
-                    {/*    value={formData.bloodType}*/}
-                    {/*    onChange={handleChange("bloodType")}*/}
-                    {/*/>*/}
 
                     <Text type="secondary" strong className={"blue-text"}>
                         Allergies
@@ -222,48 +218,44 @@ const EditUserInfo = ({onSetIsEditing}: { onSetIsEditing: () => void }) => {
                     <Button onClick={() => handleAddListItem("allergies")}>
                         Add Allergy
                     </Button>
+
+                    <Text type="secondary" strong className={"blue-text"}>
+                  Medical History
+                </Text>
+                <List
+                  dataSource={formData.medicalHistory}
+                  renderItem={(item, index) => (
+                    <List.Item
+                      key={index}
+                      style={{
+                        border: "none",
+                        padding: "8px",
+                      }}
+                    >
+                      <Input
+                        value={item}
+                        onChange={(e) =>
+                          handleListChange(
+                            "medicalHistory",
+                            index,
+                            e.target.value
+                          )
+                        }
+                      />
+                      <DeleteOutlined
+                        style={{ cursor: "pointer", marginLeft: 8 }}
+                        onClick={() =>
+                          handleDeleteListItem("medicalHistory", index)
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+                <Button onClick={() => handleAddListItem("medicalHistory")}>
+                  Add your Medical History
+                </Button>
                 </div>
             </Col>
-
-            {/*<Col span={8}>*/}
-            {/*  <div className="profile-history">*/}
-            {/*    <Text type="secondary" strong className={"blue-text"}>*/}
-            {/*      Current Medications*/}
-            {/*    </Text>*/}
-            {/*    <List*/}
-            {/*      dataSource={formData.currentMedications}*/}
-            {/*      renderItem={(item, index) => (*/}
-            {/*        <List.Item*/}
-            {/*          key={index}*/}
-            {/*          style={{*/}
-            {/*            border: "none",*/}
-            {/*            padding: "8px",*/}
-            {/*          }}*/}
-            {/*        >*/}
-            {/*          <Input*/}
-            {/*            value={item}*/}
-            {/*            onChange={(e) =>*/}
-            {/*              handleListChange(*/}
-            {/*                "currentMedications",*/}
-            {/*                index,*/}
-            {/*                e.target.value*/}
-            {/*              )*/}
-            {/*            }*/}
-            {/*          />*/}
-            {/*          <DeleteOutlined*/}
-            {/*            style={{ cursor: "pointer", marginLeft: 8 }}*/}
-            {/*            onClick={() =>*/}
-            {/*              handleDeleteListItem("currentMedications", index)*/}
-            {/*            }*/}
-            {/*          />*/}
-            {/*        </List.Item>*/}
-            {/*      )}*/}
-            {/*    />*/}
-            {/*    <Button onClick={() => handleAddListItem("currentMedications")}>*/}
-            {/*      Add Medication*/}
-            {/*    </Button>*/}
-            {/*  </div>*/}
-            {/*</Col>*/}
         </Row>
     );
 };
