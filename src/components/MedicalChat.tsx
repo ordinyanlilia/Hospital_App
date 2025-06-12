@@ -21,7 +21,7 @@ export default function MedicalChat({ messages, setMessages }: Props) {
   const { translate } = useTranslate();
 
   useEffect(() => {
-    setTimeout(() => setVisible(true), 10); // Trigger fade-in transition
+    setTimeout(() => setVisible(true), 10);
   }, []);
 
   useEffect(() => {
@@ -37,41 +37,44 @@ export default function MedicalChat({ messages, setMessages }: Props) {
     setIsLoading(true);
 
     try {
-      const chatHistory = [{ role: 'user', parts: [{ text: input }] }];
-      const payload = { contents: chatHistory };
+      const payload = {
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: input }]
+          }
+        ]
+      };
 
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json();
-      console.log('🧠 Gemini API Response:', result); // Debug log
+      console.log('Gemini Response:', result);
 
-      let geminiText = translate('bot_error');
+      let botReply = translate('bot_error');
 
-      // Safe fallback if structure differs
-      if (
-        result?.candidates &&
-        result.candidates[0]?.content?.parts &&
-        result.candidates[0].content.parts[0]?.text
-      ) {
-        geminiText = result.candidates[0].content.parts[0].text;
+      // ✅ Extract text from Gemini response safely
+      const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        botReply = text;
       } else {
-        console.error('⚠️ Unexpected Gemini API response structure:', result);
+        console.error('Unexpected response structure:', result);
       }
 
-      const geminiMessage: MessageType = { text: geminiText, sender: 'bot' };
+      const geminiMessage: MessageType = { text: botReply, sender: 'bot' };
       setMessages(prev => [...prev, geminiMessage]);
     } catch (err) {
-      console.error('🚨 API Request Error:', err);
-      setMessages(prev => [
-        ...prev,
-        { text: translate('general_error'), sender: 'bot' },
-      ]);
+      console.error('API request failed:', err);
+      setMessages(prev => [...prev, {
+        text: translate('general_error'),
+        sender: 'bot'
+      }]);
     } finally {
       setIsLoading(false);
     }
