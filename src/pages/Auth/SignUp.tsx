@@ -6,10 +6,7 @@ import { LOGIN } from "../../routes/paths";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState, useEffect } from "react";
 import { fetchData } from "../../services/apiService";
-import {
-  selectPatientStatus,
-  setPatient,
-} from "../../features/PatientSlice";
+import { selectPatientStatus, setPatient } from "../../features/PatientSlice";
 import { selectDoctorStatus } from "../../features/DoctorSlice";
 import { type Patient } from "../../features/PatientSlice";
 import { type Doctor } from "../../features/DoctorSlice";
@@ -21,7 +18,7 @@ import {
 import { setData } from "../../services/apiService";
 import { setEmailVerified } from "../../features/UserSlice";
 import loginImage from "../../assets/login-image.jpg";
-
+import { useTheme } from "../../context/theme-context.tsx";
 const { Option } = Select;
 
 const Signup = () => {
@@ -33,7 +30,7 @@ const Signup = () => {
   const [selectedRole, setSelectedRole] = useState<"patient" | "doctor" | null>(
     null
   );
-
+  const { darkMode } = useTheme();
   useEffect(() => {
     if (patientStatus === "succeeded" || doctorStatus === "succeeded") {
       navigate(LOGIN);
@@ -122,7 +119,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-root">
+    <div
+      style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+      className="signup-root"
+    >
       <div className="signup-wrapper">
         <div className="signup-visual">
           <img
@@ -132,9 +132,16 @@ const Signup = () => {
           />
           <h2>Create your digital health account</h2>
         </div>
-        <div className="signup-container">
+        <div
+          style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+          className="signup-container"
+        >
           {!selectedRole ? (
-            <Space direction="horizontal" size="large">
+            <Space
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
+              direction="horizontal"
+              size="large"
+            >
               <Card
                 title="Sign up as Patient"
                 hoverable
@@ -159,6 +166,7 @@ const Signup = () => {
               form={form}
               layout="vertical"
               className="signup-form"
+              style={{ background: darkMode ? "#101832" : "#f5f5f5" }}
             >
               <Form.Item
                 name="name"

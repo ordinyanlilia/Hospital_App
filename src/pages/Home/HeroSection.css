@@ -1,39 +1,46 @@
-.hero-section{
-    padding: 4rem 2rem;
-    background-color: #f9f9f9;
-    color: #000;
+.hero-section {
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  color: #000;
+}
+.light-mode .herosection-text {
+  color: #333;
 }
 
-.herosection-row{
-    max-width: 1200px;
-    margin: 0 auto;
+.dark-mode .herosection-text {
+  color: #f0f0f0;
 }
 
-.herosection-button{
-    background-color: #3e51a8;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 25px;
-    padding: 6px 24px;
-    border: none;
+.herosection-row {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.herosection-button:hover{
-    background-color: #2a3d70;
-    color: #fff;
+.herosection-button {
+  background-color: #3e51a8;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 25px;
+  padding: 6px 24px;
+  border: none;
 }
 
-.herosection-title{
-    color: #1a2450 !important;
+.herosection-button:hover {
+  background-color: #2a3d70;
+  color: #fff;
 }
 
-.herosection-image{
+.herosection-title {
+  color: #1a2450 !important;
+}
+
+.herosection-image {
   width: 100%;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.herosection-text{
+.herosection-text {
   color: #333;
   font-size: 16px;
   line-height: 1.7;

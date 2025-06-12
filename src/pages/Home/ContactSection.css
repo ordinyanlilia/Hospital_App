@@ -69,3 +69,21 @@
     margin: 1rem auto;
   }
 }
+
+.contact-section.light {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.contact-section.dark {
+  background-color: #101832;
+  color: #fff;
+}
+
+.contact-section.dark .contact-title {
+  color: #ffffff !important;
+}
+
+.contact-section.dark .contact-text {
+  color: #dddddd;
+}
