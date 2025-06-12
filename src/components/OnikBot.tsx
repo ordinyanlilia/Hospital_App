@@ -1,34 +1,32 @@
 import { useState } from 'react';
 import './OnikBot.css';
 import MedicalChat from './MedicalChat';
+import { useTranslate } from '../context/TranslationProvider';
 
 
-
-const faqResponses: Record<string, string> = {
-  "Ինչպե՞ս կարող եմ գրանցվել ձեր մոտ այցելության համար":
-    "Ձեր մոտ այցելություն գրանցելու համար կարող եք զանգահարել մեր տեղեկատուի համարով 📞 կամ գրել «Առաքման» բաժին։ Մեր օպերատորները կաջակցեն Ձեզ և կնշանակեն հարմար օր և ժամ։",
-  "Ի՞նչ փաստաթղթեր են անհրաժեշտ ձեր մոտ այցելու լինելու համար":
-    "Ձեր մոտ այցելության համար մեզ պետք է ներկայացնեք ձեր հետ անձնագիր կամ նույնականացման քարտ։ Սոցիալական քարտ (եթե անհրաժեշտ է)։",
-  "Որո՞նք են աշխատողի աշխատանքային ժամերը":
-    "Մեր աշխատանքային ժամերն են՝ երկուշաբթիից ուրբաթ 09:00-ից 18:00։",
-  "Արդյո՞ք դուք երեխայի խնամքով զբաղվում եք ձեր կենտրոնում":
-    "Այո՛, մեր կենտրոնում մենք առաջարկում ենք ծառայություններ երեխաների խնամքի համար։",
-  "Որտե՞ղ է գտնվում ձեր կենտրոնը և ինչպես կարող եմ հասնել":
-    "Մեր հասցեն է՝ 📍 (հասցե)։",
-  "Ո՞ր բաժիններում են գործում հիվանդանոցում":
-    "---։"
-};
 
 export default function OnikBot() {
   
-  
-  
-
+  const { translate } = useTranslate();
   const [opened, setOpened] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [view, setView] = useState<'faq' | 'medicalChat' | null>(null);
   const [messages, setMessages] = useState<{ text: string; sender: 'user' | 'bot' }[]>([]);
 
+  const faqResponses: Record<string, string> = {
+  [translate("faqVisitRegister")]:
+      translate("faqVisitRegisterAnswer"),
+    [translate("faqDocsNeeded")]:
+      translate("faqDocsNeededAnswer"),
+    [translate("faqWorkingHours")]:
+      translate("faqWorkingHoursAnswer"),
+    [translate("faqChildCare")]:
+      translate("faqChildCareAnswer"),
+    [translate("faqLocation")]:
+      translate("faqLocationAnswer"),
+    [translate("faqDepartments")]:
+      translate("faqDepartmentsAnswer")
+};
 
 
   const toggleBot = (): void => {
@@ -69,14 +67,14 @@ export default function OnikBot() {
     <div className="onik-bot-widget">
       <div className={`onik-bot-box ${opened ? 'open' : ''} ${isClosing ? 'closed' : ''}`}>
         {opened && !isClosing && (
-          <button className="chat-close-button" onClick={toggleBot}>×</button>
+          <button className="chat-close-button" onClick={toggleBot}>X</button>
         )}
         <div className="onik-inner-content">
           {view === 'faq' && (
             <div className="fade-slide">
               <p className="greeting">
-                Ողջույն, ես <span className="highlight">911-ն</span> եմ <br />
-                Ինչպե՞ս կարող եմ օգնել 🥰
+                {translate("hiIam")} <span className="highlight">{translate("botName")}</span> {translate("em")}<br />
+                {translate("howcanIHelp")} 🥰
               </p>
               <ul className="options-list fade-slide">
                 {Object.keys(faqResponses).map((q, i) => (
@@ -85,7 +83,7 @@ export default function OnikBot() {
                   </li>
                 ))}
                 <li onClick={handleOtherQuestionClick} className="medical-chat-option">
-                  Այլ հարց
+                  {translate("otherQuestions")}
                 </li>
               </ul>
             </div>
@@ -104,7 +102,7 @@ export default function OnikBot() {
       </div>
 
       <div className={`onik-toggle ${opened ? 'push-up' : ''}`} onClick={toggleBot}>
-        <p>Հարցեր</p>
+        <p>{translate("questions")}</p>
         <img src="/robot.png" alt="ONIK" />
       </div>
     </div>
