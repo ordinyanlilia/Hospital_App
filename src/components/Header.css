@@ -4,3 +4,9 @@
   flex-shrink: 0;
   white-space: nowrap;
 }
+
+@media (max-width: 768px) {
+  main{
+    padding: 10px !important;
+  }
+}
