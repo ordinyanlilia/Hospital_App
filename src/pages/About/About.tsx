@@ -93,7 +93,7 @@ const About = () => {
         <motion.div whileHover={{ scale: 1.25 }}>
           <Card className="custom-small-card" bordered={false}>
             <img
-              src="https://res.cloudinary.com/dvlaqznyd/image/upload/v1748517704/health_zqzgna.png"
+              src="https://res.cloudinary.com/healthcareintern/image/upload/v1748517704/health_zqzgna.png"
               alt="Integrity Icon"
               className="card-icon"
             />
