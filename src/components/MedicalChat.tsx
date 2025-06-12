@@ -3,7 +3,6 @@ import './OnikBot.css';
 import { apiKey } from '../services/constants';
 import { useTranslate } from '../context/TranslationProvider';
 
-
 const geminiKey = apiKey;
 
 type MessageType = { text: string; sender: 'user' | 'bot' };
@@ -50,20 +49,29 @@ export default function MedicalChat({ messages, setMessages }: Props) {
       });
 
       const result = await response.json();
+      console.log('🧠 Gemini API Response:', result); // Debug log
 
       let geminiText = translate('bot_error');
 
-      if (result?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      // Safe fallback if structure differs
+      if (
+        result?.candidates &&
+        result.candidates[0]?.content?.parts &&
+        result.candidates[0].content.parts[0]?.text
+      ) {
         geminiText = result.candidates[0].content.parts[0].text;
+      } else {
+        console.error('⚠️ Unexpected Gemini API response structure:', result);
       }
 
       const geminiMessage: MessageType = { text: geminiText, sender: 'bot' };
       setMessages(prev => [...prev, geminiMessage]);
     } catch (err) {
-      setMessages(prev => [...prev, {
-        text: translate('general_error'),
-        sender: 'bot'
-      }]);
+      console.error('🚨 API Request Error:', err);
+      setMessages(prev => [
+        ...prev,
+        { text: translate('general_error'), sender: 'bot' },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -76,17 +84,22 @@ export default function MedicalChat({ messages, setMessages }: Props) {
       </div>
 
       <div className="medical-chat-messages">
-        <div className="operator-intro">
-          {translate('operator_intro')}
-        </div>
+        <div className="operator-intro">{translate('operator_intro')}</div>
 
         {messages.map((msg, index) => (
-          <div key={index} className={`medical-chat-message ${msg.sender === 'user' ? 'user-message' : 'gemini-message'}`}>
+          <div
+            key={index}
+            className={`medical-chat-message ${
+              msg.sender === 'user' ? 'user-message' : 'gemini-message'
+            }`}
+          >
             {msg.text}
           </div>
         ))}
 
-        {isLoading && <div className="loading-message">{translate('typing')}</div>}
+        {isLoading && (
+          <div className="loading-message">{translate('typing')}</div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
