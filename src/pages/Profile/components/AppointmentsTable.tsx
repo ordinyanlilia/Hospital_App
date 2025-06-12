@@ -86,12 +86,17 @@ const AppointmentsTable = () => {
                     text: 'Visited',
                     value: 'visited',
                 },
+                {
+                    text: 'Cancelled',
+                    value: 'cancelled',
+                },
             ],
             onFilter: (value, record) => record.status.indexOf(value as string) === 0,
             render: (text: string) => (
-                <Space>{text === 'scheduled' ?
-                    <ScheduleTwoTone className={'blue-text'}/> :
-                    <FileDoneOutlined/>}
+                <Space>{text === 'scheduled' && 
+                    <ScheduleTwoTone className={'blue-text'}/> }
+                    {text === 'visited' && <FileDoneOutlined/>}
+                    {text === 'cancelled' && <CloseCircleOutlined/>}
                     {text}</Space>
             ),
         },
@@ -111,7 +116,7 @@ const AppointmentsTable = () => {
                         cancelText="No"
                     >
                         <Button danger title={'Cancel Appointment'} type={'text'}
-                                style={{padding: 0}}
+                                style={{padding: 0, textAlign: 'center'}}
                         >
                             <CloseCircleOutlined/>
                         </Button>
