@@ -134,7 +134,7 @@ const BookAppointment = () => {
       const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
       const workingTimeStart =
         isToday && dayjs().get("hour") >= 9 ? dayjs().get("hour") + 1 : 9;
-      const workingTimeEnd = 20;
+      const workingTimeEnd = 17;
 
       if (workingTimeStart > workingTimeEnd) {
         setAvailableTimes([]);
