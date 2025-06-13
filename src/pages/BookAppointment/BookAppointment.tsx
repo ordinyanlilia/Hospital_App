@@ -94,6 +94,14 @@ const BookAppointment = () => {
 
   useEffect(() => {
     dispatch(fetchDoctors());
+    window.scrollTo(0, 0);
+    if (!user) {
+      messageApi.open({
+        type: "error",
+        content: "You need to log in before booking an appointment.",
+      });
+      return;
+    }
   }, []);
 
   useEffect(() => {
@@ -148,16 +156,16 @@ const BookAppointment = () => {
       );
       const doctorAppointments = selectedDoctor.appointments || [];
 
-      const appointmentsData:Appointment[] = await Promise.all(
-          doctorAppointments.map((appointment) =>
-              getData<Appointment>(appointment.appointmentId, "appointments")
-          )
+      const appointmentsData: Appointment[] = await Promise.all(
+        doctorAppointments.map((appointment) =>
+          getData<Appointment>(appointment.appointmentId, "appointments")
+        )
       );
 
       for (const appointment of appointmentsData) {
         if (
           dayjs(appointment.startTime).isSame(selectedDate, "day") &&
-            appointment.status !== "cancelled"
+          appointment.status !== "cancelled"
         ) {
           const bookedTimeStart = dayjs(appointment.startTime);
           const bookedTimeEnd = dayjs(appointment.endTime);
@@ -197,12 +205,11 @@ const BookAppointment = () => {
         content: translate("selectDoctorError"),
       });
       return;
-
     }
-    if(!user){
+    if (!user) {
       messageApi.open({
         type: "error",
-        content: 'You need to log in before booking an appointment.',
+        content: "You need to log in before booking an appointment.",
       });
       return;
     }
