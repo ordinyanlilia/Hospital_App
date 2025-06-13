@@ -10,8 +10,9 @@ import EditUserInfo from "./components/EditUserInfo.tsx";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import {auth} from "../../services/apiService.ts";
 import {signOut} from "firebase/auth";import { clearUser } from "../../features/UserSlice.ts";
-import { selectAppointments } from "../../features/appointments/appointmentsSlice.ts";
+import { selectAppointments, setAppointments } from "../../features/appointments/appointmentsSlice.ts";
 import { useTranslate } from "../../context/TranslationProvider.tsx";
+import { setPatient } from "../../features/PatientSlice.ts";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ const Profile = () => {
         await signOut(auth);
         localStorage.removeItem('authToken');
         dispatch(clearUser());
+        dispatch(setPatient(null));
+        dispatch(setAppointments([]));
         navigate('/login');
     };
 

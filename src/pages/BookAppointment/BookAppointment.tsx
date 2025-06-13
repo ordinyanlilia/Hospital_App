@@ -41,6 +41,8 @@ import { selectPatient } from "../../features/PatientSlice.ts";
 import DoctorCard from "./DoctorCard.tsx";
 import { useTranslate } from "../../context/TranslationProvider.tsx";
 import { useTheme } from "../../context/theme-context.tsx";
+import { getData } from "../../services/apiService.ts";
+import { LOGIN } from "../../routes/paths.ts";
 
 interface FinishValue {
   reason: string;
@@ -124,52 +126,69 @@ const BookAppointment = () => {
   }
 
   useEffect(() => {
-    if (!selectedDoctor || !selectedDate) {
-      setAvailableTimes([]);
-      return;
-    }
-
-    const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
-    const workingTimeStart =
-      isToday && dayjs().get("hour") >= 9 ? dayjs().get("hour") + 1 : 9;
-    const workingTimeEnd = 20;
-
-    if (workingTimeStart > workingTimeEnd) {
-      setAvailableTimes([]);
-      return;
-    }
-
-    let result = getTimeInterval(
-      workingTimeStart,
-      workingTimeEnd,
-      MODE_HOURS[mode]
-    );
-
-    selectedDoctor?.appointments?.forEach((appointment) => {
-      if (dayjs(appointment.startTime).isSame(selectedDate, "day")) {
-        const bookedTimeStart = dayjs(appointment.startTime);
-        const bookedTimeEnd = dayjs(appointment.endTime);
-        const appointmentDate = bookedTimeStart.format("YYYY-MM-DD");
-        result = result.filter((time) => {
-          const currentTime = dayjs(`${appointmentDate}T${time}`);
-          return (
-            currentTime.isBefore(bookedTimeStart) ||
-            currentTime.isAfter(bookedTimeEnd) ||
-            currentTime.isSame(bookedTimeEnd)
-          );
-        });
+    const fetchAvailableTimes = async () => {
+      if (!selectedDoctor || !selectedDate) {
+        setAvailableTimes([]);
+        return;
       }
-    });
 
-    setAvailableTimes(
-      result.map((item) => {
-        const [hourStr, minuteStr] = item.split(":");
-        const start = dayjs().set("hour", +hourStr).set("minute", +minuteStr);
-        const end = start.add(MODE_HOURS[mode], "minute");
+      const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
+      const workingTimeStart =
+        isToday && dayjs().get("hour") >= 9 ? dayjs().get("hour") + 1 : 9;
+      const workingTimeEnd = 20;
 
-        return `${start.format("HH:mm")}-${end.format("HH:mm")}`;
-      })
-    );
+      if (workingTimeStart > workingTimeEnd) {
+        setAvailableTimes([]);
+        return;
+      }
+
+      let result = getTimeInterval(
+        workingTimeStart,
+        workingTimeEnd,
+        MODE_HOURS[mode]
+      );
+      const doctorAppointments = selectedDoctor.appointments || [];
+
+      const appointmentsData:Appointment[] = await Promise.all(
+          doctorAppointments.map((appointment) =>
+              getData<Appointment>(appointment.appointmentId, "appointments")
+          )
+      );
+
+      for (const appointment of appointmentsData) {
+        if (
+          dayjs(appointment.startTime).isSame(selectedDate, "day") &&
+            appointment.status !== "cancelled"
+        ) {
+          const bookedTimeStart = dayjs(appointment.startTime);
+          const bookedTimeEnd = dayjs(appointment.endTime);
+          const appointmentDate = bookedTimeStart.format("YYYY-MM-DD");
+
+          result = result.filter((time) => {
+            const currentTime = dayjs(`${appointmentDate}T${time}`);
+            return (
+              currentTime.isBefore(bookedTimeStart) ||
+              currentTime.isAfter(bookedTimeEnd) ||
+              currentTime.isSame(bookedTimeEnd)
+            );
+          });
+        }
+      }
+
+      setAvailableTimes(
+        result.map((item) => {
+          const [hourStr, minuteStr] = item.split(":");
+          const start = dayjs(selectedDate)
+            .set("hour", +hourStr)
+            .set("minute", +minuteStr);
+          const end = start.add(MODE_HOURS[mode], "minute");
+
+          return `${start.format("HH:mm")}-${end.format("HH:mm")}`;
+        })
+      );
+    };
+
+    fetchAvailableTimes();
   }, [selectedDate, mode, selectedDoctor]);
 
   const onFinish = async (value: FinishValue) => {
@@ -177,6 +196,14 @@ const BookAppointment = () => {
       messageApi.open({
         type: "error",
         content: translate("selectDoctorError"),
+      });
+      return;
+
+    }
+    if(!user){
+      messageApi.open({
+        type: "error",
+        content: 'You need to log in before booking an appointment.',
       });
       return;
     }
@@ -262,7 +289,7 @@ const BookAppointment = () => {
         title={translate("submissionFailed")}
         subTitle={error}
         extra={
-          <Button type="primary" onClick={handleProfileClick}>
+          <Button type="primary" onClick={() => navigate(LOGIN)}>
             {translate("goToProfile")}
           </Button>
         }
