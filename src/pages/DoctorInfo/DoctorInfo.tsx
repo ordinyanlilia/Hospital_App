@@ -188,7 +188,9 @@ if (!doctor) {
               </Col>
               <Col xs={24} sm={24} md={6} lg={7}>
                 <Title level={5}>{translate("avCalendar")}</Title>
+                <div className="doctor-calendar">
                 <Calendar fullscreen={false} cellRender={cellRender}/>
+                </div>
                 <div style={{ marginTop: "16px" }}>
                   <Title level={5}>{translate("avStatus")}</Title>
                   <div
