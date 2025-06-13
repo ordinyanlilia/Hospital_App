@@ -42,7 +42,6 @@ import DoctorCard from "./DoctorCard.tsx";
 import { useTranslate } from "../../context/TranslationProvider.tsx";
 import { useTheme } from "../../context/theme-context.tsx";
 import { getData } from "../../services/apiService.ts";
-import { LOGIN } from "../../routes/paths.ts";
 
 interface FinishValue {
   reason: string;
@@ -289,7 +288,7 @@ const BookAppointment = () => {
         title={translate("submissionFailed")}
         subTitle={error}
         extra={
-          <Button type="primary" onClick={() => navigate(LOGIN)}>
+          <Button type="primary" onClick={handleProfileClick}>
             {translate("goToProfile")}
           </Button>
         }
