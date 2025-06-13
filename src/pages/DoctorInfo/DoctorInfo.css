@@ -50,8 +50,9 @@
 .doctor-info-main-card .ant-btn {
   margin-top: 1rem;
 }
-.ant-picker-cell-selected .ant-picker-cell-inner {
+.doctor-calendar .ant-picker-cell-selected .ant-picker-cell-inner {
   background-color: red !important;
   color: white !important;
   border-radius: 4px;
 }
+

@@ -113,7 +113,7 @@ const UserInfo = ({
                         dataSource={user?.allergies}
                         renderItem={(item: string) => <List.Item>{item}</List.Item>}
                     />
-                             <Text type="secondary" strong>Medical History</Text>
+                             <Text type="secondary" strong> {translate("medHistory")}</Text>
                     <List
                         size="small"
                         dataSource={user?.medicalHistory}
