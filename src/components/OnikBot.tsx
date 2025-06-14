@@ -1,33 +1,50 @@
-import { useState } from 'react';
-import './OnikBot.css';
-import MedicalChat from './MedicalChat';
-import { useTranslate } from '../context/TranslationProvider';
-
-
+import { useEffect, useRef, useState } from "react";
+import "./OnikBot.css";
+import MedicalChat from "./MedicalChat";
+import { useTranslate } from "../context/TranslationProvider";
 
 export default function OnikBot() {
-
   const { translate } = useTranslate();
   const [opened, setOpened] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [view, setView] = useState<'faq' | 'medicalChat' | null>(null);
-  const [messages, setMessages] = useState<{ text: string; sender: 'user' | 'bot' }[]>([]);
+  const [view, setView] = useState<"faq" | "medicalChat" | null>(null);
+  const [messages, setMessages] = useState<
+    { text: string; sender: "user" | "bot" }[]
+  >([]);
+
+  const onikBotRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        opened &&
+        onikBotRef.current &&
+        !(onikBotRef.current as HTMLElement).contains(event.target as Node)
+      ) {
+        setIsClosing(true);
+        setTimeout(() => {
+          setIsClosing(false);
+          setOpened(false);
+          setView(null);
+          setMessages([]);
+        }, 400);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [opened]);
 
   const faqResponses: Record<string, string> = {
-  [translate("faqVisitRegister")]:
-      translate("faqVisitRegisterAnswer"),
-    [translate("faqDocsNeeded")]:
-      translate("faqDocsNeededAnswer"),
-    [translate("faqWorkingHours")]:
-      translate("faqWorkingHoursAnswer"),
-    [translate("faqChildCare")]:
-      translate("faqChildCareAnswer"),
-    [translate("faqLocation")]:
-      translate("faqLocationAnswer"),
-    [translate("faqDepartments")]:
-      translate("faqDepartmentsAnswer")
-};
-
+    [translate("faqVisitRegister")]: translate("faqVisitRegisterAnswer"),
+    [translate("faqDocsNeeded")]: translate("faqDocsNeededAnswer"),
+    [translate("faqWorkingHours")]: translate("faqWorkingHoursAnswer"),
+    [translate("faqChildCare")]: translate("faqChildCareAnswer"),
+    [translate("faqLocation")]: translate("faqLocationAnswer"),
+    [translate("faqDepartments")]: translate("faqDepartmentsAnswer"),
+  };
 
   const toggleBot = (): void => {
     if (opened) {
@@ -40,37 +57,43 @@ export default function OnikBot() {
       }, 400); // match CSS transition
     } else {
       setOpened(true);
-      setView('faq');
+      setView("faq");
     }
   };
 
   const handleFaqQuestionClick = (question: string): void => {
     const answer = faqResponses[question];
-    setMessages(prev => [
+    setMessages((prev) => [
       ...prev,
-      { text: question, sender: 'user' },
-      { text: answer, sender: 'bot' }
-
+      { text: question, sender: "user" },
+      { text: answer, sender: "bot" },
     ]);
-    setView('medicalChat');
+    setView("medicalChat");
   };
 
   const handleOtherQuestionClick = (): void => {
-    setView('medicalChat');
+    setView("medicalChat");
   };
-
 
   return (
     <div className="onik-bot-widget">
-      <div className={`onik-bot-box ${opened ? 'open' : ''} ${isClosing ? 'closed' : ''}`}>
+      <div
+        ref={onikBotRef}
+        className={`onik-bot-box ${opened ? "open" : ""} ${isClosing ? "closed" : ""}`}
+      >
         {opened && !isClosing && (
-          <button className="chat-close-button" onClick={toggleBot}>X</button>
+          <button className="chat-close-button" onClick={toggleBot}>
+            X
+          </button>
         )}
         <div className="onik-inner-content">
-          {view === 'faq' && (
+          {view === "faq" && (
             <div className="fade-slide">
               <p className="greeting">
-                {translate("hiIam")} <span className="highlight">{translate("botName")}</span> {translate("em")}<br />
+                {translate("hiIam")}{" "}
+                <span className="highlight">{translate("botName")}</span>{" "}
+                {translate("em")}
+                <br />
                 {translate("howcanIHelp")} 🥰
               </p>
               <ul className="options-list fade-slide">
@@ -79,25 +102,28 @@ export default function OnikBot() {
                     {q}
                   </li>
                 ))}
-                <li onClick={handleOtherQuestionClick} className="medical-chat-option">
+                <li
+                  onClick={handleOtherQuestionClick}
+                  className="medical-chat-option"
+                >
                   {translate("otherQuestions")}
                 </li>
               </ul>
             </div>
           )}
 
-          {view === 'medicalChat' && (
+          {view === "medicalChat" && (
             <div className="fade-slide chat-box">
-              <MedicalChat
-                messages={messages}
-                setMessages={setMessages}
-              />
+              <MedicalChat messages={messages} setMessages={setMessages} />
             </div>
           )}
         </div>
       </div>
 
-      <div className={`onik-toggle ${opened ? 'push-up' : ''}`} onClick={toggleBot}>
+      <div
+        className={`onik-toggle ${opened ? "push-up" : ""}`}
+        onClick={toggleBot}
+      >
         <p>{translate("questions")}</p>
         <img src="/robot.png" alt="ONIK" />
       </div>
